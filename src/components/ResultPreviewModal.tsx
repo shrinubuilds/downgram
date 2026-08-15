@@ -1,0 +1,926 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import {
+  X,
+  Download,
+  FileArchive,
+  ExternalLink,
+  CheckCircle2,
+  Film,
+  Music,
+  UserCheck,
+  Layers,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Check,
+  Link as LinkIcon,
+} from 'lucide-react';
+import JSZip from 'jszip';
+import confetti from 'canvas-confetti';
+import { InstagramScrapeResult, MediaItem, MediaType } from '@/types/instagram';
+import { formatNumber, triggerDownload, copyToClipboard } from '@/lib/utils';
+import { AudioPlayerCard } from './AudioPlayerCard';
+
+interface ResultPreviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  data: InstagramScrapeResult | null;
+  selectedType: MediaType;
+  onSaveToHistory?: (item: any) => void;
+}
+
+export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
+  isOpen,
+  onClose,
+  data,
+  selectedType,
+  onSaveToHistory,
+}) => {
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isZipping, setIsZipping] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !data) return null;
+
+  const items = data.items || [];
+  const currentItem: MediaItem | undefined = items[currentSlideIndex] || items[0];
+  const isCarousel = items.length > 1;
+
+  const triggerConfetti = () => {
+    try {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.75 },
+        colors: ['#f09433', '#e6683c', '#dc2743', '#cc2366', '#bc1888'],
+      });
+    } catch {}
+  };
+
+  const handleDownloadMedia = (item?: MediaItem) => {
+    const targetItem = item || currentItem;
+    if (!targetItem?.url) return;
+
+    const ext = targetItem.type === 'video' ? 'mp4' : 'jpg';
+    const filename =
+      targetItem.filename ||
+      `DownGram_${data.author?.username || 'media'}_${targetItem.id || 'download'}.${ext}`;
+
+    triggerDownload(targetItem.url, filename);
+    triggerConfetti();
+
+    if (onSaveToHistory) {
+      onSaveToHistory({
+        id: targetItem.id || String(Date.now()),
+        timestamp: Date.now(),
+        url: data.url,
+        mediaType: selectedType,
+        title: data.title || `${data.author?.username || 'Instagram'} ${selectedType}`,
+        thumbnailUrl: targetItem.thumbnailUrl || targetItem.url,
+        downloadUrl: targetItem.url,
+      });
+    }
+  };
+
+  const handleDownloadAudio = () => {
+    const audioUrl = data.audio?.audioUrl || (currentItem?.type === 'video' ? currentItem.url : null);
+    if (!audioUrl) return;
+
+    const filename = `DownGram_Audio_${data.author?.username || 'track'}_${data.shortcode || 'audio'}.mp3`;
+    triggerDownload(audioUrl, filename);
+    triggerConfetti();
+
+    if (onSaveToHistory) {
+      onSaveToHistory({
+        id: `audio_${data.shortcode || Date.now()}`,
+        timestamp: Date.now(),
+        url: data.url,
+        mediaType: 'audio',
+        title: data.audio?.title || `Audio by @${data.author?.username}`,
+        thumbnailUrl: data.audio?.coverUrl || data.author?.avatarUrl || '',
+        downloadUrl: audioUrl,
+      });
+    }
+  };
+
+  const handleDownloadProfilePic = () => {
+    const picUrl =
+      data.profile?.profilePicUrlHd ||
+      data.profile?.profilePicUrl ||
+      data.author?.avatarUrl ||
+      currentItem?.thumbnailUrl ||
+      currentItem?.url;
+    if (!picUrl) return;
+
+    const filename = `DownGram_${data.author?.username || 'profile'}_HD_DP.jpg`;
+    triggerDownload(picUrl, filename);
+    triggerConfetti();
+  };
+
+  const handleDownloadAllZip = async () => {
+    if (items.length === 0 || isZipping) return;
+    setIsZipping(true);
+
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder(`DownGram_${data.author?.username || 'instagram'}_carousel`);
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const res = await fetch(
+          `/api/proxy-download?url=${encodeURIComponent(item.url)}&filename=slide_${i + 1}`
+        );
+        if (res.ok) {
+          const blob = await res.blob();
+          const ext = item.type === 'video' ? 'mp4' : 'jpg';
+          folder?.file(`slide_${i + 1}.${ext}`, blob);
+        }
+      }
+
+      const content = await zip.generateAsync({ type: 'blob' });
+      const zipUrl = URL.createObjectURL(content);
+      const a = document.createElement('a');
+      a.href = zipUrl;
+      a.download = `DownGram_${data.author?.username || 'carousel'}_all_slides.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(zipUrl);
+
+      triggerConfetti();
+    } catch (err) {
+      console.error('Error generating zip:', err);
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
+  const handleCopyText = async (text: string, key: string) => {
+    if (!text) return;
+    const ok = await copyToClipboard(text);
+    if (ok) {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2500);
+      triggerConfetti();
+    }
+  };
+
+  const getHeaderBadge = () => {
+    switch (selectedType) {
+      case 'audio':
+        return { label: 'Audio Track', icon: <Music size={16} />, color: '#f59e0b' };
+      case 'profile':
+        return { label: 'Profile (DP & Bio)', icon: <UserCheck size={16} />, color: '#10b981' };
+      case 'post':
+        return { label: isCarousel ? `Album (${items.length} Photos)` : 'Photo Preview', icon: <Layers size={16} />, color: '#a855f7' };
+      case 'caption':
+      case 'bio':
+        return { label: 'Caption', icon: <FileText size={16} />, color: '#f97316' };
+      case 'reel':
+      default:
+        return { label: 'Reel Preview', icon: <Film size={16} />, color: '#e1306c' };
+    }
+  };
+
+  const headerBadge = getHeaderBadge();
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.82)',
+        backdropFilter: 'blur(12px)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        animation: 'fadeIn 0.25s ease-out',
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="glass-panel"
+        style={{
+          width: '100%',
+          maxWidth: '680px',
+          maxHeight: '92vh',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: 'var(--bg-card)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--border-subtle)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75)',
+          overflow: 'hidden',
+          animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px 20px',
+            borderBottom: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-secondary)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '5px 12px',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: 'rgba(225, 48, 108, 0.12)',
+                color: headerBadge.color,
+                fontSize: '0.84rem',
+                fontWeight: 700,
+              }}
+            >
+              {headerBadge.icon}
+              <span>{headerBadge.label}</span>
+            </div>
+
+            {data.author?.username && (
+              <a
+                href={`https://instagram.com/${data.author.username}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  fontSize: '0.9rem',
+                  fontWeight: 700,
+                  color: 'var(--text-muted)',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                @{data.author.username}
+                <ExternalLink size={12} color="var(--text-dim)" />
+              </a>
+            )}
+          </div>
+
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+            title="Close Preview (Esc)"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Modal Body - Strictly Tailored By User's Selected Tool */}
+        <div
+          style={{
+            padding: '20px',
+            overflowY: 'auto',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
+          {/* 1. REEL ONLY PREVIEW (Clean Video Player Only - No Captions/Extra Clutter) */}
+          {selectedType === 'reel' && (
+            <div
+              style={{
+                position: 'relative',
+                backgroundColor: '#000000',
+                borderRadius: 'var(--radius-lg)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '360px',
+                maxHeight: '520px',
+                boxShadow: 'inset 0 0 24px rgba(0,0,0,0.9)',
+              }}
+            >
+              {currentItem?.type === 'video' ? (
+                <video
+                  src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
+                  poster={currentItem.thumbnailUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  preload="metadata"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '520px',
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                <img
+                  src={`/api/proxy-download?url=${encodeURIComponent(currentItem?.url || '')}&inline=true`}
+                  alt="Reel preview"
+                  style={{ maxWidth: '100%', maxHeight: '520px', objectFit: 'contain' }}
+                />
+              )}
+            </div>
+          )}
+
+          {/* 2. AUDIO ONLY PREVIEW */}
+          {selectedType === 'audio' && (
+            <div style={{ margin: '4px 0' }}>
+              <AudioPlayerCard
+                audio={
+                  data.audio || {
+                    title: `Sound from @${data.author?.username || 'track'}`,
+                    artist: `@${data.author?.username || 'instagram_user'}`,
+                    audioUrl: currentItem?.url || '',
+                    coverUrl: data.author?.avatarUrl || currentItem?.thumbnailUrl,
+                    isOriginalAudio: true,
+                  }
+                }
+                authorUsername={data.author?.username}
+              />
+            </div>
+          )}
+
+          {/* 3. PROFILE ONLY PREVIEW (DP + Bio + Bio Links in one unified place) */}
+          {selectedType === 'profile' && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
+              {/* Profile Card & Avatar */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '24px 16px',
+                  backgroundColor: 'var(--bg-secondary)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border-subtle)',
+                  textAlign: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '160px',
+                    height: '160px',
+                    borderRadius: 'var(--radius-full)',
+                    padding: '4px',
+                    background: 'var(--ig-primary-gradient)',
+                    boxShadow: '0 10px 25px rgba(225, 48, 108, 0.35)',
+                    marginBottom: '16px',
+                  }}
+                >
+                  {(() => {
+                    const dpPicUrl =
+                      data.profile?.profilePicUrlHd ||
+                      data.profile?.profilePicUrl ||
+                      data.author?.avatarUrl ||
+                      currentItem?.thumbnailUrl ||
+                      currentItem?.url ||
+                      '';
+                    return (
+                      <img
+                        src={`/api/proxy-download?url=${encodeURIComponent(dpPicUrl)}&inline=true`}
+                        alt={data.author?.username || 'Avatar'}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: 'var(--radius-full)',
+                          objectFit: 'cover',
+                          border: '3px solid var(--bg-card)',
+                        }}
+                      />
+                    );
+                  })()}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                    @{data.author?.username}
+                  </h3>
+                  {data.author?.isVerified && (
+                    <CheckCircle2 size={16} color="#0095f6" fill="#0095f6" stroke="#fff" />
+                  )}
+                </div>
+
+                {data.author?.fullName && (
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
+                    {data.author.fullName}
+                  </p>
+                )}
+
+                {/* Follower Stats */}
+                {data.profile && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '24px',
+                      fontSize: '0.88rem',
+                      color: 'var(--text-muted)',
+                    }}
+                  >
+                    {data.profile.followersCount !== undefined && (
+                      <div>
+                        <strong style={{ color: 'var(--text-main)', display: 'block', fontSize: '1.05rem' }}>
+                          {formatNumber(data.profile.followersCount)}
+                        </strong>
+                        Followers
+                      </div>
+                    )}
+                    {data.profile.followingCount !== undefined && (
+                      <div>
+                        <strong style={{ color: 'var(--text-main)', display: 'block', fontSize: '1.05rem' }}>
+                          {formatNumber(data.profile.followingCount)}
+                        </strong>
+                        Following
+                      </div>
+                    )}
+                    {data.profile.postsCount !== undefined && (
+                      <div>
+                        <strong style={{ color: 'var(--text-main)', display: 'block', fontSize: '1.05rem' }}>
+                          {formatNumber(data.profile.postsCount)}
+                        </strong>
+                        Posts
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Biography Section */}
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-secondary)',
+                  padding: '16px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Biography
+                  </span>
+                  <button
+                    onClick={() => handleCopyText(data.profile?.biography || data.caption || '', 'bio')}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: copiedKey === 'bio' ? '#22c55e' : '#e1306c',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    {copiedKey === 'bio' ? <Check size={13} /> : <Copy size={13} />}
+                    {copiedKey === 'bio' ? 'Copied Bio' : 'Copy Bio'}
+                  </button>
+                </div>
+                <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-main)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                  {data.profile?.biography || data.caption || 'No biography text provided.'}
+                </p>
+              </div>
+
+              {/* Bio Links Section */}
+              {data.profile?.externalUrl && (
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-secondary)',
+                    padding: '14px 16px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-subtle)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
+                    <LinkIcon size={16} color="#0095f6" />
+                    <a
+                      href={data.profile.externalUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        fontSize: '0.9rem',
+                        fontWeight: 600,
+                        color: '#0095f6',
+                        textDecoration: 'underline',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {data.profile.externalUrl}
+                    </a>
+                  </div>
+
+                  <button
+                    onClick={() => handleCopyText(data.profile?.externalUrl || '', 'link')}
+                    style={{
+                      background: 'rgba(0, 149, 246, 0.1)',
+                      border: '1px solid rgba(0, 149, 246, 0.3)',
+                      color: '#0095f6',
+                      padding: '6px 12px',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {copiedKey === 'link' ? <Check size={12} /> : <Copy size={12} />}
+                    {copiedKey === 'link' ? 'Copied' : 'Copy Link'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 4. PHOTO & CAROUSEL ONLY PREVIEW */}
+          {selectedType === 'post' && currentItem && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div
+                style={{
+                  position: 'relative',
+                  backgroundColor: '#000000',
+                  borderRadius: 'var(--radius-lg)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '340px',
+                  maxHeight: '480px',
+                }}
+              >
+                <img
+                  src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
+                  alt={`Slide ${currentSlideIndex + 1}`}
+                  style={{ maxWidth: '100%', maxHeight: '480px', objectFit: 'contain' }}
+                />
+
+                {isCarousel && (
+                  <>
+                    <button
+                      onClick={() => setCurrentSlideIndex((p) => (p > 0 ? p - 1 : items.length - 1))}
+                      style={{
+                        position: 'absolute',
+                        left: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'rgba(0, 0, 0, 0.65)',
+                        color: '#fff',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button
+                      onClick={() => setCurrentSlideIndex((p) => (p < items.length - 1 ? p + 1 : 0))}
+                      style={{
+                        position: 'absolute',
+                        right: '12px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: 'var(--radius-full)',
+                        background: 'rgba(0, 0, 0, 0.65)',
+                        color: '#fff',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        background: 'rgba(0, 0, 0, 0.75)',
+                        color: '#fff',
+                        padding: '4px 10px',
+                        borderRadius: 'var(--radius-full)',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {currentSlideIndex + 1} / {items.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {isCarousel && (
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
+                  {items.map((it, idx) => (
+                    <div
+                      key={it.id || idx}
+                      onClick={() => setCurrentSlideIndex(idx)}
+                      style={{
+                        position: 'relative',
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        border:
+                          currentSlideIndex === idx
+                            ? '2px solid #a855f7'
+                            : '1px solid var(--border-subtle)',
+                        opacity: currentSlideIndex === idx ? 1 : 0.6,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <img
+                        src={`/api/proxy-download?url=${encodeURIComponent(it.thumbnailUrl || it.url)}&inline=true`}
+                        alt={`Thumb ${idx + 1}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 5. CAPTION ONLY PREVIEW (Full text caption and hashtags only) */}
+          {(selectedType === 'caption' || selectedType === 'bio') && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '14px',
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-secondary)',
+                  padding: '20px',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid var(--border-subtle)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f97316', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Full Post Caption
+                  </span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+                    {(data.caption || data.profile?.biography || '').length} characters
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    backgroundColor: 'var(--bg-input)',
+                    padding: '16px',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-subtle)',
+                    maxHeight: '260px',
+                    overflowY: 'auto',
+                    whiteSpace: 'pre-wrap',
+                    fontSize: '0.94rem',
+                    color: 'var(--text-main)',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {data.caption || data.profile?.biography || 'No text caption available.'}
+                </div>
+
+                {/* Hashtag breakdown */}
+                {data.hashtags && data.hashtags.length > 0 && (
+                  <div>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                      Hashtags ({data.hashtags.length})
+                    </span>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {data.hashtags.map((h, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            padding: '3px 8px',
+                            borderRadius: 'var(--radius-sm)',
+                            backgroundColor: 'rgba(249, 115, 22, 0.12)',
+                            color: '#f97316',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Modal Footer - Single Dedicated Download / Action Button Below Preview */}
+        <div
+          style={{
+            padding: '16px 20px',
+            borderTop: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--bg-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '10px',
+          }}
+        >
+          {/* Reel Download Button */}
+          {selectedType === 'reel' && (
+            <button
+              onClick={() => handleDownloadMedia()}
+              className="btn-gradient"
+              style={{
+                flex: 1,
+                minWidth: '220px',
+                height: '48px',
+                fontSize: '1rem',
+                fontWeight: 700,
+              }}
+            >
+              <Download size={19} />
+              <span>Download HD Reel (MP4)</span>
+            </button>
+          )}
+
+          {/* Audio Download Button */}
+          {selectedType === 'audio' && (
+            <button
+              onClick={handleDownloadAudio}
+              className="btn-gradient"
+              style={{
+                flex: 1,
+                minWidth: '220px',
+                height: '48px',
+                fontSize: '1rem',
+                fontWeight: 700,
+              }}
+            >
+              <Download size={19} />
+              <span>Download Audio Track (MP3)</span>
+            </button>
+          )}
+
+          {/* Profile DP Download Button */}
+          {selectedType === 'profile' && (
+            <button
+              onClick={handleDownloadProfilePic}
+              className="btn-gradient"
+              style={{
+                flex: 1,
+                minWidth: '220px',
+                height: '48px',
+                fontSize: '1rem',
+                fontWeight: 700,
+              }}
+            >
+              <Download size={19} />
+              <span>Download Full HD DP (JPG)</span>
+            </button>
+          )}
+
+          {/* Photo & Carousel Download Buttons */}
+          {selectedType === 'post' && (
+            <>
+              <button
+                onClick={() => handleDownloadMedia()}
+                className="btn-gradient"
+                style={{
+                  flex: 1,
+                  minWidth: '190px',
+                  height: '48px',
+                  fontSize: '1rem',
+                  fontWeight: 700,
+                }}
+              >
+                <Download size={19} />
+                <span>
+                  Download {isCarousel ? `Photo ${currentSlideIndex + 1} (JPG)` : 'HD Photo (JPG)'}
+                </span>
+              </button>
+
+              {isCarousel && (
+                <button
+                  onClick={handleDownloadAllZip}
+                  disabled={isZipping}
+                  className="btn-secondary"
+                  style={{
+                    height: '48px',
+                    borderColor: 'rgba(168, 85, 247, 0.4)',
+                    background: 'rgba(168, 85, 247, 0.1)',
+                    color: '#c084fc',
+                    fontWeight: 700,
+                  }}
+                >
+                  <FileArchive size={17} />
+                  <span>{isZipping ? 'Creating ZIP...' : `Download All ${items.length} Slides (.ZIP)`}</span>
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Caption Copy Button */}
+          {(selectedType === 'caption' || selectedType === 'bio') && (
+            <button
+              onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
+              className="btn-gradient"
+              style={{
+                flex: 1,
+                minWidth: '220px',
+                height: '48px',
+                fontSize: '1rem',
+                fontWeight: 700,
+              }}
+            >
+              {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
+              <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption!' : 'Copy Entire Caption'}</span>
+            </button>
+          )}
+
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="btn-secondary"
+            style={{
+              height: '48px',
+              padding: '0 18px',
+              fontWeight: 600,
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
