@@ -803,20 +803,38 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                 style={{
                   position: 'relative',
                   backgroundColor: '#000000',
-                  borderRadius: 'var(--radius-lg)',
+                  borderRadius: '18px',
                   overflow: 'hidden',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  minHeight: '340px',
-                  maxHeight: '480px',
+                  width: 'fit-content',
+                  maxWidth: '100%',
+                  margin: '0 auto',
+                  boxShadow: '0 10px 28px rgba(0, 0, 0, 0.35)',
+                  border: '1.5px solid var(--border-subtle)',
                 }}
               >
-                <img
-                  src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
-                  alt={`Slide ${currentSlideIndex + 1}`}
-                  style={{ maxWidth: '100%', maxHeight: '480px', objectFit: 'contain' }}
-                />
+                {currentItem.type === 'video' ? (
+                  <CustomReelVideoPlayer
+                    videoUrl={currentItem.url}
+                    thumbnailUrl={currentItem.thumbnailUrl}
+                  />
+                ) : (
+                  <img
+                    src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
+                    alt={`Slide ${currentSlideIndex + 1}`}
+                    style={{
+                      display: 'block',
+                      width: 'auto',
+                      maxWidth: '100%',
+                      maxHeight: '52vh',
+                      height: 'auto',
+                      borderRadius: '16px',
+                      objectFit: 'contain',
+                    }}
+                  />
+                )}
 
                 {isCarousel && (
                   <>
@@ -831,13 +849,16 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                         height: '38px',
                         borderRadius: 'var(--radius-full)',
                         background: 'rgba(0, 0, 0, 0.65)',
+                        backdropFilter: 'blur(8px)',
                         color: '#fff',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.25)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         cursor: 'pointer',
+                        zIndex: 20,
                       }}
+                      title="Previous Slide"
                     >
                       <ChevronLeft size={20} />
                     </button>
@@ -852,13 +873,16 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                         height: '38px',
                         borderRadius: 'var(--radius-full)',
                         background: 'rgba(0, 0, 0, 0.65)',
+                        backdropFilter: 'blur(8px)',
                         color: '#fff',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.25)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         cursor: 'pointer',
+                        zIndex: 20,
                       }}
+                      title="Next Slide"
                     >
                       <ChevronRight size={20} />
                     </button>
@@ -868,11 +892,14 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                         top: '12px',
                         right: '12px',
                         background: 'rgba(0, 0, 0, 0.75)',
+                        backdropFilter: 'blur(8px)',
                         color: '#fff',
                         padding: '4px 10px',
                         borderRadius: 'var(--radius-full)',
                         fontSize: '0.8rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
+                        fontFamily: 'var(--font-mono)',
+                        zIndex: 20,
                       }}
                     >
                       {currentSlideIndex + 1} / {items.length}
