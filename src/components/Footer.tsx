@@ -5,13 +5,17 @@ import Link from 'next/link';
 import {
   Heart,
   ShieldCheck,
-  Zap,
   Lock,
   ArrowUp,
   Scale,
   AlertTriangle,
   Shield,
   Activity,
+  Film,
+  Music,
+  Layers,
+  UserCheck,
+  FileText,
 } from 'lucide-react';
 import { DownGramLogo } from './DownGramLogo';
 
@@ -20,6 +24,21 @@ export const Footer: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const toolLinks = [
+    { href: '/reels', label: 'Reels Downloader', icon: <Film size={13} />, color: '#e1306c' },
+    { href: '/audio', label: 'Audio Extractor', icon: <Music size={13} />, color: '#f59e0b' },
+    { href: '/photos', label: 'Photo & Carousel', icon: <Layers size={13} />, color: '#a855f7' },
+    { href: '/profile', label: 'Profile Picture', icon: <UserCheck size={13} />, color: '#10b981' },
+    { href: '/captions', label: 'Caption Extractor', icon: <FileText size={13} />, color: '#0095f6' },
+  ];
+
+  const legalLinks = [
+    { href: '/terms', label: 'Terms of Service', icon: <Scale size={13} />, color: '#e1306c' },
+    { href: '/privacy', label: 'Privacy Policy', icon: <Lock size={13} />, color: '#0095f6' },
+    { href: '/dmca', label: 'DMCA Disclaimer', icon: <AlertTriangle size={13} />, color: '#f59e0b' },
+    { href: '/fair-use', label: 'Fair Use Notice', icon: <Shield size={13} />, color: '#10b981' },
+  ];
+
   return (
     <footer
       style={{
@@ -27,152 +46,161 @@ export const Footer: React.FC = () => {
         backgroundColor: 'var(--bg-surface)',
         borderTop: '1px solid var(--border-subtle)',
         boxShadow: 'var(--neu-raised)',
-        padding: 'clamp(32px, 5vw, 48px) 0 24px 0',
+        padding: 'clamp(28px, 4vw, 44px) 0 20px 0',
         position: 'relative',
       }}
     >
       <div className="container">
-        {/* Main Footer Block */}
+        {/* Main Footer Multi-Column Grid */}
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '24px',
-            paddingBottom: '28px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 'clamp(20px, 3.5vw, 36px)',
+            paddingBottom: '24px',
             borderBottom: '1px solid var(--border-subtle)',
           }}
         >
-          {/* Brand, Tagline & Trust Badges */}
-          <div style={{ maxWidth: '520px' }}>
+          {/* Brand Info & Trust Badges */}
+          <div style={{ gridColumn: 'span 1' }}>
             <Link
               href="/"
               onClick={scrollToTop}
-              style={{ marginBottom: '12px', display: 'inline-block', textDecoration: 'none', color: 'inherit' }}
+              style={{ marginBottom: '10px', display: 'inline-block', textDecoration: 'none', color: 'inherit' }}
             >
-              <DownGramLogo size="md" />
+              <DownGramLogo size="sm" />
             </Link>
 
             <p
               style={{
-                fontSize: 'clamp(0.85rem, 1.5vw, 0.92rem)',
+                fontSize: '0.82rem',
                 color: 'var(--text-muted)',
-                lineHeight: '1.65',
-                marginBottom: '16px',
+                lineHeight: '1.55',
+                marginBottom: '14px',
+                maxWidth: '360px',
               }}
             >
-              DownGram is a fast and reliable Instagram media downloader. Save Reels, extract MP3 audio, download full photo carousels as ZIP, and get profile pictures in high quality.
+              High-speed Instagram media downloader for Reels, MP3 audio tracks, photo carousels, and profile pictures.
             </p>
 
             {/* Trust Badges */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '8px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                fontFamily: 'var(--font-mono)',
-              }}
-            >
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 12px',
-                  borderRadius: '10px',
+                  gap: '5px',
+                  padding: '4px 10px',
+                  borderRadius: '8px',
                   background: 'var(--bg-surface-inset)',
                   boxShadow: 'var(--neu-inset-sm)',
                   color: '#10b981',
                   border: '1px solid rgba(16, 185, 129, 0.25)',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
-                <Activity size={12} /> OPERATIONAL
+                <Activity size={11} /> OPERATIONAL
               </span>
 
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 12px',
-                  borderRadius: '10px',
+                  gap: '5px',
+                  padding: '4px 10px',
+                  borderRadius: '8px',
                   background: 'var(--bg-surface-inset)',
                   boxShadow: 'var(--neu-inset-sm)',
                   color: '#0095f6',
                   border: '1px solid rgba(0, 149, 246, 0.25)',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
-                <ShieldCheck size={12} /> ZERO_LOGS
+                <ShieldCheck size={11} /> ZERO_LOGS
               </span>
 
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 12px',
-                  borderRadius: '10px',
+                  gap: '5px',
+                  padding: '4px 10px',
+                  borderRadius: '8px',
                   background: 'var(--bg-surface-inset)',
                   boxShadow: 'var(--neu-inset-sm)',
                   color: '#e1306c',
                   border: '1px solid rgba(225, 48, 108, 0.25)',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  fontFamily: 'var(--font-mono)',
                 }}
               >
-                <Lock size={12} /> SSL_256BIT
+                <Lock size={11} /> SSL_256BIT
               </span>
             </div>
           </div>
 
-          {/* Legal Options Beside One Another (Horizontal Row) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-            <span
+          {/* Quick Instagram Tools Links */}
+          <div>
+            <div
               style={{
-                fontSize: '0.78rem',
+                fontSize: '0.74rem',
                 fontWeight: 800,
                 color: 'var(--text-dim)',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
                 fontFamily: 'var(--font-mono)',
+                marginBottom: '12px',
               }}
             >
-              Legal & Privacy
-            </span>
+              Instagram Tools
+            </div>
 
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {toolLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="footer-nav-link"
+                >
+                  <span style={{ color: item.color }}>{item.icon}</span>
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Legal & Policies Links */}
+          <div>
             <div
-              className="legal-options-row"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '8px',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                color: 'var(--text-dim)',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                fontFamily: 'var(--font-mono)',
+                marginBottom: '12px',
               }}
             >
-              {/* Terms */}
-              <Link href="/terms" className="legal-pill-link">
-                <Scale size={14} color="#e1306c" />
-                <span>Terms</span>
-              </Link>
+              Legal & Safety
+            </div>
 
-              {/* Privacy */}
-              <Link href="/privacy" className="legal-pill-link">
-                <Lock size={14} color="#0095f6" />
-                <span>Privacy</span>
-              </Link>
-
-              {/* DMCA */}
-              <Link href="/dmca" className="legal-pill-link">
-                <AlertTriangle size={14} color="#f59e0b" />
-                <span>DMCA</span>
-              </Link>
-
-              {/* Fair Use */}
-              <Link href="/fair-use" className="legal-pill-link">
-                <Shield size={14} color="#10b981" />
-                <span>Fair Use</span>
-              </Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {legalLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="footer-nav-link"
+                >
+                  <span style={{ color: item.color }}>{item.icon}</span>
+                  <span>{item.label}</span>
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -180,25 +208,25 @@ export const Footer: React.FC = () => {
         {/* Footer Bottom Bar */}
         <div
           style={{
-            marginTop: '20px',
+            marginTop: '16px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '14px',
-            fontSize: '0.8rem',
+            gap: '12px',
+            fontSize: '0.76rem',
             color: 'var(--text-dim)',
           }}
         >
-          <div style={{ maxWidth: '600px' }}>
-            © {new Date().getFullYear()} DownGram. Not affiliated with, endorsed, or sponsored by Instagram or Meta Platforms, Inc.
+          <div style={{ maxWidth: '560px', lineHeight: 1.4 }}>
+            © {new Date().getFullYear()} DownGram. Not affiliated with or endorsed by Instagram or Meta Platforms, Inc.
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>Made with</span>
-              <Heart size={13} fill="#e1306c" color="#e1306c" />
-              <span>for Archivists</span>
+              <Heart size={12} fill="#e1306c" color="#e1306c" />
+              <span>for Creators</span>
             </div>
 
             {/* Smooth Back-to-Top Button */}
@@ -206,18 +234,18 @@ export const Footer: React.FC = () => {
               onClick={scrollToTop}
               className="btn-secondary"
               style={{
-                padding: '6px 14px',
-                borderRadius: '12px',
-                fontSize: '0.76rem',
+                padding: '5px 12px',
+                borderRadius: '10px',
+                fontSize: '0.72rem',
                 fontWeight: 800,
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 gap: '4px',
                 boxShadow: 'var(--neu-btn)',
               }}
               title="Back to Top"
             >
-              <ArrowUp size={12} />
+              <ArrowUp size={11} />
               <span>Top</span>
             </button>
           </div>
@@ -225,30 +253,21 @@ export const Footer: React.FC = () => {
       </div>
 
       <style jsx>{`
-        .legal-pill-link {
+        .footer-nav-link {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 8px 16px;
-          border-radius: 12px;
-          background: var(--bg-surface);
-          box-shadow: var(--neu-btn);
-          border: 1px solid var(--border-subtle);
+          gap: 7px;
           color: var(--text-muted);
-          font-size: 0.84rem;
-          font-weight: 700;
+          font-size: 0.82rem;
+          font-weight: 600;
           text-decoration: none;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 4px 0;
+          transition: all 0.2s ease;
+          width: fit-content;
         }
-        .legal-pill-link:hover {
-          color: #e1306c;
-          background: var(--bg-surface-raised);
-          box-shadow: var(--neu-raised-sm);
-          transform: translateY(-2px);
-        }
-        .legal-pill-link:active {
-          transform: translateY(1px);
-          box-shadow: var(--neu-btn-pressed);
+        .footer-nav-link:hover {
+          color: var(--text-main);
+          transform: translateX(3px);
         }
       `}</style>
     </footer>
