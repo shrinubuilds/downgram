@@ -246,69 +246,84 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '16px 20px',
+            padding: '14px 18px',
             borderBottom: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface)',
+            gap: '12px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+            {/* Tool Badge */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
+                padding: '6px 12px',
                 borderRadius: '12px',
                 backgroundColor: 'var(--bg-surface-inset)',
                 boxShadow: 'var(--neu-inset-sm)',
                 border: '1px solid var(--border-subtle)',
                 color: headerBadge.color,
-                fontSize: '0.84rem',
+                fontSize: '0.82rem',
                 fontWeight: 800,
                 fontFamily: 'var(--font-mono)',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
               }}
             >
               {headerBadge.icon}
               <span>{headerBadge.label}</span>
             </div>
 
+            {/* Author Link */}
             {data.author?.username && (
               <a
                 href={`https://instagram.com/${data.author.username}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  fontSize: '0.9rem',
+                  fontSize: '0.86rem',
                   fontWeight: 700,
                   color: 'var(--text-muted)',
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '4px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
-                @{data.author.username}
-                <ExternalLink size={12} color="var(--text-dim)" />
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>@{data.author.username}</span>
+                <ExternalLink size={12} color="var(--text-dim)" style={{ flexShrink: 0 }} />
               </a>
             )}
           </div>
 
-          {/* Close Button */}
+          {/* Close Button (X) */}
           <button
             onClick={onClose}
+            className="btn-secondary"
             style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-muted)',
+              width: '36px',
+              height: '36px',
+              minWidth: '36px',
+              borderRadius: '12px',
+              padding: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
+              boxShadow: 'var(--neu-btn)',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-muted)',
+              flexShrink: 0,
+              transition: 'all 0.2s ease',
             }}
             title="Close Preview (Esc)"
+            aria-label="Close"
           >
             <X size={18} />
           </button>
@@ -791,35 +806,64 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
           )}
         </div>
 
-        {/* Modal Footer - Single Dedicated Download / Action Button Below Preview */}
+        {/* Modal Footer - Perfectly Aligned Actions */}
         <div
           style={{
             padding: '16px 20px',
             borderTop: '1px solid var(--border-subtle)',
-            backgroundColor: 'var(--bg-secondary)',
+            backgroundColor: 'var(--bg-surface)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
+            flexDirection: 'column',
             gap: '10px',
+            width: '100%',
           }}
         >
           {/* Reel Download Button */}
           {selectedType === 'reel' && (
-            <button
-              onClick={() => handleDownloadMedia()}
-              className="btn-gradient"
-              style={{
-                flex: 1,
-                minWidth: '220px',
-                height: '48px',
-                fontSize: '1rem',
-                fontWeight: 700,
-              }}
-            >
-              <Download size={19} />
-              <span>Download Reel (MP4)</span>
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+              <button
+                onClick={() => handleDownloadMedia()}
+                className="btn-gradient"
+                style={{
+                  width: '100%',
+                  height: '50px',
+                  fontSize: '1.02rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                  boxShadow: 'var(--neu-raised-glow)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                <Download size={20} />
+                <span>Download Reel (MP4)</span>
+              </button>
+
+              {/* Extract Audio Track Optional Action */}
+              <button
+                onClick={handleDownloadAudio}
+                className="btn-secondary"
+                style={{
+                  width: '100%',
+                  height: '42px',
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  color: '#f59e0b',
+                  borderColor: 'rgba(245, 158, 11, 0.3)',
+                  background: 'rgba(245, 158, 11, 0.06)',
+                }}
+              >
+                <Music size={16} />
+                <span>Extract Sound / Audio (MP3)</span>
+              </button>
+            </div>
           )}
 
           {/* Audio Download Button */}
@@ -828,14 +872,19 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               onClick={handleDownloadAudio}
               className="btn-gradient"
               style={{
-                flex: 1,
-                minWidth: '220px',
-                height: '48px',
-                fontSize: '1rem',
-                fontWeight: 700,
+                width: '100%',
+                height: '50px',
+                fontSize: '1.02rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+                boxShadow: 'var(--neu-raised-glow)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
             >
-              <Download size={19} />
+              <Download size={20} />
               <span>Download Audio Track (MP3)</span>
             </button>
           )}
@@ -846,33 +895,43 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               onClick={handleDownloadProfilePic}
               className="btn-gradient"
               style={{
-                flex: 1,
-                minWidth: '220px',
-                height: '48px',
-                fontSize: '1rem',
-                fontWeight: 700,
+                width: '100%',
+                height: '50px',
+                fontSize: '1.02rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+                boxShadow: 'var(--neu-raised-glow)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
             >
-              <Download size={19} />
-              <span>Download Profile Picture (JPG)</span>
+              <Download size={20} />
+              <span>Download HD Profile Picture (JPG)</span>
             </button>
           )}
 
           {/* Photo & Carousel Download Buttons */}
           {selectedType === 'post' && (
-            <>
+            <div style={{ display: 'flex', flexDirection: isCarousel ? 'column' : 'row', gap: '10px', width: '100%' }}>
               <button
                 onClick={() => handleDownloadMedia()}
                 className="btn-gradient"
                 style={{
-                  flex: 1,
-                  minWidth: '190px',
-                  height: '48px',
-                  fontSize: '1rem',
-                  fontWeight: 700,
+                  width: '100%',
+                  height: '50px',
+                  fontSize: '1.02rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                  boxShadow: 'var(--neu-raised-glow)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
                 }}
               >
-                <Download size={19} />
+                <Download size={20} />
                 <span>
                   Download {isCarousel ? `Photo ${currentSlideIndex + 1} (JPG)` : 'Photo (JPG)'}
                 </span>
@@ -884,18 +943,24 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   disabled={isZipping}
                   className="btn-secondary"
                   style={{
-                    height: '48px',
+                    width: '100%',
+                    height: '46px',
                     borderColor: 'rgba(168, 85, 247, 0.4)',
-                    background: 'rgba(168, 85, 247, 0.1)',
+                    background: 'rgba(168, 85, 247, 0.08)',
                     color: '#c084fc',
                     fontWeight: 700,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
                   }}
                 >
                   <FileArchive size={17} />
                   <span>{isZipping ? 'Creating ZIP...' : `Download All ${items.length} Slides (.ZIP)`}</span>
                 </button>
               )}
-            </>
+            </div>
           )}
 
           {/* Caption Copy Button */}
@@ -904,30 +969,22 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
               className="btn-gradient"
               style={{
-                flex: 1,
-                minWidth: '220px',
-                height: '48px',
-                fontSize: '1rem',
-                fontWeight: 700,
+                width: '100%',
+                height: '50px',
+                fontSize: '1.02rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+                boxShadow: 'var(--neu-raised-glow)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
               }}
             >
-              {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
+              {copiedKey === 'full_caption' ? <Check size={20} /> : <Copy size={20} />}
               <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption!' : 'Copy Entire Caption'}</span>
             </button>
           )}
-
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="btn-secondary"
-            style={{
-              height: '48px',
-              padding: '0 18px',
-              fontWeight: 600,
-            }}
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
