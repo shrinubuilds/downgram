@@ -13,10 +13,8 @@ import {
   Layers,
   UserCheck,
   FileText,
-  Sparkles,
   Link as LinkIcon,
   Check,
-  Radio,
 } from 'lucide-react';
 import { MediaType } from '@/types/instagram';
 
@@ -39,7 +37,6 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
   loadingStep,
   error,
   activeType,
-  onLoadSample,
 }) => {
   const [pasteSuccess, setPasteSuccess] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -49,44 +46,44 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
     switch (activeType) {
       case 'reel':
         return {
-          placeholder: 'Enter Instagram Reel or Video URL (e.g. instagram.com/reel/...)',
+          placeholder: 'Paste Instagram Reel or Video link (e.g. instagram.com/reel/...)',
           icon: <Film size={18} color="#e1306c" />,
-          label: 'REEL_STREAM',
+          label: 'REEL',
           color: '#e1306c',
         };
       case 'audio':
         return {
-          placeholder: 'Enter Reel link to extract 320kbps high-bitrate MP3 stream...',
+          placeholder: 'Paste Reel link to extract audio track (MP3)...',
           icon: <Music size={18} color="#f59e0b" />,
-          label: 'MP3_EXTRACT',
+          label: 'AUDIO',
           color: '#f59e0b',
         };
       case 'post':
         return {
-          placeholder: 'Enter Instagram Photo / Carousel link (e.g. instagram.com/p/...)',
+          placeholder: 'Paste Instagram Photo or Carousel link (e.g. instagram.com/p/...)',
           icon: <Layers size={18} color="#a855f7" />,
-          label: 'RAW_PHOTOS',
+          label: 'PHOTOS',
           color: '#a855f7',
         };
       case 'profile':
         return {
-          placeholder: 'Enter Instagram @username or profile URL to inspect Full HD DP...',
+          placeholder: 'Enter Instagram username (e.g. @username) or profile URL...',
           icon: <UserCheck size={18} color="#10b981" />,
-          label: 'AVATAR_DP',
+          label: 'PROFILE',
           color: '#10b981',
         };
       case 'caption':
         return {
-          placeholder: 'Enter Post or Reel URL to extract structured captions & tags...',
+          placeholder: 'Paste Post or Reel link to extract caption text...',
           icon: <FileText size={18} color="#06b6d4" />,
-          label: 'CAPTIONS',
+          label: 'CAPTION',
           color: '#06b6d4',
         };
       default:
         return {
-          placeholder: 'Paste Instagram URL here...',
+          placeholder: 'Paste Instagram link here...',
           icon: <LinkIcon size={18} color="#e1306c" />,
-          label: 'INSTAGRAM',
+          label: 'LINK',
           color: '#e1306c',
         };
     }
@@ -117,7 +114,7 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
         style={{
           position: 'relative',
           padding: '10px',
-          borderRadius: '26px',
+          borderRadius: '24px',
           backgroundColor: 'var(--bg-surface)',
           boxShadow: isFocused
             ? 'var(--neu-raised-glow)'
@@ -149,13 +146,13 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               minWidth: 0,
               backgroundColor: 'var(--bg-surface-inset)',
               boxShadow: 'var(--neu-inset)',
-              borderRadius: '18px',
+              borderRadius: '16px',
               padding: '6px 12px 6px 14px',
               border: error ? '1.5px solid #ef4444' : '1px solid var(--border-subtle)',
               transition: 'border-color 0.2s ease',
             }}
           >
-            {/* Leading Monospace Mode Tag */}
+            {/* Mode Tag */}
             <div
               style={{
                 display: 'flex',
@@ -202,7 +199,7 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               }}
             />
 
-            {/* Tactile Clear Button */}
+            {/* Clear Button */}
             {url && !isLoading && (
               <button
                 type="button"
@@ -255,17 +252,17 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               {pasteSuccess ? (
                 <>
                   <Check size={16} color="#10b981" />
-                  <span style={{ color: '#10b981' }}>PASTED!</span>
+                  <span style={{ color: '#10b981' }}>Pasted!</span>
                 </>
               ) : (
                 <>
                   <Clipboard size={16} color="#f59e0b" />
-                  <span>PASTE</span>
+                  <span>Paste</span>
                 </>
               )}
             </button>
 
-            {/* Neumorphic Cyber Gradient CTA Button */}
+            {/* CTA Download Button */}
             <button
               type="submit"
               disabled={isLoading || !url.trim()}
@@ -282,11 +279,11 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               {isLoading ? (
                 <>
                   <Loader2 size={18} className="animate-spin" />
-                  <span>EXTRACTING...</span>
+                  <span>Downloading...</span>
                 </>
               ) : (
                 <>
-                  <span>DOWNLOAD</span>
+                  <span>Download</span>
                   <ArrowRight size={18} />
                 </>
               )}
@@ -294,54 +291,6 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
           </div>
         </form>
       </div>
-
-      {/* Digital HUD Demo Chips Matrix */}
-      {onLoadSample && (
-        <div
-          style={{
-            marginTop: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '8px',
-            fontSize: '0.82rem',
-          }}
-        >
-          <span style={{ color: 'var(--text-dim)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.76rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <Radio size={12} color="#10b981" /> PRESETS:
-          </span>
-          {[
-            { id: 'reel', label: '[ DEMO: 4K REEL ]' },
-            { id: 'post', label: '[ DEMO: PHOTO SET ]' },
-            { id: 'audio', label: '[ DEMO: MP3 AUDIO ]' },
-            { id: 'profile', label: '[ DEMO: FULL DP ]' },
-          ].map((sample) => (
-            <button
-              key={sample.id}
-              type="button"
-              onClick={() => onLoadSample(sample.id)}
-              disabled={isLoading}
-              style={{
-                background: 'var(--bg-surface)',
-                boxShadow: 'var(--neu-btn)',
-                border: '1px solid var(--border-subtle)',
-                color: 'var(--text-muted)',
-                padding: '5px 12px',
-                borderRadius: '10px',
-                fontSize: '0.74rem',
-                fontWeight: 800,
-                fontFamily: 'var(--font-mono)',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-              className="sample-neu-chip"
-            >
-              {sample.label}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Progressive Step Loading Feedback */}
       {isLoading && loadingStep && (
@@ -356,7 +305,6 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
             color: '#e1306c',
             fontSize: '0.9rem',
             fontWeight: 800,
-            fontFamily: 'var(--font-mono)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -392,16 +340,6 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
       )}
 
       <style jsx>{`
-        .sample-neu-chip:hover {
-          background: var(--bg-surface-raised) !important;
-          color: #e1306c !important;
-          transform: translateY(-1.5px);
-          box-shadow: var(--neu-raised-sm) !important;
-        }
-        .sample-neu-chip:active {
-          transform: translateY(1px);
-          box-shadow: var(--neu-btn-pressed) !important;
-        }
         @media (max-width: 680px) {
           .downloader-form-bar {
             flex-direction: column !important;
@@ -426,5 +364,6 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
     </div>
   );
 };
+
 
 

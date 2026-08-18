@@ -77,14 +77,14 @@ export default function HomePage() {
     setIsLoading(true);
     setError(null);
     setScrapeResult(null);
-    setLoadingStep('Connecting to Instagram & extracting stream...');
+    setLoadingStep('Connecting to Instagram...');
 
     const stepTimer1 = setTimeout(() => {
-      setLoadingStep('Bypassing restrictions & resolving 4K stream...');
+      setLoadingStep('Resolving media stream...');
     }, 700);
 
     const stepTimer2 = setTimeout(() => {
-      setLoadingStep('Processing uncompressed media & audio...');
+      setLoadingStep('Preparing download links...');
     }, 1400);
 
     try {
@@ -111,37 +111,6 @@ export default function HomePage() {
     } finally {
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
-      setIsLoading(false);
-      setLoadingStep('');
-    }
-  };
-
-  // Sample Loader
-  const handleLoadSample = async (typeKey: string) => {
-    setIsLoading(true);
-    setError(null);
-    setScrapeResult(null);
-    setActiveType(typeKey as MediaType);
-    setLoadingStep(`Loading live 4K ${typeKey} preview...`);
-
-    try {
-      const res = await fetch('/api/instagram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: `demo:${typeKey}`,
-          useSample: true,
-        }),
-      });
-      const data: InstagramScrapeResult = await res.json();
-      if (data.success) {
-        setScrapeResult(data);
-        setUrl(data.url);
-        setIsModalOpen(true);
-      }
-    } catch (err) {
-      console.error('Sample fetch error:', err);
-    } finally {
       setIsLoading(false);
       setLoadingStep('');
     }
@@ -178,7 +147,7 @@ export default function HomePage() {
               }}
             >
               <span className="led-dot" />
-              <span>DIGITAL ENGINE // 4K ULTRA HD INSTAGRAM EXTRACTOR</span>
+              <span>ONLINE // INSTAGRAM MEDIA DOWNLOADER</span>
             </div>
 
             <h1
@@ -190,9 +159,9 @@ export default function HomePage() {
                 marginBottom: '16px',
               }}
             >
-              Rip Instagram <span className="text-gradient">4K Reels, Audio,</span>
+              Download Instagram <span className="text-gradient">Reels, Videos,</span>
               <br />
-              <span className="text-gradient-purple">HD Avatars & Full Albums</span>
+              <span className="text-gradient-purple">Photos, Audio & Profile DP</span>
             </h1>
 
             <p
@@ -205,7 +174,7 @@ export default function HomePage() {
                 fontWeight: 500,
               }}
             >
-              Extract uncompressed 4K reels, isolate 320kbps MP3 audio tracks, batch export photo carousels into ZIP files, or download full-size profile avatars in high speed.
+              Easily save Instagram Reels, extract MP3 audio tracks, download multi-slide photo carousels as ZIP, and get full-resolution profile avatars in seconds.
             </p>
           </div>
 
@@ -226,13 +195,12 @@ export default function HomePage() {
               onSubmit={handleSubmit}
               isLoading={isLoading}
               activeType={activeType}
-              onLoadSample={handleLoadSample}
               error={error}
               loadingStep={loadingStep}
             />
           </div>
 
-          {/* Neumorphic Digital Value Highlights */}
+          {/* Neumorphic Value Highlights */}
           <div
             style={{
               display: 'flex',
@@ -240,14 +208,14 @@ export default function HomePage() {
               justifyContent: 'center',
               flexWrap: 'wrap',
               gap: '12px',
-              marginTop: '42px',
+              marginTop: '36px',
             }}
           >
             {[
-              { icon: <CheckCircle2 size={16} color="#10b981" />, label: 'ZERO_WATERMARKS', text: 'No Watermarks' },
-              { icon: <Zap size={16} color="#fcaf45" />, label: 'DIRECT_CDN', text: 'Instant Direct CDN' },
-              { icon: <Music2 size={16} color="#e1306c" />, label: 'MP3_320K', text: 'Studio MP3 Audio' },
-              { icon: <Shield size={16} color="#06b6d4" />, label: '100%_ANONYMOUS', text: 'Zero Logs & Anonymous' },
+              { icon: <CheckCircle2 size={16} color="#10b981" />, text: 'No Watermarks' },
+              { icon: <Zap size={16} color="#fcaf45" />, text: 'Fast Downloads' },
+              { icon: <Music2 size={16} color="#e1306c" />, text: 'MP3 Audio Extraction' },
+              { icon: <Shield size={16} color="#06b6d4" />, text: '100% Free & Anonymous' },
             ].map((item, idx) => (
               <div
                 key={idx}

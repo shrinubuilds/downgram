@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'DownGram - Ultimate Instagram Downloader (Reels, Videos, Posts, DP, Audio & Bio)',
+  title: 'DownGram - Instagram Downloader for Reels, Photos, Audio & Profile DP',
   description:
-    'Download Instagram Reels in 4K/HD, Carousel Photos, Full HD Profile Pictures (DP), Audio tracks from Reels, and extract Bios and Captions with DownGram. Fast, secure, and 100% free.',
+    'Download Instagram Reels, Videos, Carousel Photos, Full HD Profile Pictures, and MP3 Audio tracks with DownGram. Fast, secure, and 100% free.',
   keywords: [
     'instagram downloader',
     'download instagram reels',

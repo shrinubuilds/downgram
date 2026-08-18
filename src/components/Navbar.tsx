@@ -195,30 +195,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
           </button>
         </nav>
 
-        {/* Right: Digital Monospace Spec Badges & Tactile Button */}
+        {/* Right: Theme Toggler */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Monospace 4K Tag */}
-          <div
-            className="header-digital-badge"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '12px',
-              background: 'var(--bg-surface-inset)',
-              boxShadow: 'var(--neu-inset-sm)',
-              border: '1px solid var(--border-subtle)',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              fontFamily: 'var(--font-mono)',
-              color: '#e1306c',
-            }}
-          >
-            <Sparkles size={13} color="#fcaf45" />
-            <span>4K // 60FPS</span>
-          </div>
-
           {/* Neumorphic Push Button Theme Toggle */}
           <button
             onClick={toggleTheme}
@@ -237,7 +215,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
               cursor: 'pointer',
               transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Neumorphic Mode`}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             aria-label="Toggle Theme"
           >
             <div
@@ -260,16 +238,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
       </div>
 
       <style jsx>{`
-        @media (max-width: 800px) {
+        @media (max-width: 768px) {
           .desktop-nav-links {
-            display: none !important;
-          }
-          .digital-status-chip {
-            display: none !important;
-          }
-        }
-        @media (max-width: 540px) {
-          .header-digital-badge {
             display: none !important;
           }
         }

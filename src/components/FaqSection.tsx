@@ -35,17 +35,17 @@ export const FaqSection: React.FC = () => {
     },
     {
       category: 'reels',
-      q: 'Does DownGram download Reels in original 4K and 1080p without watermarks?',
+      q: 'Does DownGram download Reels in original quality without watermarks?',
       badge: 'No Watermark',
       badgeColor: '#e1306c',
-      a: 'DownGram connects directly to high-speed Instagram CDN endpoints, bypassing watermarks and compression algorithms. You receive the exact original MP4 stream with pristine 1080p/4K resolution, full 60fps frame rate, and synchronized stereo sound.',
+      a: 'DownGram connects directly to Instagram media endpoints, retrieving clean video files without watermarks. You receive the exact original MP4 file uploaded by the creator with synchronized audio.',
     },
     {
       category: 'audio',
-      q: 'How do I extract and download MP3 audio from any Instagram Reel?',
-      badge: '320kbps MP3',
+      q: 'How do I extract and download MP3 audio from an Instagram Reel?',
+      badge: 'MP3 Audio',
       badgeColor: '#f59e0b',
-      a: 'Simply paste the Instagram Reel or Video URL into DownGram and select the "Audio / MP3" mode (or hit Download). DownGram automatically strips and separates the background music or voice track into clean, high-bitrate 320kbps MP3 audio with a built-in player preview.',
+      a: 'Simply paste the Instagram Reel or Video URL into DownGram and select the "Audio" tab (or click Download). DownGram extracts the audio track into a downloadable MP3 file with a built-in player preview.',
     },
     {
       category: 'carousel',

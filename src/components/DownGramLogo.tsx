@@ -180,7 +180,7 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
         </svg>
       </div>
 
-      {/* Brand Typography & Badge */}
+      {/* Brand Typography */}
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span
@@ -191,45 +191,24 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
               background: 'var(--ig-primary-gradient)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              textShadow: '0 2px 10px rgba(225, 48, 108, 0.15)',
               display: 'inline-block',
             }}
           >
             DownGram
           </span>
-
-          {showBadge && (
-            <span
-              style={{
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                letterSpacing: '0.04em',
-                padding: '2px 7px',
-                borderRadius: '6px',
-                background: 'rgba(225, 48, 108, 0.14)',
-                color: '#ff5f9e',
-                border: '1px solid rgba(225, 48, 108, 0.3)',
-                animation: 'badgePulse 3s infinite',
-                lineHeight: 1.2,
-                textTransform: 'uppercase',
-              }}
-            >
-              HD+
-            </span>
-          )}
         </div>
 
         <span
           style={{
-            fontSize: '0.65rem',
+            fontSize: '0.66rem',
             color: 'var(--text-dim)',
             textTransform: 'uppercase',
-            letterSpacing: '0.1em',
+            letterSpacing: '0.08em',
             fontWeight: 700,
             marginTop: '-2px',
           }}
         >
-          Fast Media Extractor
+          Instagram Downloader
         </span>
       </div>
     </div>

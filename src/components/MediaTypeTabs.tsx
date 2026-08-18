@@ -7,7 +7,7 @@ import {
   Layers,
   UserCheck,
   FileText,
-  Zap,
+  Sparkles,
 } from 'lucide-react';
 import { MediaType } from '@/types/instagram';
 
@@ -24,77 +24,65 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
     id: MediaType;
     label: string;
     icon: React.ReactNode;
-    badge: string;
     hint: string;
     color: string;
     gradient: string;
-    ledColor: string;
   }[] = [
     {
       id: 'reel',
-      label: 'Reels & Video',
-      icon: <Film size={17} />,
-      badge: '4K_UHD',
-      hint: 'Extract uncompressed 4K 60FPS video streams with direct CDN bypass.',
+      label: 'Reels',
+      icon: <Film size={19} />,
+      hint: 'Download Instagram Reels and Videos in original MP4 quality without watermarks.',
       color: '#e1306c',
       gradient: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)',
-      ledColor: '#e1306c',
     },
     {
       id: 'audio',
-      label: 'Audio / MP3',
-      icon: <Music size={17} />,
-      badge: '320_KBPS',
-      hint: 'Rip studio-grade MP3 audio tracks and voice stems from any Reel.',
+      label: 'Audio',
+      icon: <Music size={19} />,
+      hint: 'Extract and download background audio or voice tracks as clean MP3 files.',
       color: '#f59e0b',
       gradient: 'linear-gradient(135deg, #f59e0b, #d97706, #b45309)',
-      ledColor: '#f59e0b',
     },
     {
       id: 'post',
-      label: 'Photos & ZIP',
-      icon: <Layers size={17} />,
-      badge: 'RAW_HD',
-      hint: 'Download full-res photo carousels & batch-export all slides as ZIP archive.',
+      label: 'Photos',
+      icon: <Layers size={19} />,
+      hint: 'Save high-resolution single photos or full multi-slide carousel posts (with ZIP export).',
       color: '#a855f7',
       gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
-      ledColor: '#a855f7',
     },
     {
       id: 'profile',
       label: 'Profile DP',
-      icon: <UserCheck size={17} />,
-      badge: 'AVATAR_HD',
-      hint: 'Download full-size original profile avatars & inspect metadata.',
+      icon: <UserCheck size={19} />,
+      hint: 'View and download full-size original profile avatars and copy profile details.',
       color: '#10b981',
       gradient: 'linear-gradient(135deg, #10b981, #059669)',
-      ledColor: '#10b981',
     },
     {
       id: 'caption',
       label: 'Captions',
-      icon: <FileText size={17} />,
-      badge: 'TXT_TAGS',
-      hint: 'Extract complete formatted captions, emojis, and viral hashtag matrix.',
-      color: '#06b6d4',
-      gradient: 'linear-gradient(135deg, #06b6d4, #2563eb)',
-      ledColor: '#06b6d4',
+      icon: <FileText size={19} />,
+      hint: 'Copy full post captions with emojis, line formatting, and extracted hashtags.',
+      color: '#0095f6',
+      gradient: 'linear-gradient(135deg, #0095f6, #2563eb)',
     },
   ];
 
   const activeTabInfo = tabs.find((t) => t.id === activeType) || tabs[0];
 
   return (
-    <div style={{ margin: '0 auto 24px auto', maxWidth: '1020px', width: '100%' }}>
-      {/* Neumorphic Extruded Tool Station Plate */}
+    <div style={{ margin: '0 auto 24px auto', maxWidth: '980px', width: '100%' }}>
+      {/* Neumorphic Tool Station Plate */}
       <div
         className="tools-neu-plate"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-          gap: '10px',
-          padding: '10px',
-          borderRadius: '24px',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: '8px',
+          padding: '8px',
+          borderRadius: '22px',
           backgroundColor: 'var(--bg-tabs)',
           boxShadow: 'var(--neu-raised)',
           border: '1px solid var(--border-subtle)',
@@ -113,33 +101,18 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                padding: '12px 14px',
+                padding: '12px 10px',
                 borderRadius: '16px',
-                border: '1px solid var(--border-subtle)',
-                background: isActive ? tab.gradient : 'var(--bg-surface)',
+                border: isActive ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
+                background: isActive ? tab.gradient : 'transparent',
                 color: isActive ? '#ffffff' : 'var(--text-muted)',
                 fontWeight: isActive ? 800 : 700,
-                fontSize: '0.88rem',
+                fontSize: '0.92rem',
                 cursor: 'pointer',
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: isActive ? 'var(--neu-pill-active)' : 'var(--neu-btn)',
+                boxShadow: isActive ? 'var(--neu-pill-active)' : 'none',
               }}
             >
-              {/* LED Active Dot */}
-              {isActive && (
-                <span
-                  style={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    background: '#ffffff',
-                    boxShadow: '0 0 8px #ffffff',
-                    display: 'inline-block',
-                    flexShrink: 0,
-                  }}
-                />
-              )}
-
               {/* Icon */}
               <span
                 style={{
@@ -158,38 +131,21 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
               <span style={{ whiteSpace: 'nowrap', textShadow: isActive ? '0 1px 2px rgba(0,0,0,0.3)' : 'none' }}>
                 {tab.label}
               </span>
-
-              {/* Digital Monospace Tech Badge */}
-              <span
-                className="tech-mono-tag"
-                style={{
-                  fontSize: '0.64rem',
-                  padding: '2px 6px',
-                  borderRadius: '6px',
-                  background: isActive ? 'rgba(0, 0, 0, 0.35)' : 'var(--bg-surface-inset)',
-                  color: isActive ? '#ffffff' : tab.color,
-                  border: isActive ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid var(--border-subtle)',
-                  boxShadow: isActive ? 'none' : 'var(--neu-inset-sm)',
-                  flexShrink: 0,
-                }}
-              >
-                {tab.badge}
-              </span>
             </button>
           );
         })}
       </div>
 
-      {/* Digital HUD Tool Context Banner */}
+      {/* Tool Context Description Readout */}
       <div
-        className="tool-hud-banner"
+        className="tool-readout-banner"
         style={{
           marginTop: '12px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: '8px',
-          fontSize: '0.84rem',
+          fontSize: '0.86rem',
           color: 'var(--text-muted)',
           textAlign: 'center',
           padding: '8px 16px',
@@ -203,15 +159,13 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             color: activeTabInfo.color,
             fontWeight: 800,
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.8rem',
             flexShrink: 0,
           }}
         >
-          <Zap size={14} /> [ {activeTabInfo.label.toUpperCase()} ] :
+          <Sparkles size={14} /> {activeTabInfo.label} Tool:
         </span>
         <span style={{ lineHeight: 1.4, fontWeight: 500 }}>{activeTabInfo.hint}</span>
       </div>
@@ -220,19 +174,23 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
         .neu-tab-btn:hover:not(.active) {
           background: var(--bg-surface-raised);
           color: var(--text-main);
-          transform: translateY(-2px);
           box-shadow: var(--neu-raised-sm);
         }
-        .neu-tab-btn:active {
-          transform: translateY(1px);
-          box-shadow: var(--neu-btn-pressed);
+        @media (max-width: 768px) {
+          .tools-neu-plate {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
         }
-        @media (max-width: 680px) {
+        @media (max-width: 520px) {
           .tools-neu-plate {
             grid-template-columns: repeat(2, 1fr) !important;
           }
-          .tool-hud-banner {
-            font-size: 0.78rem !important;
+          .neu-tab-btn {
+            padding: 10px 8px !important;
+            font-size: 0.86rem !important;
+          }
+          .tool-readout-banner {
+            font-size: 0.8rem !important;
             flex-direction: column !important;
             gap: 4px !important;
           }
@@ -241,5 +199,6 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
     </div>
   );
 };
+
 
 

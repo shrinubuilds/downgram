@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
                 marginBottom: '16px',
               }}
             >
-              DownGram is a high-speed Instagram media extraction suite. Download uncompressed 4K Reels, 320kbps MP3 audio, multi-image albums, and original HD avatars in real time.
+              DownGram is a fast and reliable Instagram media downloader. Save Reels, extract MP3 audio, download full photo carousels as ZIP, and get profile pictures in high quality.
             </p>
 
             {/* Trust Badges */}

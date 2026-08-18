@@ -111,8 +111,8 @@ export const HowToGuide: React.FC = () => {
     {
       step: '03',
       title: 'Preview & Instant Save',
-      subtitle: '4K MP4, 320k MP3 & ZIP',
-      desc: 'Watch the high-definition preview, inspect audio waveform, and download crystal-clear media directly to your storage.',
+      subtitle: 'MP4 Video, MP3 & ZIP',
+      desc: 'Watch the media preview, play extracted audio, and download files directly to your device storage.',
       icon: <DownloadCloud size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #0095f6 0%, #10b981 100%)',
       glowColor: 'rgba(0, 149, 246, 0.4)',
@@ -139,7 +139,7 @@ export const HowToGuide: React.FC = () => {
               gap: '4px',
             }}
           >
-            <Film size={11} /> 4K MP4
+            <Film size={11} /> MP4 Video
           </span>
           <span
             style={{
@@ -154,7 +154,7 @@ export const HowToGuide: React.FC = () => {
               gap: '4px',
             }}
           >
-            <Music size={11} /> 320k MP3
+            <Music size={11} /> MP3 Audio
           </span>
           <span
             style={{
@@ -169,7 +169,7 @@ export const HowToGuide: React.FC = () => {
               gap: '4px',
             }}
           >
-            <CheckCircle2 size={11} /> Saved
+            <CheckCircle2 size={11} /> Ready
           </span>
         </div>
       ),
