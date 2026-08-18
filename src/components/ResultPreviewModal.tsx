@@ -224,17 +224,17 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
       }}
     >
       <div
-        className="glass-panel"
+        className="neu-panel"
         style={{
           width: '100%',
           maxWidth: '680px',
           maxHeight: '92vh',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: 'var(--bg-card)',
+          backgroundColor: 'var(--bg-surface)',
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--border-subtle)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75)',
+          boxShadow: 'var(--neu-raised-glow)',
           overflow: 'hidden',
           animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -248,7 +248,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             justifyContent: 'space-between',
             padding: '16px 20px',
             borderBottom: '1px solid var(--border-subtle)',
-            backgroundColor: 'var(--bg-secondary)',
+            backgroundColor: 'var(--bg-surface)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -257,12 +257,15 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '5px 12px',
-                borderRadius: 'var(--radius-full)',
-                backgroundColor: 'rgba(225, 48, 108, 0.12)',
+                padding: '6px 14px',
+                borderRadius: '12px',
+                backgroundColor: 'var(--bg-surface-inset)',
+                boxShadow: 'var(--neu-inset-sm)',
+                border: '1px solid var(--border-subtle)',
                 color: headerBadge.color,
                 fontSize: '0.84rem',
-                fontWeight: 700,
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
               }}
             >
               {headerBadge.icon}
@@ -397,7 +400,8 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '24px 16px',
-                  backgroundColor: 'var(--bg-secondary)',
+                  backgroundColor: 'var(--bg-surface)',
+                  boxShadow: 'var(--neu-raised-sm)',
                   borderRadius: 'var(--radius-lg)',
                   border: '1px solid var(--border-subtle)',
                   textAlign: 'center',
@@ -411,7 +415,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                     borderRadius: 'var(--radius-full)',
                     padding: '4px',
                     background: 'var(--ig-primary-gradient)',
-                    boxShadow: '0 10px 25px rgba(225, 48, 108, 0.35)',
+                    boxShadow: 'var(--neu-raised-glow)',
                     marginBottom: '16px',
                   }}
                 >
@@ -496,24 +500,28 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               {/* Biography Section */}
               <div
                 style={{
-                  backgroundColor: 'var(--bg-secondary)',
+                  backgroundColor: 'var(--bg-surface-inset)',
+                  boxShadow: 'var(--neu-inset-sm)',
                   padding: '16px',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-subtle)',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Biography
+                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono)' }}>
+                    BIOGRAPHY
                   </span>
                   <button
                     onClick={() => handleCopyText(data.profile?.biography || data.caption || '', 'bio')}
                     style={{
-                      background: 'transparent',
-                      border: 'none',
+                      background: 'var(--bg-surface)',
+                      boxShadow: 'var(--neu-btn)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '8px',
+                      padding: '4px 10px',
                       color: copiedKey === 'bio' ? '#22c55e' : '#e1306c',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -533,7 +541,8 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               {data.profile?.externalUrl && (
                 <div
                   style={{
-                    backgroundColor: 'var(--bg-secondary)',
+                    backgroundColor: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset-sm)',
                     padding: '14px 16px',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-subtle)',

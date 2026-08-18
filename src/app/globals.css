@@ -11,34 +11,34 @@
   --cyber-cyan: #06b6d4;
   --cyber-green: #10b981;
 
-  /* Dark Neumorphic Base Palette */
-  --bg-primary: #0c0e14;
-  --bg-surface: #12151f;
-  --bg-surface-raised: #161a26;
+  /* Dark Neumorphic Base Palette - Deep Space Matte */
+  --bg-primary: #0d0f17;
+  --bg-surface: #131622;
+  --bg-surface-raised: #181c2b;
   --bg-surface-inset: #090b10;
-  --bg-card: #131722;
-  --bg-card-hover: #181d2c;
-  --bg-input: #0a0c12;
-  --bg-tabs: #10131c;
+  --bg-card: #131622;
+  --bg-card-hover: #191e2e;
+  --bg-input: #090b11;
+  --bg-tabs: #10131d;
 
-  /* Neumorphic Dual-Shadows (Dark Mode) */
-  --neu-flat: 6px 6px 16px #06070a, -6px -6px 16px #1a1e2c;
-  --neu-raised: 10px 10px 24px #050608, -10px -10px 24px #1c2130, inset 0 1px 1px rgba(255, 255, 255, 0.08);
-  --neu-raised-sm: 4px 4px 10px #06070a, -4px -4px 10px #181c2a;
-  --neu-raised-glow: 8px 8px 24px #050608, -8px -8px 24px #1c2130, 0 0 20px rgba(225, 48, 108, 0.25);
-  --neu-inset: inset 4px 4px 10px #06070a, inset -4px -4px 10px #161a28;
-  --neu-inset-sm: inset 2px 2px 6px #06070a, inset -2px -2px 6px #161a28;
-  --neu-pill-active: 6px 6px 16px #06070a, -6px -6px 16px #1c2130, 0 0 15px rgba(225, 48, 108, 0.4);
-  --neu-btn: 5px 5px 12px #06070a, -5px -5px 12px #1c2130;
-  --neu-btn-pressed: inset 3px 3px 8px #06070a, inset -3px -3px 8px #181c2a;
+  /* Precision Neumorphic Dual-Shadows (Dark Mode) */
+  --neu-flat: 6px 6px 16px #06070a, -6px -6px 16px #1a1f30;
+  --neu-raised: 12px 12px 28px #050608, -12px -12px 28px #1d2334, inset 1px 1px 1px rgba(255, 255, 255, 0.08);
+  --neu-raised-sm: 5px 5px 12px #050608, -5px -5px 12px #1c2132;
+  --neu-raised-glow: 10px 10px 28px #050608, -10px -10px 28px #1d2334, 0 0 25px rgba(225, 48, 108, 0.35);
+  --neu-inset: inset 5px 5px 12px #040508, inset -5px -5px 12px #181d2c;
+  --neu-inset-sm: inset 3px 3px 8px #040508, inset -3px -3px 8px #181d2c;
+  --neu-pill-active: 6px 6px 16px #040508, -6px -6px 16px #1e2436, 0 0 20px rgba(225, 48, 108, 0.45);
+  --neu-btn: 6px 6px 14px #050608, -6px -6px 14px #1c2233;
+  --neu-btn-pressed: inset 4px 4px 10px #040508, inset -4px -4px 10px #181e2e;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(225, 48, 108, 0.4);
-  --border-active: rgba(240, 148, 51, 0.6);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-glow: rgba(225, 48, 108, 0.45);
+  --border-active: rgba(240, 148, 51, 0.65);
 
-  --text-main: #f3f4f8;
-  --text-muted: #9ba3b8;
-  --text-dim: #626c84;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
 
   --accent-glow: 0 0 25px rgba(225, 48, 108, 0.35);
   --accent-glow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
@@ -54,34 +54,34 @@
 }
 
 [data-theme="light"] {
-  /* Light Neumorphic Base Palette */
-  --bg-primary: #e6ebf4;
-  --bg-surface: #e6ebf4;
-  --bg-surface-raised: #ebf0f8;
-  --bg-surface-inset: #dce2ed;
-  --bg-card: #e6ebf4;
-  --bg-card-hover: #ebf1fa;
-  --bg-input: #dbe2ee;
-  --bg-tabs: #e2e8f2;
+  /* Light Neumorphic Base Palette - Soft Ceramic Titanium */
+  --bg-primary: #e5ebf4;
+  --bg-surface: #e5ebf4;
+  --bg-surface-raised: #ecf2fa;
+  --bg-surface-inset: #d9e1ec;
+  --bg-card: #e5ebf4;
+  --bg-card-hover: #edf3fb;
+  --bg-input: #d8e0eb;
+  --bg-tabs: #e0e7f1;
 
-  /* Neumorphic Dual-Shadows (Light Mode) */
-  --neu-flat: 8px 8px 18px #c2c9d6, -8px -8px 18px #ffffff;
-  --neu-raised: 10px 10px 24px #bcc4d2, -10px -10px 24px #ffffff, inset 0 1px 1px rgba(255, 255, 255, 0.9);
-  --neu-raised-sm: 4px 4px 10px #c2c9d6, -4px -4px 10px #ffffff;
-  --neu-raised-glow: 8px 8px 24px #bcc4d2, -8px -8px 24px #ffffff, 0 0 20px rgba(225, 48, 108, 0.2);
-  --neu-inset: inset 4px 4px 10px #bcc4d2, inset -4px -4px 10px #ffffff;
-  --neu-inset-sm: inset 2px 2px 6px #bcc4d2, inset -2px -2px 6px #ffffff;
-  --neu-pill-active: 6px 6px 14px #bcc4d2, -6px -6px 14px #ffffff, 0 0 12px rgba(225, 48, 108, 0.3);
-  --neu-btn: 5px 5px 12px #c2c9d6, -5px -5px 12px #ffffff;
-  --neu-btn-pressed: inset 3px 3px 8px #bcc4d2, inset -3px -3px 8px #ffffff;
+  /* Precision Neumorphic Dual-Shadows (Light Mode) */
+  --neu-flat: 8px 8px 18px #c0c8d6, -8px -8px 18px #ffffff;
+  --neu-raised: 12px 12px 28px #bac3d2, -12px -12px 28px #ffffff, inset 1px 1px 1px rgba(255, 255, 255, 0.95);
+  --neu-raised-sm: 5px 5px 12px #c0c8d6, -5px -5px 12px #ffffff;
+  --neu-raised-glow: 10px 10px 28px #bac3d2, -10px -10px 28px #ffffff, 0 0 22px rgba(225, 48, 108, 0.25);
+  --neu-inset: inset 5px 5px 12px #b6bfcf, inset -5px -5px 12px #ffffff;
+  --neu-inset-sm: inset 3px 3px 8px #b6bfcf, inset -3px -3px 8px #ffffff;
+  --neu-pill-active: 6px 6px 16px #bac3d2, -6px -6px 16px #ffffff, 0 0 16px rgba(225, 48, 108, 0.35);
+  --neu-btn: 6px 6px 14px #c0c8d6, -6px -6px 14px #ffffff;
+  --neu-btn-pressed: inset 4px 4px 10px #b6bfcf, inset -4px -4px 10px #ffffff;
 
-  --border-subtle: rgba(255, 255, 255, 0.7);
+  --border-subtle: rgba(255, 255, 255, 0.85);
   --border-glow: rgba(225, 48, 108, 0.35);
   --border-active: rgba(240, 148, 51, 0.7);
 
-  --text-main: #182234;
-  --text-muted: #53627a;
-  --text-dim: #7b8ba4;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #64748b;
 
   --accent-glow-subtle: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
@@ -107,22 +107,22 @@ body {
 /* Digital Grid Matrix Background */
 body {
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(225, 48, 108, 0.12) 0%, rgba(131, 58, 180, 0.06) 40%, transparent 70%),
-    radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 15% 70%, rgba(240, 148, 51, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% -10%, rgba(225, 48, 108, 0.15) 0%, rgba(131, 58, 180, 0.08) 35%, transparent 70%),
+    radial-gradient(circle at 90% 50%, rgba(6, 182, 212, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 10% 60%, rgba(240, 148, 51, 0.06) 0%, transparent 45%),
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
 }
 
 [data-theme="light"] body {
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(225, 48, 108, 0.08) 0%, rgba(131, 58, 180, 0.04) 40%, transparent 70%),
-    radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 15% 70%, rgba(240, 148, 51, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% -10%, rgba(225, 48, 108, 0.1) 0%, rgba(131, 58, 180, 0.05) 35%, transparent 70%),
+    radial-gradient(circle at 90% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 10% 60%, rgba(240, 148, 51, 0.05) 0%, transparent 45%),
     linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
 }
 
 a {
@@ -382,18 +382,6 @@ a {
   animation: pulseGlow 2.5s infinite ease-in-out;
 }
 
-.header-animated-border {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #833ab4, #0095f6, #f09433);
-  background-size: 300% 100%;
-  animation: headerGradientMove 6s linear infinite;
-  opacity: 0.85;
-}
-
 /* Nav Link Button with Tactile Pressed Response */
 .nav-link-btn {
   position: relative;
@@ -482,19 +470,26 @@ a {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 clamp(12px, 3.5vw, 24px);
+  padding: 0 clamp(14px, 3.5vw, 24px);
 }
 
 .container-narrow {
   width: 100%;
   max-width: 880px;
   margin: 0 auto;
-  padding: 0 clamp(12px, 3.5vw, 24px);
+  padding: 0 clamp(14px, 3.5vw, 24px);
+}
+
+/* Mobile & Touch Responsive Enhancements */
+@media (max-width: 768px) {
+  .how-to-card {
+    padding: 24px 20px !important;
+  }
 }
 
 @media (max-width: 480px) {
   .badge-pill {
-    font-size: 0.76rem !important;
+    font-size: 0.72rem !important;
     padding: 5px 12px !important;
   }
 }

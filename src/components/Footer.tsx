@@ -24,8 +24,9 @@ export const Footer: React.FC = () => {
     <footer
       style={{
         marginTop: 'auto',
-        backgroundColor: 'var(--bg-secondary)',
+        backgroundColor: 'var(--bg-surface)',
         borderTop: '1px solid var(--border-subtle)',
+        boxShadow: 'var(--neu-raised)',
         padding: 'clamp(32px, 5vw, 48px) 0 24px 0',
         position: 'relative',
       }}
@@ -71,52 +72,56 @@ export const Footer: React.FC = () => {
                 flexWrap: 'wrap',
                 gap: '8px',
                 fontSize: '0.78rem',
-                fontWeight: 700,
+                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
               }}
             >
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(16, 185, 129, 0.1)',
+                  gap: '6px',
+                  padding: '5px 12px',
+                  borderRadius: '10px',
+                  background: 'var(--bg-surface-inset)',
+                  boxShadow: 'var(--neu-inset-sm)',
                   color: '#10b981',
                   border: '1px solid rgba(16, 185, 129, 0.25)',
                 }}
               >
-                <Activity size={12} /> Live & Operational
+                <Activity size={12} /> LIVE // ONLINE
               </span>
 
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(0, 149, 246, 0.1)',
+                  gap: '6px',
+                  padding: '5px 12px',
+                  borderRadius: '10px',
+                  background: 'var(--bg-surface-inset)',
+                  boxShadow: 'var(--neu-inset-sm)',
                   color: '#0095f6',
                   border: '1px solid rgba(0, 149, 246, 0.25)',
                 }}
               >
-                <ShieldCheck size={12} /> Zero Logs
+                <ShieldCheck size={12} /> ZERO_LOGS
               </span>
 
               <span
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: 'var(--radius-full)',
-                  background: 'rgba(225, 48, 108, 0.1)',
+                  gap: '6px',
+                  padding: '5px 12px',
+                  borderRadius: '10px',
+                  background: 'var(--bg-surface-inset)',
+                  boxShadow: 'var(--neu-inset-sm)',
                   color: '#e1306c',
                   border: '1px solid rgba(225, 48, 108, 0.25)',
                 }}
               >
-                <Lock size={12} /> 256-Bit SSL
+                <Lock size={12} /> SSL_256BIT
               </span>
             </div>
           </div>
@@ -130,6 +135,7 @@ export const Footer: React.FC = () => {
                 color: 'var(--text-dim)',
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
+                fontFamily: 'var(--font-mono)',
               }}
             >
               Legal & Privacy
@@ -200,13 +206,14 @@ export const Footer: React.FC = () => {
               onClick={scrollToTop}
               className="btn-secondary"
               style={{
-                padding: '5px 12px',
-                borderRadius: 'var(--radius-full)',
+                padding: '6px 14px',
+                borderRadius: '12px',
                 fontSize: '0.76rem',
-                fontWeight: 700,
+                fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
+                boxShadow: 'var(--neu-btn)',
               }}
               title="Back to Top"
             >
@@ -222,34 +229,26 @@ export const Footer: React.FC = () => {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 7px 14px;
-          border-radius: var(--radius-full);
-          background: rgba(255, 255, 255, 0.05);
+          padding: 8px 16px;
+          border-radius: 12px;
+          background: var(--bg-surface);
+          box-shadow: var(--neu-btn);
           border: 1px solid var(--border-subtle);
           color: var(--text-muted);
           font-size: 0.84rem;
           font-weight: 700;
           text-decoration: none;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .legal-pill-link:hover {
-          color: var(--text-main);
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(225, 48, 108, 0.4);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(225, 48, 108, 0.15);
-        }
-        :global([data-theme="light"]) .legal-pill-link {
-          background: #ffffff;
-          border-color: rgba(0, 0, 0, 0.08);
-          color: #475569;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        }
-        :global([data-theme="light"]) .legal-pill-link:hover {
           color: #e1306c;
-          background: rgba(225, 48, 108, 0.06);
-          border-color: rgba(225, 48, 108, 0.35);
-          box-shadow: 0 4px 12px rgba(225, 48, 108, 0.12);
+          background: var(--bg-surface-raised);
+          box-shadow: var(--neu-raised-sm);
+          transform: translateY(-2px);
+        }
+        .legal-pill-link:active {
+          transform: translateY(1px);
+          box-shadow: var(--neu-btn-pressed);
         }
       `}</style>
     </footer>

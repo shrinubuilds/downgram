@@ -143,17 +143,18 @@ export const FaqSection: React.FC = () => {
                   setActiveCategory(cat.id);
                   setOpenIndex(0);
                 }}
-                className="btn-secondary"
+                className={`btn-secondary ${isCatActive ? 'active' : ''}`}
                 style={{
-                  padding: '7px 16px',
-                  borderRadius: 'var(--radius-full)',
+                  padding: '8px 18px',
+                  borderRadius: '14px',
                   fontSize: '0.84rem',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  border: isCatActive ? '1.5px solid #e1306c' : '1px solid var(--border-subtle)',
-                  background: isCatActive ? 'rgba(225, 48, 108, 0.12)' : undefined,
+                  border: isCatActive ? '1px solid rgba(225, 48, 108, 0.4)' : '1px solid var(--border-subtle)',
+                  background: isCatActive ? 'var(--bg-surface-raised)' : 'var(--bg-surface)',
+                  boxShadow: isCatActive ? 'var(--neu-pill-active)' : 'var(--neu-btn)',
                   color: isCatActive ? '#e1306c' : 'var(--text-muted)',
                 }}
               >
@@ -171,13 +172,14 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="glass-panel"
+                className="neu-panel"
                 style={{
-                  borderRadius: 'var(--radius-md)',
+                  borderRadius: '18px',
                   overflow: 'hidden',
-                  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                  border: isOpen ? '1.5px solid rgba(225, 48, 108, 0.45)' : '1px solid var(--border-subtle)',
-                  boxShadow: isOpen ? '0 12px 30px rgba(225, 48, 108, 0.1)' : 'var(--accent-glow-subtle)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  border: isOpen ? '1px solid rgba(225, 48, 108, 0.4)' : '1px solid var(--border-subtle)',
+                  boxShadow: isOpen ? 'var(--neu-raised-glow)' : 'var(--neu-raised)',
+                  backgroundColor: 'var(--bg-surface)',
                 }}
               >
                 <button
@@ -201,16 +203,18 @@ export const FaqSection: React.FC = () => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                     <span>{faq.q}</span>
                     <span
+                      className="tech-mono-tag"
                       style={{
-                        fontSize: '0.7rem',
+                        fontSize: '0.68rem',
                         fontWeight: 800,
-                        padding: '2px 8px',
-                        borderRadius: 'var(--radius-full)',
-                        background: 'rgba(255, 255, 255, 0.08)',
+                        padding: '3px 8px',
+                        borderRadius: '6px',
+                        background: 'var(--bg-surface-inset)',
+                        boxShadow: 'var(--neu-inset-sm)',
                         border: `1px solid ${faq.badgeColor}`,
                         color: faq.badgeColor,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.03em',
+                        letterSpacing: '0.04em',
                       }}
                     >
                       {faq.badge}
