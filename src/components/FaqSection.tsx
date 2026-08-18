@@ -9,8 +9,6 @@ import {
   Music,
   Layers,
   ShieldCheck,
-  Zap,
-  MessageSquare,
 } from 'lucide-react';
 
 export const FaqSection: React.FC = () => {
@@ -18,11 +16,11 @@ export const FaqSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const categories = [
-    { id: 'all', label: 'All Questions', icon: <Sparkles size={14} /> },
-    { id: 'reels', label: 'Reels & Video', icon: <Film size={14} /> },
-    { id: 'audio', label: 'Audio & Music', icon: <Music size={14} /> },
-    { id: 'carousel', label: 'Carousels & Photos', icon: <Layers size={14} /> },
-    { id: 'privacy', label: 'Security & Limits', icon: <ShieldCheck size={14} /> },
+    { id: 'all', label: 'All Questions', icon: <Sparkles size={13} /> },
+    { id: 'reels', label: 'Reels & Video', icon: <Film size={13} /> },
+    { id: 'audio', label: 'Audio & Music', icon: <Music size={13} /> },
+    { id: 'carousel', label: 'Carousels & Photos', icon: <Layers size={13} /> },
+    { id: 'privacy', label: 'Security & Limits', icon: <ShieldCheck size={13} /> },
   ];
 
   const faqs = [
@@ -89,7 +87,7 @@ export const FaqSection: React.FC = () => {
     : faqs.filter((f) => f.category === activeCategory);
 
   return (
-    <section id="faq" style={{ margin: 'clamp(40px, 6vw, 80px) 0 clamp(60px, 8vw, 100px) 0' }}>
+    <section id="faq" style={{ margin: 'clamp(40px, 6vw, 80px) 0 clamp(60px, 8vw, 100px) 0', fontFamily: 'var(--font-sans), sans-serif' }}>
       <div className="container-narrow">
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 3.5vw, 32px)' }}>
@@ -158,6 +156,9 @@ export const FaqSection: React.FC = () => {
                   background: isCatActive ? 'var(--bg-surface-raised)' : 'var(--bg-surface)',
                   boxShadow: isCatActive ? 'var(--neu-pill-active)' : 'var(--neu-btn)',
                   color: isCatActive ? '#e1306c' : 'var(--text-muted)',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
                 {cat.icon}
@@ -174,11 +175,11 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="neu-panel"
+                className="faq-accordion-item"
                 style={{
                   borderRadius: '16px',
                   overflow: 'hidden',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   border: isOpen ? '1px solid rgba(225, 48, 108, 0.4)' : '1px solid var(--border-subtle)',
                   boxShadow: isOpen ? 'var(--neu-raised-glow)' : 'var(--neu-raised)',
                   backgroundColor: 'var(--bg-surface)',
@@ -200,12 +201,12 @@ export const FaqSection: React.FC = () => {
                     fontWeight: 700,
                     textAlign: 'left',
                     cursor: 'pointer',
+                    fontFamily: 'inherit',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <span>{faq.q}</span>
+                    <span style={{ lineHeight: 1.35 }}>{faq.q}</span>
                     <span
-                      className="tech-mono-tag"
                       style={{
                         fontSize: '0.64rem',
                         fontWeight: 800,
@@ -217,6 +218,7 @@ export const FaqSection: React.FC = () => {
                         color: faq.badgeColor,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
+                        fontFamily: 'var(--font-mono), monospace',
                       }}
                     >
                       {faq.badge}
@@ -226,7 +228,7 @@ export const FaqSection: React.FC = () => {
                   <div
                     style={{
                       transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform 0.25s ease',
+                      transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                       color: isOpen ? '#e1306c' : 'var(--text-muted)',
                       flexShrink: 0,
                     }}
@@ -235,26 +237,43 @@ export const FaqSection: React.FC = () => {
                   </div>
                 </button>
 
-                {isOpen && (
-                  <div
-                    style={{
-                      padding: '0 18px 16px 18px',
-                      fontSize: '0.86rem',
-                      color: 'var(--text-muted)',
-                      lineHeight: '1.6',
-                      borderTop: '1px solid var(--border-subtle)',
-                      paddingTop: '12px',
-                      animation: 'fadeIn 0.2s ease-in-out',
-                    }}
-                  >
-                    {faq.a}
+                {/* Smooth CSS Grid Accordion Collapse Animation */}
+                <div
+                  className="faq-content-grid"
+                  style={{
+                    display: 'grid',
+                    gridTemplateRows: isOpen ? '1fr' : '0fr',
+                    transition: 'grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease',
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                >
+                  <div style={{ overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        padding: '0 18px 16px 18px',
+                        fontSize: '0.86rem',
+                        color: 'var(--text-muted)',
+                        lineHeight: '1.6',
+                        borderTop: isOpen ? '1px solid var(--border-subtle)' : 'none',
+                        paddingTop: '12px',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      {faq.a}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      <style jsx>{`
+        .faq-accordion-item:hover {
+          border-color: rgba(225, 48, 108, 0.25);
+        }
+      `}</style>
     </section>
   );
 };
