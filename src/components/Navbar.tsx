@@ -9,6 +9,7 @@ import {
   BookOpen,
   Sparkles,
   Zap,
+  Activity,
 } from 'lucide-react';
 import { MediaType } from '@/types/instagram';
 import { DownGramLogo } from './DownGramLogo';
@@ -25,7 +26,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
   const [isRotatingTheme, setIsRotatingTheme] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Initialize theme from localStorage or system preference
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem('downgram_theme') as 'dark' | 'light' | null;
@@ -74,13 +74,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
       className="floating-header-wrapper"
       style={{
         position: 'sticky',
-        top: '12px',
+        top: '14px',
         zIndex: 50,
         width: '100%',
         padding: '0 16px',
         maxWidth: '1240px',
         margin: '0 auto',
-        pointerEvents: 'auto',
       }}
     >
       <div
@@ -89,150 +88,156 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '66px',
-          padding: '0 clamp(12px, 2.5vw, 24px)',
-          borderRadius: '20px',
-          backgroundColor:
-            theme === 'dark'
-              ? isScrolled
-                ? 'rgba(14, 16, 22, 0.92)'
-                : 'rgba(18, 20, 28, 0.82)'
-              : isScrolled
-              ? 'rgba(255, 255, 255, 0.94)'
-              : 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          border:
-            theme === 'dark'
-              ? '1px solid rgba(255, 255, 255, 0.12)'
-              : '1px solid rgba(0, 0, 0, 0.08)',
-          boxShadow:
-            theme === 'dark'
-              ? '0 10px 35px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05)'
-              : '0 10px 30px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.03)',
+          height: '68px',
+          padding: '0 clamp(14px, 2.5vw, 26px)',
+          borderRadius: '22px',
+          backgroundColor: 'var(--bg-surface)',
+          boxShadow: isScrolled
+            ? 'var(--neu-raised-glow)'
+            : 'var(--neu-raised)',
+          border: '1px solid var(--border-subtle)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           position: 'relative',
-          overflow: 'hidden',
         }}
       >
-        {/* Animated Gradient Accent Border Top */}
+        {/* Animated Cyber Accent Top Line */}
         <div
           style={{
             position: 'absolute',
             top: 0,
-            left: 0,
-            right: 0,
+            left: 20,
+            right: 20,
             height: '2px',
             background:
-              'linear-gradient(90deg, #f09433, #dc2743, #bc1888, #833ab4, #0095f6, #f09433)',
-            backgroundSize: '200% 100%',
-            animation: 'headerGradientMove 5s linear infinite',
-            opacity: 0.9,
+              'linear-gradient(90deg, transparent, #f09433, #e1306c, #06b6d4, transparent)',
+            opacity: 0.8,
+            borderRadius: '2px',
           }}
         />
 
-        {/* Left: Brand Logo */}
-        <Link
-          href="/"
-          onClick={() => {
-            if (onSelectType) onSelectType('reel');
-            if (window.location.pathname === '/') {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
-          style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}
-        >
-          <DownGramLogo size="md" />
-        </Link>
+        {/* Left: Brand Logo + Digital Indicator */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <Link
+            href="/"
+            onClick={() => {
+              if (onSelectType) onSelectType('reel');
+              if (window.location.pathname === '/') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}
+          >
+            <DownGramLogo size="md" />
+          </Link>
 
-        {/* Center: Navigation Links */}
+          {/* Digital Core Status Dot */}
+          <div
+            className="digital-status-chip"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 10px',
+              borderRadius: '9999px',
+              background: 'var(--bg-surface-inset)',
+              boxShadow: 'var(--neu-inset-sm)',
+              border: '1px solid var(--border-subtle)',
+              fontSize: '0.72rem',
+              fontWeight: 800,
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--text-muted)',
+            }}
+          >
+            <span className="led-dot" />
+            <span>ONLINE</span>
+          </div>
+        </div>
+
+        {/* Center: Neumorphic Inset Navigation Pill Dock */}
         <nav
           className="desktop-nav-links"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            background:
-              theme === 'dark'
-                ? 'rgba(255, 255, 255, 0.04)'
-                : 'rgba(0, 0, 0, 0.03)',
+            gap: '4px',
+            background: 'var(--bg-surface-inset)',
+            boxShadow: 'var(--neu-inset)',
             padding: '4px 6px',
-            borderRadius: '14px',
-            border:
-              theme === 'dark'
-                ? '1px solid rgba(255, 255, 255, 0.06)'
-                : '1px solid rgba(0, 0, 0, 0.05)',
+            borderRadius: '16px',
+            border: '1px solid var(--border-subtle)',
           }}
         >
-          {/* How to Guide */}
           <button
             onClick={() => handleNavClick('#how-to')}
             className="nav-link-btn"
             title="How to Download"
           >
-            <BookOpen size={15} color="#22c55e" />
+            <BookOpen size={14} color="#10b981" />
             <span>How It Works</span>
           </button>
 
-          {/* Features */}
           <button
             onClick={() => handleNavClick('#downloader-box')}
             className="nav-link-btn"
             title="Explore Tools"
           >
-            <Zap size={15} color="#f59e0b" />
+            <Zap size={14} color="#f59e0b" />
             <span>Downloader</span>
           </button>
 
-          {/* FAQ */}
           <button
             onClick={() => handleNavClick('#faq')}
             className="nav-link-btn"
             title="Frequently Asked Questions"
           >
-            <HelpCircle size={15} color="#0095f6" />
+            <HelpCircle size={14} color="#06b6d4" />
             <span>FAQ</span>
           </button>
         </nav>
 
-        {/* Right: Header Action Items */}
+        {/* Right: Digital Monospace Spec Badges & Tactile Button */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* 4K Badge */}
+          {/* Monospace 4K Tag */}
           <div
-            className="header-badge-tag"
+            className="header-digital-badge"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '5px',
+              gap: '6px',
               padding: '6px 12px',
               borderRadius: '12px',
-              background: 'rgba(225, 48, 108, 0.12)',
-              border: '1px solid rgba(225, 48, 108, 0.25)',
-              fontSize: '0.78rem',
+              background: 'var(--bg-surface-inset)',
+              boxShadow: 'var(--neu-inset-sm)',
+              border: '1px solid var(--border-subtle)',
+              fontSize: '0.75rem',
               fontWeight: 800,
+              fontFamily: 'var(--font-mono)',
               color: '#e1306c',
-              letterSpacing: '0.03em',
             }}
           >
             <Sparkles size={13} color="#fcaf45" />
-            <span>4K ULTRA HD</span>
+            <span>4K // 60FPS</span>
           </div>
 
-          {/* Theme Toggler */}
+          {/* Neumorphic Push Button Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="btn-secondary"
             style={{
-              width: '40px',
-              height: '40px',
+              width: '42px',
+              height: '42px',
               padding: 0,
               borderRadius: '14px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              boxShadow: 'var(--neu-btn)',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-subtle)',
+              cursor: 'pointer',
               transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Neumorphic Mode`}
             aria-label="Toggle Theme"
           >
             <div
@@ -254,13 +259,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
         </div>
       </div>
 
-      {/* Responsive Styles */}
       <style jsx>{`
-        @media (max-width: 720px) {
+        @media (max-width: 800px) {
           .desktop-nav-links {
             display: none !important;
           }
-          .header-badge-tag {
+          .digital-status-chip {
+            display: none !important;
+          }
+        }
+        @media (max-width: 540px) {
+          .header-digital-badge {
             display: none !important;
           }
         }
@@ -268,4 +277,5 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
     </header>
   );
 };
+
 
