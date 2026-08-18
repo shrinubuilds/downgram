@@ -249,7 +249,6 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             padding: '14px 18px',
             borderBottom: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface)',
-            gap: '8px',
           }}
         >
           {/* Left: Badge */}
@@ -258,13 +257,13 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 12px',
+              padding: '6px 14px',
               borderRadius: '10px',
               backgroundColor: 'var(--bg-surface-inset)',
               boxShadow: 'var(--neu-inset-sm)',
               border: '1px solid var(--border-subtle)',
               color: headerBadge.color,
-              fontSize: '0.8rem',
+              fontSize: '0.84rem',
               fontWeight: 800,
               fontFamily: 'var(--font-mono)',
               flexShrink: 0,
@@ -273,31 +272,6 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             {headerBadge.icon}
             <span>{headerBadge.label}</span>
           </div>
-
-          {/* Center: Author Username */}
-          {data.author?.username && (
-            <a
-              href={`https://instagram.com/${data.author.username}`}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                fontSize: '0.86rem',
-                fontWeight: 700,
-                color: 'var(--text-muted)',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                maxWidth: '150px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              @{data.author.username}
-              <ExternalLink size={11} color="var(--text-dim)" style={{ flexShrink: 0 }} />
-            </a>
-          )}
 
           {/* Right: Neumorphic Circular Close Button */}
           <button
@@ -819,61 +793,20 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
         >
           {/* Reel Actions */}
           {selectedType === 'reel' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-              <button
-                onClick={() => handleDownloadMedia()}
-                className="btn-gradient"
-                style={{
-                  width: '100%',
-                  height: '48px',
-                  fontSize: '0.98rem',
-                  fontWeight: 800,
-                  borderRadius: '14px',
-                }}
-              >
-                <Download size={19} />
-                <span>Download Reel (MP4)</span>
-              </button>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', width: '100%' }}>
-                <button
-                  onClick={handleDownloadAudio}
-                  className="btn-secondary"
-                  style={{
-                    height: '42px',
-                    fontSize: '0.86rem',
-                    fontWeight: 700,
-                    borderRadius: '12px',
-                    color: '#f59e0b',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                  }}
-                >
-                  <Music size={15} />
-                  <span>Audio (MP3)</span>
-                </button>
-                <button
-                  onClick={() => handleCopyText(data.url, 'share_url')}
-                  className="btn-secondary"
-                  style={{
-                    height: '42px',
-                    fontSize: '0.86rem',
-                    fontWeight: 700,
-                    borderRadius: '12px',
-                    color: copiedKey === 'share_url' ? '#22c55e' : 'var(--text-main)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                  }}
-                >
-                  {copiedKey === 'share_url' ? <Check size={15} /> : <LinkIcon size={15} />}
-                  <span>{copiedKey === 'share_url' ? 'Copied Link' : 'Copy Link'}</span>
-                </button>
-              </div>
-            </div>
+            <button
+              onClick={() => handleDownloadMedia()}
+              className="btn-gradient"
+              style={{
+                width: '100%',
+                height: '48px',
+                fontSize: '0.98rem',
+                fontWeight: 800,
+                borderRadius: '14px',
+              }}
+            >
+              <Download size={19} />
+              <span>Download Reel (MP4)</span>
+            </button>
           )}
 
           {/* Audio Actions */}
