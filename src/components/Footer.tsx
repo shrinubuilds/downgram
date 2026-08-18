@@ -20,6 +20,16 @@ import {
 import { DownGramLogo } from './DownGramLogo';
 
 export const Footer: React.FC = () => {
+  const [showFab, setShowFab] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setShowFab(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -40,236 +50,247 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer
-      style={{
-        marginTop: 'auto',
-        backgroundColor: 'var(--bg-surface)',
-        borderTop: '1px solid var(--border-subtle)',
-        boxShadow: 'var(--neu-raised)',
-        padding: 'clamp(28px, 4vw, 44px) 0 20px 0',
-        position: 'relative',
-      }}
-    >
-      <div className="container">
-        {/* Main Footer Multi-Column Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 'clamp(20px, 3.5vw, 36px)',
-            paddingBottom: '24px',
-            borderBottom: '1px solid var(--border-subtle)',
-          }}
-        >
-          {/* Brand Info & Trust Badges */}
-          <div style={{ gridColumn: 'span 1' }}>
-            <Link
-              href="/"
-              onClick={scrollToTop}
-              style={{ marginBottom: '10px', display: 'inline-block', textDecoration: 'none', color: 'inherit' }}
-            >
-              <DownGramLogo size="sm" />
-            </Link>
+    <>
+      <footer
+        style={{
+          marginTop: 'auto',
+          backgroundColor: 'var(--bg-surface)',
+          borderTop: '1px solid var(--border-subtle)',
+          boxShadow: 'var(--neu-raised)',
+          padding: 'clamp(28px, 4vw, 44px) 0 20px 0',
+          position: 'relative',
+        }}
+      >
+        <div className="container">
+          {/* Main Footer Multi-Column Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 'clamp(20px, 3.5vw, 36px)',
+              paddingBottom: '24px',
+              borderBottom: '1px solid var(--border-subtle)',
+            }}
+          >
+            {/* Brand Info & Trust Badges */}
+            <div style={{ gridColumn: 'span 1' }}>
+              <Link
+                href="/"
+                onClick={scrollToTop}
+                style={{ marginBottom: '10px', display: 'inline-block', textDecoration: 'none', color: 'inherit' }}
+              >
+                <DownGramLogo size="sm" />
+              </Link>
 
-            <p
-              style={{
-                fontSize: '0.82rem',
-                color: 'var(--text-muted)',
-                lineHeight: '1.55',
-                marginBottom: '14px',
-                maxWidth: '360px',
-              }}
-            >
-              High-speed Instagram media downloader for Reels, MP3 audio tracks, photo carousels, and profile pictures.
-            </p>
-
-            {/* Trust Badges */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              <span
+              <p
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  background: 'var(--bg-surface-inset)',
-                  boxShadow: 'var(--neu-inset-sm)',
-                  color: '#10b981',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.82rem',
+                  color: 'var(--text-muted)',
+                  lineHeight: '1.55',
+                  marginBottom: '14px',
+                  maxWidth: '360px',
                 }}
               >
-                <Activity size={11} /> OPERATIONAL
-              </span>
+                High-speed Instagram media downloader for Reels, MP3 audio tracks, photo carousels, and profile pictures.
+              </p>
 
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  background: 'var(--bg-surface-inset)',
-                  boxShadow: 'var(--neu-inset-sm)',
-                  color: '#0095f6',
-                  border: '1px solid rgba(0, 149, 246, 0.25)',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  fontFamily: 'var(--font-mono)',
-                }}
-              >
-                <ShieldCheck size={11} /> ZERO_LOGS
-              </span>
-
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  background: 'var(--bg-surface-inset)',
-                  boxShadow: 'var(--neu-inset-sm)',
-                  color: '#e1306c',
-                  border: '1px solid rgba(225, 48, 108, 0.25)',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  fontFamily: 'var(--font-mono)',
-                }}
-              >
-                <Lock size={11} /> SSL_256BIT
-              </span>
-            </div>
-          </div>
-
-          {/* Quick Instagram Tools Links */}
-          <div>
-            <div
-              style={{
-                fontSize: '0.74rem',
-                fontWeight: 800,
-                color: 'var(--text-dim)',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                fontFamily: 'var(--font-mono)',
-                marginBottom: '12px',
-              }}
-            >
-              Instagram Tools
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {toolLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="footer-nav-link"
+              {/* Trust Badges */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    background: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset-sm)',
+                    color: '#10b981',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    fontFamily: 'var(--font-mono)',
+                  }}
                 >
-                  <span style={{ color: item.color }}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
+                  <Activity size={11} /> OPERATIONAL
+                </span>
 
-          {/* Legal & Policies Links */}
-          <div>
-            <div
-              style={{
-                fontSize: '0.74rem',
-                fontWeight: 800,
-                color: 'var(--text-dim)',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                fontFamily: 'var(--font-mono)',
-                marginBottom: '12px',
-              }}
-            >
-              Legal & Safety
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {legalLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="footer-nav-link"
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    background: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset-sm)',
+                    color: '#0095f6',
+                    border: '1px solid rgba(0, 149, 246, 0.25)',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    fontFamily: 'var(--font-mono)',
+                  }}
                 >
-                  <span style={{ color: item.color }}>{item.icon}</span>
-                  <span>{item.label}</span>
-                </Link>
-              ))}
+                  <ShieldCheck size={11} /> ZERO_LOGS
+                </span>
+
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    background: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset-sm)',
+                    color: '#e1306c',
+                    border: '1px solid rgba(225, 48, 108, 0.25)',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                >
+                  <Lock size={11} /> SSL_256BIT
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Instagram Tools Links */}
+            <div>
+              <div
+                style={{
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  color: 'var(--text-dim)',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'var(--font-mono)',
+                  marginBottom: '12px',
+                }}
+              >
+                Instagram Tools
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {toolLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="footer-nav-link"
+                  >
+                    <span style={{ color: item.color }}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Legal & Policies Links */}
+            <div>
+              <div
+                style={{
+                  fontSize: '0.74rem',
+                  fontWeight: 800,
+                  color: 'var(--text-dim)',
+                  letterSpacing: '0.06em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'var(--font-mono)',
+                  marginBottom: '12px',
+                }}
+              >
+                Legal & Safety
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {legalLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="footer-nav-link"
+                  >
+                    <span style={{ color: item.color }}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Footer Bottom Bar */}
-        <div
-          style={{
-            marginTop: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '12px',
-            fontSize: '0.76rem',
-            color: 'var(--text-dim)',
-          }}
-        >
-          <div style={{ maxWidth: '560px', lineHeight: 1.4 }}>
-            © {new Date().getFullYear()} DownGram. Not affiliated with or endorsed by Instagram or Meta Platforms, Inc.
-          </div>
+          {/* Footer Bottom Bar */}
+          <div
+            style={{
+              marginTop: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '12px',
+              fontSize: '0.76rem',
+              color: 'var(--text-dim)',
+            }}
+          >
+            <div style={{ maxWidth: '560px', lineHeight: 1.4 }}>
+              © {new Date().getFullYear()} DownGram. Not affiliated with or endorsed by Instagram or Meta Platforms, Inc.
+            </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span>Made with</span>
               <Heart size={12} fill="#e1306c" color="#e1306c" />
               <span>for Creators</span>
             </div>
-
-            {/* Smooth Back-to-Top Button */}
-            <button
-              onClick={scrollToTop}
-              className="btn-secondary"
-              style={{
-                padding: '5px 12px',
-                borderRadius: '10px',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                boxShadow: 'var(--neu-btn)',
-              }}
-              title="Back to Top"
-            >
-              <ArrowUp size={11} />
-              <span>Top</span>
-            </button>
           </div>
         </div>
-      </div>
 
-      <style jsx>{`
-        .footer-nav-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          color: var(--text-muted);
-          font-size: 0.82rem;
-          font-weight: 600;
-          text-decoration: none;
-          padding: 4px 0;
-          transition: all 0.2s ease;
-          width: fit-content;
-        }
-        .footer-nav-link:hover {
-          color: var(--text-main);
-          transform: translateX(3px);
-        }
-      `}</style>
-    </footer>
+        <style jsx>{`
+          .footer-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 4px 0;
+            transition: all 0.2s ease;
+            width: fit-content;
+          }
+          .footer-nav-link:hover {
+            color: var(--text-main);
+            transform: translateX(3px);
+          }
+        `}</style>
+      </footer>
+
+      {/* Floating Back-To-Top FAB */}
+      <button
+        onClick={scrollToTop}
+        className="floating-top-fab"
+        style={{
+          position: 'fixed',
+          bottom: '22px',
+          right: '22px',
+          zIndex: 80,
+          width: '44px',
+          height: '44px',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--bg-surface-raised)',
+          boxShadow: 'var(--neu-raised-glow)',
+          border: '1.5px solid var(--border-subtle)',
+          color: '#e1306c',
+          cursor: 'pointer',
+          opacity: showFab ? 1 : 0,
+          transform: showFab ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.8)',
+          pointerEvents: showFab ? 'auto' : 'none',
+          transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        }}
+        title="Scroll to Top"
+        aria-label="Scroll to Top"
+      >
+        <ArrowUp size={18} />
+      </button>
+    </>
   );
 };
