@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
+import { MediaTypeTabs } from '@/components/MediaTypeTabs';
 import { DownloaderInput } from '@/components/DownloaderInput';
-import { FeaturesSection } from '@/components/FeaturesSection';
 import { ResultPreviewModal } from '@/components/ResultPreviewModal';
 import { HowToGuide } from '@/components/HowToGuide';
 import { FaqSection } from '@/components/FaqSection';
@@ -171,10 +171,6 @@ export default function HomePage() {
               onSubmit={handleSubmit}
               isLoading={isLoading}
               activeType={activeType}
-              onSelectType={(type) => {
-                setActiveType(type);
-                setError(null);
-              }}
               error={error}
               loadingStep={loadingStep}
             />
@@ -219,9 +215,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
-        {/* Dedicated Downloader Power Tools & Capabilities */}
-        <FeaturesSection />
 
         {/* How To Step-by-Step Guide */}
         <HowToGuide />

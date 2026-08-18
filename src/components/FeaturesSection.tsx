@@ -1,191 +1,200 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import {
   Film,
   Music,
   Layers,
+  Video,
   UserCheck,
   FileText,
   Sparkles,
   ArrowRight,
-  Shield,
-  Zap,
-  DownloadCloud,
   CheckCircle2,
-  Lock,
 } from 'lucide-react';
 import { MediaType } from '@/types/instagram';
 
-export const FeaturesSection: React.FC = () => {
+interface FeaturesSectionProps {
+  onSelectType?: (type: MediaType) => void;
+}
+
+export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onSelectType }) => {
   const tools = [
     {
       id: 'reel' as MediaType,
-      href: '/reels',
-      title: 'Reels & Video',
+      title: 'Reels & Video Downloader',
       subtitle: 'Original MP4 Video Streams',
-      desc: 'Save Instagram Reels, clips, and feed videos directly in original MP4 quality with synchronized sound and zero watermarks.',
-      icon: <Film size={22} />,
-      color: '#e1306c',
-      gradient: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)',
       badge: 'MP4 Video',
+      icon: <Film size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #f09433 0%, #dc2743 100%)',
+      glowColor: 'rgba(220, 39, 67, 0.35)',
+      badgeBg: 'rgba(220, 39, 67, 0.12)',
+      badgeColor: '#dc2743',
+      points: [
+        'Downloads original video files directly from Instagram servers',
+        'Completely watermark-free with full visual fidelity',
+        'Includes embedded sound and synchronized audio',
+      ],
+      buttonLabel: 'Launch Reels Downloader',
     },
     {
       id: 'audio' as MediaType,
-      href: '/audio',
-      title: 'Audio Extractor',
-      subtitle: 'Background Music & Songs',
-      desc: 'Rip clean background audio, trending reels music, and voice tracks into playable and downloadable MP3 audio files.',
-      icon: <Music size={22} />,
-      color: '#f59e0b',
-      gradient: 'linear-gradient(135deg, #f59e0b, #d97706, #b45309)',
+      title: 'MP3 Audio Extractor',
+      subtitle: 'Extract Background Music & Sounds',
       badge: 'MP3 Audio',
+      icon: <Music size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #fcaf45 0%, #f77737 100%)',
+      glowColor: 'rgba(252, 175, 69, 0.35)',
+      badgeBg: 'rgba(247, 119, 55, 0.12)',
+      badgeColor: '#ea580c',
+      points: [
+        'Extract background audio and songs from any Reel or Post',
+        'Built-in audio player with preview before download',
+        'Clean, compatible MP3 audio file export',
+      ],
+      buttonLabel: 'Launch Audio Extractor',
     },
     {
       id: 'post' as MediaType,
-      href: '/photos',
-      title: 'Photos & Carousels',
-      subtitle: 'Single Photos & ZIP Export',
-      desc: 'Download single photos in full resolution or batch export entire multi-slide carousel albums into a single ZIP archive.',
-      icon: <Layers size={22} />,
-      color: '#a855f7',
-      gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+      title: 'Photo & Carousel Downloader',
+      subtitle: 'Single Photos & ZIP Album Export',
       badge: 'Photos & ZIP',
+      icon: <Layers size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #833ab4 0%, #c13584 100%)',
+      glowColor: 'rgba(131, 58, 180, 0.35)',
+      badgeBg: 'rgba(131, 58, 180, 0.12)',
+      badgeColor: '#833ab4',
+      points: [
+        'Download single photos or full multi-slide carousel posts',
+        '1-click ZIP package download for entire post collections',
+        'Preserves original image dimensions and color quality',
+      ],
+      buttonLabel: 'Launch Photos Downloader',
     },
     {
       id: 'profile' as MediaType,
-      href: '/profile',
-      title: 'Profile Picture (DP)',
-      subtitle: 'Avatar Zoom & Bio Text',
-      desc: 'View and download uncompressed full-size profile pictures (DP) from any public account, and copy profile bio text.',
-      icon: <UserCheck size={22} />,
-      color: '#10b981',
-      gradient: 'linear-gradient(135deg, #10b981, #059669)',
+      title: 'Profile Picture & Bio Viewer',
+      subtitle: 'Original Avatar Zoom',
       badge: 'Profile DP',
+      icon: <UserCheck size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #0095f6 0%, #10b981 100%)',
+      glowColor: 'rgba(0, 149, 246, 0.35)',
+      badgeBg: 'rgba(0, 149, 246, 0.12)',
+      badgeColor: '#0284c7',
+      points: [
+        'Inspect, zoom in, and download original profile pictures',
+        'Extract bio text, public stats, and follower count',
+        'Works for public creators, individuals, and brand accounts',
+      ],
+      buttonLabel: 'Launch Profile Tool',
+    },
+    {
+      id: 'video' as MediaType,
+      title: 'Feed Video Downloader',
+      subtitle: 'Standard MP4 Video Files',
+      badge: 'Feed Video',
+      icon: <Video size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)',
+      glowColor: 'rgba(2, 132, 199, 0.35)',
+      badgeBg: 'rgba(2, 132, 199, 0.12)',
+      badgeColor: '#0369a1',
+      points: [
+        'Download regular feed videos and long clips',
+        'Direct download with fast connection speeds',
+        'Universal MP4 compatibility on mobile, tablet & desktop',
+      ],
+      buttonLabel: 'Launch Video Downloader',
     },
     {
       id: 'caption' as MediaType,
-      href: '/captions',
-      title: 'Captions & Hashtags',
-      subtitle: 'Formatted Text & Tags',
-      desc: 'Extract full post captions with emojis, clean line breaks, and all tagged creator hashtags ready for copying.',
-      icon: <FileText size={22} />,
-      color: '#0095f6',
-      gradient: 'linear-gradient(135deg, #0095f6, #2563eb)',
-      badge: 'Captions',
+      title: 'Caption, Hashtags & Bio Formatter',
+      subtitle: 'Text & Metadata Extraction',
+      badge: 'Captions & Tags',
+      icon: <FileText size={26} color="#ffffff" />,
+      iconBg: 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)',
+      glowColor: 'rgba(255, 65, 108, 0.35)',
+      badgeBg: 'rgba(255, 65, 108, 0.12)',
+      badgeColor: '#e11d48',
+      points: [
+        'Preserves emojis, precise line breaks, and formatting',
+        'Hashtag analysis for creator and research use',
+        '1-click export to clipboard or formatted .TXT file',
+      ],
+      buttonLabel: 'Launch Caption Tool',
     },
   ];
 
-  const highlights = [
-    {
-      icon: <Zap size={20} color="#f59e0b" />,
-      title: 'Sub-Second Resolution',
-      desc: 'High-speed cloud extractor engine fetches direct media streams with minimal latency.',
-    },
-    {
-      icon: <Shield size={20} color="#10b981" />,
-      title: '100% Anonymous & Safe',
-      desc: 'Zero account logins, zero personal data logs, and strictly ephemeral stream processing.',
-    },
-    {
-      icon: <DownloadCloud size={20} color="#0095f6" />,
-      title: 'No Watermarks',
-      desc: 'Original media files with untouched resolution and crisp audio tracks.',
-    },
-    {
-      icon: <CheckCircle2 size={20} color="#a855f7" />,
-      title: 'Universal Compatibility',
-      desc: 'Optimized for iPhone, Android, iPad, Mac, Windows, and Linux browsers.',
-    },
-  ];
+  const handleToolClick = (type: MediaType) => {
+    if (onSelectType) {
+      onSelectType(type);
+    }
+    const inputArea = document.querySelector('#downloader-box') || document.querySelector('input');
+    if (inputArea) {
+      inputArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (inputArea instanceof HTMLInputElement) {
+        inputArea.focus();
+      }
+    }
+  };
 
   return (
-    <section id="tools-matrix" style={{ margin: 'clamp(40px, 6vw, 70px) 0' }}>
+    <section id="features" style={{ margin: '90px 0 50px 0' }}>
       <div className="container">
-        {/* Section Heading */}
-        <div style={{ textAlign: 'center', marginBottom: 'clamp(24px, 4vw, 40px)' }}>
-          <div className="badge-pill" style={{ marginBottom: '10px', cursor: 'default' }}>
-            <Sparkles size={13} /> Dedicated Downloader Suite
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+          <div
+            className="badge-pill"
+            style={{ marginBottom: '14px', cursor: 'default' }}
+          >
+            <Sparkles size={14} /> DownGram Tools
           </div>
 
           <h2
             style={{
-              fontSize: 'clamp(1.35rem, 3.8vw, 2.3rem)',
-              fontWeight: 800,
+              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
+              fontWeight: 900,
               letterSpacing: '-0.02em',
-              marginBottom: '8px',
-              color: 'var(--text-main)',
-              textWrap: 'balance',
+              marginBottom: '16px',
             }}
           >
-            Explore DownGram <span className="text-gradient">Power Tools</span>
+            Built for Every <span className="text-gradient">Instagram Format</span>
           </h2>
 
           <p
             style={{
               color: 'var(--text-muted)',
-              fontSize: 'clamp(0.82rem, 1.8vw, 0.96rem)',
-              maxWidth: '520px',
+              fontSize: '1.08rem',
+              maxWidth: '640px',
               margin: '0 auto',
-              lineHeight: 1.5,
-              textWrap: 'balance',
+              lineHeight: 1.6,
             }}
           >
-            Select a specialized tool designed specifically for your media download needs.
+            Choose from specialized tools for downloading Instagram videos, extracting MP3 audio, saving photo carousels, and getting profile pictures.
           </p>
         </div>
 
-        {/* 5-Card Neumorphic Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '16px',
-            marginBottom: '40px',
-          }}
-        >
+        {/* 6-Card Interactive Tool Suite Grid */}
+        <div className="grid-responsive" style={{ gap: '24px' }}>
           {tools.map((tool) => (
-            <Link
+            <div
               key={tool.id}
-              href={tool.href}
-              className="neu-tool-card"
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                padding: '20px',
-                borderRadius: '20px',
-                backgroundColor: 'var(--bg-surface)',
-                boxShadow: 'var(--neu-raised)',
-                border: '1px solid var(--border-subtle)',
-                textDecoration: 'none',
-                color: 'var(--text-main)',
-                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
+              className="tool-card"
             >
+              {/* Card Top: Icon & Badge */}
               <div>
-                {/* Top Row: Inset Icon Dock & Badge */}
                 <div
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     justifyContent: 'space-between',
-                    marginBottom: '16px',
+                    marginBottom: '18px',
                   }}
                 >
                   <div
+                    className="tool-card-icon-wrap"
                     style={{
-                      width: '44px',
-                      height: '44px',
-                      borderRadius: '14px',
-                      background: 'var(--bg-surface-inset)',
-                      boxShadow: 'var(--neu-inset-sm)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: tool.color,
-                      border: '1px solid var(--border-subtle)',
+                      background: tool.iconBg,
+                      boxShadow: `0 8px 24px ${tool.glowColor}`,
                     }}
                   >
                     {tool.icon}
@@ -193,28 +202,28 @@ export const FeaturesSection: React.FC = () => {
 
                   <span
                     style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.74rem',
                       fontWeight: 800,
+                      letterSpacing: '0.03em',
                       padding: '4px 10px',
-                      borderRadius: '9999px',
-                      background: 'var(--bg-surface-inset)',
-                      boxShadow: 'var(--neu-inset-sm)',
-                      color: tool.color,
-                      border: `1px solid ${tool.color}33`,
-                      letterSpacing: '0.04em',
+                      borderRadius: 'var(--radius-full)',
+                      background: tool.badgeBg,
+                      color: tool.badgeColor,
                       textTransform: 'uppercase',
+                      border: '1px solid currentColor',
+                      opacity: 0.95,
                     }}
                   >
                     {tool.badge}
                   </span>
                 </div>
 
-                {/* Title & Subtitle */}
                 <h3
                   style={{
-                    fontSize: '1.12rem',
+                    fontSize: '1.25rem',
                     fontWeight: 800,
-                    marginBottom: '4px',
+                    marginBottom: '6px',
+                    letterSpacing: '-0.01em',
                     color: 'var(--text-main)',
                   }}
                 >
@@ -223,114 +232,55 @@ export const FeaturesSection: React.FC = () => {
 
                 <p
                   style={{
-                    fontSize: '0.78rem',
+                    fontSize: '0.85rem',
                     fontWeight: 700,
                     color: 'var(--text-dim)',
+                    marginBottom: '16px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.04em',
-                    marginBottom: '10px',
                   }}
                 >
                   {tool.subtitle}
                 </p>
 
-                <p
-                  style={{
-                    fontSize: '0.84rem',
-                    color: 'var(--text-muted)',
-                    lineHeight: 1.5,
-                    marginBottom: '18px',
-                  }}
-                >
-                  {tool.desc}
-                </p>
-              </div>
-
-              {/* Action Link Button */}
-              <div
-                className="tool-card-cta"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '10px 14px',
-                  borderRadius: '12px',
-                  background: 'var(--bg-surface)',
-                  boxShadow: 'var(--neu-btn)',
-                  border: '1px solid var(--border-subtle)',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  color: tool.color,
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <span>Launch Tool</span>
-                <ArrowRight size={15} />
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* 4-Pillar Neumorphic Key Benefits Matrix */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '14px',
-          }}
-        >
-          {highlights.map((h, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '12px',
-                padding: '16px',
-                borderRadius: '16px',
-                background: 'var(--bg-surface-inset)',
-                boxShadow: 'var(--neu-inset-sm)',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: 'var(--bg-surface)',
-                  boxShadow: 'var(--neu-btn)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                {h.icon}
-              </div>
-              <div>
-                <div style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--text-main)', marginBottom: '2px' }}>
-                  {h.title}
-                </div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.45 }}>
-                  {h.desc}
+                {/* Feature Bullet Points */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '22px' }}>
+                  {tool.points.map((point, pIdx) => (
+                    <div
+                      key={pIdx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '9px',
+                        fontSize: '0.9rem',
+                        color: 'var(--text-muted)',
+                        lineHeight: 1.45,
+                      }}
+                    >
+                      <CheckCircle2
+                        size={17}
+                        color="#10b981"
+                        style={{ flexShrink: 0, marginTop: '2px' }}
+                      />
+                      <span>{point}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
+
+              {/* Card Action Button */}
+              <button
+                type="button"
+                onClick={() => handleToolClick(tool.id)}
+                className="tool-action-btn"
+              >
+                <span>{tool.buttonLabel}</span>
+                <ArrowRight size={17} />
+              </button>
             </div>
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        .neu-tool-card:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--neu-raised-glow) !important;
-        }
-        .neu-tool-card:hover .tool-card-cta {
-          background: var(--bg-surface-raised) !important;
-          box-shadow: var(--neu-raised-sm) !important;
-        }
-      `}</style>
     </section>
   );
 };
