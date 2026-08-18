@@ -244,7 +244,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
 
         {/* Right: Theme Toggler & Hamburger Menu Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          {/* Neumorphic Push Button Theme Toggle */}
+          {/* Neumorphic Orbital Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="btn-secondary"
@@ -253,6 +253,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
               height: '36px',
               padding: 0,
               borderRadius: '12px',
+              position: 'relative',
+              overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -260,25 +262,41 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
               background: 'var(--bg-surface)',
               border: '1px solid var(--border-subtle)',
               cursor: 'pointer',
-              transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
             }}
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             aria-label="Toggle Theme"
           >
+            {/* Sun Icon (Rotates & scales in Dark mode) */}
             <div
               style={{
-                transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                transform: isRotatingTheme ? 'rotate(360deg) scale(1.15)' : 'rotate(0deg) scale(1)',
+                position: 'absolute',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                transition: 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease',
+                transform: theme === 'dark' ? 'rotate(0deg) scale(1)' : 'rotate(90deg) scale(0)',
+                opacity: theme === 'dark' ? 1 : 0,
+                pointerEvents: 'none',
               }}
             >
-              {theme === 'dark' ? (
-                <Sun size={16} color="#fcaf45" />
-              ) : (
-                <Moon size={16} color="#833ab4" />
-              )}
+              <Sun size={16} color="#fcaf45" />
+            </div>
+
+            {/* Moon Icon (Rotates & scales in Light mode) */}
+            <div
+              style={{
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease',
+                transform: theme === 'light' ? 'rotate(0deg) scale(1)' : 'rotate(-90deg) scale(0)',
+                opacity: theme === 'light' ? 1 : 0,
+                pointerEvents: 'none',
+              }}
+            >
+              <Moon size={16} color="#833ab4" />
             </div>
           </button>
 
