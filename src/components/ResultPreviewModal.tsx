@@ -102,22 +102,19 @@ const CustomReelVideoPlayer: React.FC<{
       onClick={togglePlay}
       style={{
         position: 'relative',
-        backgroundColor: '#050608',
         borderRadius: '18px',
         overflow: 'hidden',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
-        maxWidth: isHorizontal ? '100%' : '320px',
-        maxHeight: isHorizontal ? '48vh' : '56vh',
-        aspectRatio: aspectRatio ? `${aspectRatio}` : 'auto',
+        width: 'fit-content',
+        maxWidth: '100%',
         margin: '0 auto',
-        boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
-        border: '1px solid var(--border-subtle)',
+        boxShadow: '0 10px 28px rgba(0, 0, 0, 0.35)',
+        border: '1.5px solid var(--border-subtle)',
         cursor: 'pointer',
         userSelect: 'none',
-        transition: 'aspect-ratio 0.25s ease, max-width 0.25s ease',
+        backgroundColor: '#000000',
       }}
     >
       <video
@@ -140,9 +137,13 @@ const CustomReelVideoPlayer: React.FC<{
           }
         }}
         style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
+          display: 'block',
+          width: 'auto',
+          maxWidth: '100%',
+          maxHeight: '52vh',
+          height: 'auto',
+          borderRadius: '16px',
+          objectFit: 'contain',
           pointerEvents: 'none',
         }}
       />
