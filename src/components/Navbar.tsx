@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
           }}
         />
 
-        {/* Left: Brand Logo + Digital Indicator */}
+        {/* Left: Brand Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <Link
             href="/"
@@ -129,28 +129,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType }) => {
           >
             <DownGramLogo size="md" />
           </Link>
-
-          {/* Digital Core Status Dot */}
-          <div
-            className="digital-status-chip"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px 10px',
-              borderRadius: '9999px',
-              background: 'var(--bg-surface-inset)',
-              boxShadow: 'var(--neu-inset-sm)',
-              border: '1px solid var(--border-subtle)',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--text-muted)',
-            }}
-          >
-            <span className="led-dot" />
-            <span>ONLINE</span>
-          </div>
         </div>
 
         {/* Center: Neumorphic Inset Navigation Pill Dock */}

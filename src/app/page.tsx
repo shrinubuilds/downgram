@@ -132,31 +132,15 @@ export default function HomePage() {
       <main style={{ flex: 1, padding: '36px 0 60px 0' }}>
         <div className="container">
           {/* Hero Section */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div
-              className="badge-pill pulse-glow"
-              style={{
-                marginBottom: '18px',
-                cursor: 'default',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 16px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.8rem',
-              }}
-            >
-              <span className="led-dot" />
-              <span>ONLINE // INSTAGRAM MEDIA DOWNLOADER</span>
-            </div>
-
+          {/* Hero Section */}
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 4vw, 32px)' }}>
             <h1
               style={{
-                fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
+                fontSize: 'clamp(1.85rem, 4.5vw, 3.4rem)',
                 fontWeight: 900,
                 letterSpacing: '-0.03em',
-                lineHeight: 1.15,
-                marginBottom: '16px',
+                lineHeight: 1.18,
+                marginBottom: '12px',
               }}
             >
               Download Instagram <span className="text-gradient">Reels, Videos,</span>
@@ -166,15 +150,15 @@ export default function HomePage() {
 
             <p
               style={{
-                fontSize: 'clamp(1rem, 2vw, 1.15rem)',
+                fontSize: 'clamp(0.92rem, 1.8vw, 1.1rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '700px',
-                margin: '0 auto 32px auto',
-                lineHeight: 1.6,
+                maxWidth: '680px',
+                margin: '0 auto clamp(18px, 3vw, 28px) auto',
+                lineHeight: 1.55,
                 fontWeight: 500,
               }}
             >
-              Easily save Instagram Reels, extract MP3 audio tracks, download multi-slide photo carousels as ZIP, and get full-resolution profile avatars in seconds.
+              Save Instagram Reels, extract MP3 audio, download full photo carousels as ZIP, and get profile pictures in original quality.
             </p>
           </div>
 

@@ -176,23 +176,32 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
           color: var(--text-main);
           box-shadow: var(--neu-raised-sm);
         }
-        @media (max-width: 768px) {
+        @media (max-width: 680px) {
           .tools-neu-plate {
-            grid-template-columns: repeat(3, 1fr) !important;
+            display: flex !important;
+            overflow-x: auto !important;
+            flex-wrap: nowrap !important;
+            padding: 6px !important;
+            gap: 6px !important;
+            border-radius: 18px !important;
+            scrollbar-width: none !important;
+            -webkit-overflow-scrolling: touch !important;
           }
-        }
-        @media (max-width: 520px) {
-          .tools-neu-plate {
-            grid-template-columns: repeat(2, 1fr) !important;
+          .tools-neu-plate::-webkit-scrollbar {
+            display: none !important;
           }
           .neu-tab-btn {
-            padding: 10px 8px !important;
+            flex: 1 0 auto !important;
+            min-width: 96px !important;
+            padding: 10px 14px !important;
             font-size: 0.86rem !important;
+            border-radius: 13px !important;
           }
           .tool-readout-banner {
-            font-size: 0.8rem !important;
+            font-size: 0.78rem !important;
+            padding: 8px 12px !important;
             flex-direction: column !important;
-            gap: 4px !important;
+            gap: 3px !important;
           }
         }
       `}</style>
