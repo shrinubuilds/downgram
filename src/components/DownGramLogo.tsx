@@ -181,34 +181,19 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
       </div>
 
       {/* Brand Typography */}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            style={{
-              fontSize,
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              background: 'var(--ig-primary-gradient)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              display: 'inline-block',
-            }}
-          >
-            DownGram
-          </span>
-        </div>
-
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <span
           style={{
-            fontSize: '0.66rem',
-            color: 'var(--text-dim)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            fontWeight: 700,
-            marginTop: '-2px',
+            fontSize,
+            fontWeight: 900,
+            letterSpacing: '-0.03em',
+            background: 'var(--ig-primary-gradient)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            display: 'inline-block',
           }}
         >
-          Instagram Downloader
+          DownGram
         </span>
       </div>
     </div>
