@@ -22,102 +22,102 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onSelectType }
   const tools = [
     {
       id: 'reel' as MediaType,
-      title: '4K Reels Video Downloader',
-      subtitle: 'Ultra HD MP4 Video Streams',
-      badge: '4K Ultra HD',
+      title: 'Reels & Video Downloader',
+      subtitle: 'Original MP4 Video Streams',
+      badge: 'MP4 Video',
       icon: <Film size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #f09433 0%, #dc2743 100%)',
       glowColor: 'rgba(220, 39, 67, 0.35)',
       badgeBg: 'rgba(220, 39, 67, 0.12)',
       badgeColor: '#dc2743',
       points: [
-        'Zero compression, preserves authentic 1080p / 4K fidelity',
-        'Completely watermark-free with original 60fps bitrate',
+        'Downloads original video files directly from Instagram servers',
+        'Completely watermark-free with full visual fidelity',
         'Includes embedded sound and synchronized audio',
       ],
       buttonLabel: 'Launch Reels Downloader',
     },
     {
       id: 'audio' as MediaType,
-      title: 'Lossless MP3 Audio Extractor',
-      subtitle: 'Rip Background Music & Sounds',
-      badge: '320kbps MP3',
+      title: 'MP3 Audio Extractor',
+      subtitle: 'Extract Background Music & Sounds',
+      badge: 'MP3 Audio',
       icon: <Music size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #fcaf45 0%, #f77737 100%)',
       glowColor: 'rgba(252, 175, 69, 0.35)',
       badgeBg: 'rgba(247, 119, 55, 0.12)',
       badgeColor: '#ea580c',
       points: [
-        'Extract viral background audio & songs from any Reel or Post',
-        'Built-in audio player with waveform preview before download',
-        'High-bitrate stereo MP3 file conversion',
+        'Extract background audio and songs from any Reel or Post',
+        'Built-in audio player with preview before download',
+        'Clean, compatible MP3 audio file export',
       ],
       buttonLabel: 'Launch Audio Extractor',
     },
     {
       id: 'post' as MediaType,
-      title: 'Multi-Slide Carousel & Photo Downloader',
-      subtitle: 'Batch Album & ZIP Archiver',
-      badge: 'Multi-Slide ZIP',
+      title: 'Photo & Carousel Downloader',
+      subtitle: 'Single Photos & ZIP Album Export',
+      badge: 'Photos & ZIP',
       icon: <Layers size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #833ab4 0%, #c13584 100%)',
       glowColor: 'rgba(131, 58, 180, 0.35)',
       badgeBg: 'rgba(131, 58, 180, 0.12)',
       badgeColor: '#833ab4',
       points: [
-        'Download all photos & videos in multi-slide carousels at once',
-        '1-click ZIP package download for entire album collections',
-        'Preserves full HDR resolution and original color gamut',
+        'Download single photos or full multi-slide carousel posts',
+        '1-click ZIP package download for entire post collections',
+        'Preserves original image dimensions and color quality',
       ],
-      buttonLabel: 'Launch Carousel Downloader',
+      buttonLabel: 'Launch Photos Downloader',
     },
     {
       id: 'profile' as MediaType,
-      title: 'Full HD Profile DP & Bio Inspector',
-      subtitle: 'Full-Resolution Avatar Zoom',
-      badge: 'Full HD Avatar',
+      title: 'Profile Picture & Bio Viewer',
+      subtitle: 'Original Avatar Zoom',
+      badge: 'Profile DP',
       icon: <UserCheck size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #0095f6 0%, #10b981 100%)',
       glowColor: 'rgba(0, 149, 246, 0.35)',
       badgeBg: 'rgba(0, 149, 246, 0.12)',
       badgeColor: '#0284c7',
       points: [
-        'Inspect, zoom in, and download full-size original profile avatars',
-        'Extract verified badges, bio text, and follower count statistics',
-        'Works for both creators and brand public profiles',
+        'Inspect, zoom in, and download original profile pictures',
+        'Extract bio text, public stats, and follower count',
+        'Works for public creators, individuals, and brand accounts',
       ],
-      buttonLabel: 'Launch Profile DP Tool',
+      buttonLabel: 'Launch Profile Tool',
     },
     {
       id: 'video' as MediaType,
-      title: 'Feed & IGTV Video Downloader',
-      subtitle: 'High-Bitrate Long-Form Video',
-      badge: '1080p HD',
+      title: 'Feed Video Downloader',
+      subtitle: 'Standard MP4 Video Files',
+      badge: 'Feed Video',
       icon: <Video size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #0284c7 0%, #2563eb 100%)',
       glowColor: 'rgba(2, 132, 199, 0.35)',
       badgeBg: 'rgba(2, 132, 199, 0.12)',
       badgeColor: '#0369a1',
       points: [
-        'Download full-length feed videos, long clips, and broadcasts',
-        'Direct connection to high-speed CDN delivery servers',
-        'Universal MP4 compatibility on all mobile & desktop devices',
+        'Download regular feed videos and long clips',
+        'Direct download with fast connection speeds',
+        'Universal MP4 compatibility on mobile, tablet & desktop',
       ],
       buttonLabel: 'Launch Video Downloader',
     },
     {
       id: 'caption' as MediaType,
       title: 'Caption, Hashtags & Bio Formatter',
-      subtitle: 'Metadata & Text Extraction',
-      badge: 'Text & Tags',
+      subtitle: 'Text & Metadata Extraction',
+      badge: 'Captions & Tags',
       icon: <FileText size={26} color="#ffffff" />,
       iconBg: 'linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%)',
       glowColor: 'rgba(255, 65, 108, 0.35)',
       badgeBg: 'rgba(255, 65, 108, 0.12)',
       badgeColor: '#e11d48',
       points: [
-        'Preserves emojis, precise line breaks, and caption formatting',
-        'Interactive hashtag cloud analysis for creator research',
+        'Preserves emojis, precise line breaks, and formatting',
+        'Hashtag analysis for creator and research use',
         '1-click export to clipboard or formatted .TXT file',
       ],
       buttonLabel: 'Launch Caption Tool',
@@ -146,7 +146,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onSelectType }
             className="badge-pill"
             style={{ marginBottom: '14px', cursor: 'default' }}
           >
-            <Sparkles size={14} /> DownGram Power Suite
+            <Sparkles size={14} /> DownGram Tools
           </div>
 
           <h2
@@ -157,7 +157,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onSelectType }
               marginBottom: '16px',
             }}
           >
-            Engineered For Every <span className="text-gradient">Instagram Format</span>
+            Built for Every <span className="text-gradient">Instagram Format</span>
           </h2>
 
           <p
@@ -169,7 +169,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ onSelectType }
               lineHeight: 1.6,
             }}
           >
-            Choose from specialized extraction tools built for uncompressed 4K video, high-bitrate MP3 audio, full multi-image carousels, and HD avatars.
+            Choose from specialized tools for downloading Instagram videos, extracting MP3 audio, saving photo carousels, and getting profile pictures.
           </p>
         </div>
 

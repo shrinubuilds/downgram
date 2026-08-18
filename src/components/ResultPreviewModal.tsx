@@ -818,7 +818,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               }}
             >
               <Download size={19} />
-              <span>Download HD Reel (MP4)</span>
+              <span>Download Reel (MP4)</span>
             </button>
           )}
 
@@ -854,7 +854,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               }}
             >
               <Download size={19} />
-              <span>Download Full HD DP (JPG)</span>
+              <span>Download Profile Picture (JPG)</span>
             </button>
           )}
 
@@ -874,7 +874,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               >
                 <Download size={19} />
                 <span>
-                  Download {isCarousel ? `Photo ${currentSlideIndex + 1} (JPG)` : 'HD Photo (JPG)'}
+                  Download {isCarousel ? `Photo ${currentSlideIndex + 1} (JPG)` : 'Photo (JPG)'}
                 </span>
               </button>
 

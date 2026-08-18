@@ -353,7 +353,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             >
               <Download size={20} />
               <span>
-                Download HD {selectedType === 'reel' ? 'Reel' : 'Video'} (MP4)
+                Download {selectedType === 'reel' ? 'Reel' : 'Video'} (MP4)
               </span>
             </button>
           </div>
@@ -402,7 +402,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '20px' }}>
             <UserCheck size={22} color="#10b981" />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              Profile HD Avatar
+              Profile Picture
             </h3>
           </div>
 
@@ -466,7 +466,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               style={{ width: '100%', maxWidth: '380px', height: '52px', fontSize: '1.05rem', fontWeight: 700 }}
             >
               <Download size={20} />
-              <span>Download Full HD DP (JPG)</span>
+              <span>Download Profile Picture (JPG)</span>
             </button>
           </div>
         </div>
@@ -607,7 +607,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             >
               <Download size={20} />
               <span>
-                Download {isCarousel ? `Slide ${currentSlideIndex + 1} (JPG)` : 'HD Photo (JPG)'}
+                Download {isCarousel ? `Slide ${currentSlideIndex + 1} (JPG)` : 'Photo (JPG)'}
               </span>
             </button>
 

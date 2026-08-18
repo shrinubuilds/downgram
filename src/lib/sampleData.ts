@@ -7,13 +7,13 @@ export const sampleInstagramData: Record<string, InstagramScrapeResult> = {
     url: 'https://www.instagram.com/reel/C3zZ9XYZ123/',
     shortcode: 'C3zZ9XYZ123',
     title: 'Neon Nights in Tokyo 🗼✨ Cinematic Reel',
-    caption: `Tokyo midnight aesthetic! 🗼✨ Shooting through Shinjuku neon alleys in 4K 60fps. Which frame is your favorite? 
+    caption: `Tokyo midnight aesthetic! 🗼✨ Shooting through Shinjuku neon alleys. Which frame is your favorite? 
 
 Drop your thoughts in comments 👇
 .
 .
 #tokyo #japan #cyberpunk #neonvibes #streetphotography #cinematic #reelsviral #filmmaking #traveljapan #nightlights`,
-    captionFormatted: `Tokyo midnight aesthetic! 🗼✨ Shooting through Shinjuku neon alleys in 4K 60fps. Which frame is your favorite? \n\nDrop your thoughts in comments 👇\n.\n.\n#tokyo #japan #cyberpunk #neonvibes #streetphotography #cinematic #reelsviral #filmmaking #traveljapan #nightlights`,
+    captionFormatted: `Tokyo midnight aesthetic! 🗼✨ Shooting through Shinjuku neon alleys. Which frame is your favorite? \n\nDrop your thoughts in comments 👇\n.\n.\n#tokyo #japan #cyberpunk #neonvibes #streetphotography #cinematic #reelsviral #filmmaking #traveljapan #nightlights`,
     hashtags: ['#tokyo', '#japan', '#cyberpunk', '#neonvibes', '#streetphotography', '#cinematic', '#reelsviral', '#filmmaking', '#traveljapan', '#nightlights'],
     mentions: ['@tokyocameraclub', '@shinjukucity'],
     author: {
@@ -123,7 +123,7 @@ Color graded with Alpine Moody LUTs (link in bio)
     success: true,
     mediaType: 'profile',
     url: 'https://www.instagram.com/designgenius/',
-    title: 'Design Genius (@designgenius) - Instagram Profile & HD DP',
+    title: 'Design Genius (@designgenius) - Instagram Profile & Picture',
     author: {
       username: 'designgenius',
       fullName: 'Design Genius Studio ✨',
