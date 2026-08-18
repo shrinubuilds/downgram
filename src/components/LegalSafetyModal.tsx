@@ -339,44 +339,26 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             </div>
           </div>
 
-          {/* Desktop Close Icon / Mobile Full-screen Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="btn-secondary mobile-expand-btn"
-              style={{
-                padding: '5px 10px',
-                borderRadius: '10px',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                boxShadow: 'var(--neu-btn)',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-              }}
-            >
-              {isExpanded ? 'Collapse' : 'Expand'}
-            </button>
-
-            <button
-              onClick={onClose}
-              className="btn-secondary desktop-close-btn"
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 0,
-                boxShadow: 'var(--neu-btn)',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-              }}
-              title="Close"
-            >
-              <X size={16} />
-            </button>
-          </div>
+          {/* Desktop Close Icon */}
+          <button
+            onClick={onClose}
+            className="btn-secondary desktop-close-btn"
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 0,
+              boxShadow: 'var(--neu-btn)',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+            }}
+            title="Close"
+          >
+            <X size={16} />
+          </button>
         </div>
 
         {/* Scrollable Document Content */}
