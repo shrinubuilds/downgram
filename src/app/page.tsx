@@ -132,32 +132,34 @@ export default function HomePage() {
       <main style={{ flex: 1, padding: 'clamp(14px, 3vw, 32px) 0 50px 0' }}>
         <div className="container">
           {/* Hero Section */}
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2.5vw, 24px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2.5vw, 22px)' }}>
             <h1
               style={{
-                fontSize: 'clamp(1.35rem, 4vw, 2.85rem)',
+                fontSize: 'clamp(1.28rem, 3.8vw, 2.75rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
-                lineHeight: 1.22,
+                lineHeight: 1.25,
                 marginBottom: '8px',
+                maxWidth: '680px',
+                margin: '0 auto 8px auto',
+                textWrap: 'balance',
               }}
             >
-              Download Instagram <span className="text-gradient">Reels, Videos,</span>
-              <br />
-              <span className="text-gradient-purple">Photos, Audio & Profile DP</span>
+              Download Instagram <span className="text-gradient">Reels, Videos,</span> <span className="text-gradient-purple">Photos, Audio & DP</span>
             </h1>
 
             <p
               style={{
-                fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)',
+                fontSize: 'clamp(0.8rem, 1.8vw, 0.95rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '580px',
+                maxWidth: '520px',
                 margin: '0 auto clamp(12px, 2vw, 20px) auto',
-                lineHeight: 1.48,
+                lineHeight: 1.5,
                 fontWeight: 500,
+                textWrap: 'balance',
               }}
             >
-              Save Instagram Reels, extract MP3 audio, download full photo carousels as ZIP, and get profile pictures in original quality.
+              Save Instagram Reels, extract MP3 audio, download photo carousels as ZIP, and get profile avatars in seconds.
             </p>
           </div>
 

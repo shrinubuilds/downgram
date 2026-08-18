@@ -180,13 +180,16 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
         </svg>
       </div>
 
-      {/* Brand Typography */}
+      {/* Animated Brand Typography */}
       <span
+        className="brand-animated-name"
         style={{
           fontSize,
           fontWeight: 900,
           letterSpacing: '-0.03em',
-          background: 'var(--ig-primary-gradient)',
+          background: 'linear-gradient(120deg, #f09433, #dc2743, #bc1888, #833ab4, #0095f6, #f09433)',
+          backgroundSize: '250% 250%',
+          animation: 'brandGradientMove 4s ease infinite',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           display: 'inline-block',
@@ -195,6 +198,20 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
       >
         DownGram
       </span>
+
+      <style jsx>{`
+        @keyframes brandGradientMove {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 };
