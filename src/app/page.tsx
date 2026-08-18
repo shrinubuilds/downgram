@@ -129,17 +129,17 @@ export default function HomePage() {
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
-      <main style={{ flex: 1, padding: '36px 0 60px 0' }}>
+      <main style={{ flex: 1, padding: 'clamp(14px, 3vw, 32px) 0 50px 0' }}>
         <div className="container">
           {/* Hero Section */}
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(16px, 3.5vw, 26px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2.5vw, 24px)' }}>
             <h1
               style={{
-                fontSize: 'clamp(1.3rem, 3.2vw, 2.35rem)',
+                fontSize: 'clamp(1.35rem, 4vw, 2.85rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
-                lineHeight: 1.24,
-                marginBottom: '10px',
+                lineHeight: 1.22,
+                marginBottom: '8px',
               }}
             >
               Download Instagram <span className="text-gradient">Reels, Videos,</span>
@@ -149,11 +149,11 @@ export default function HomePage() {
 
             <p
               style={{
-                fontSize: 'clamp(0.82rem, 1.4vw, 0.95rem)',
+                fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '600px',
-                margin: '0 auto clamp(14px, 2.5vw, 22px) auto',
-                lineHeight: 1.5,
+                maxWidth: '580px',
+                margin: '0 auto clamp(12px, 2vw, 20px) auto',
+                lineHeight: 1.48,
                 fontWeight: 500,
               }}
             >
@@ -181,28 +181,28 @@ export default function HomePage() {
               alignItems: 'center',
               justifyContent: 'center',
               flexWrap: 'wrap',
-              gap: '12px',
-              marginTop: '36px',
+              gap: '8px',
+              marginTop: '24px',
             }}
           >
             {[
-              { icon: <CheckCircle2 size={16} color="#10b981" />, text: 'No Watermarks' },
-              { icon: <Zap size={16} color="#fcaf45" />, text: 'Fast Downloads' },
-              { icon: <Music2 size={16} color="#e1306c" />, text: 'MP3 Audio Extraction' },
-              { icon: <Shield size={16} color="#06b6d4" />, text: '100% Free & Anonymous' },
+              { icon: <CheckCircle2 size={14} color="#10b981" />, text: 'No Watermarks' },
+              { icon: <Zap size={14} color="#fcaf45" />, text: 'Fast Downloads' },
+              { icon: <Music2 size={14} color="#e1306c" />, text: 'MP3 Extraction' },
+              { icon: <Shield size={14} color="#06b6d4" />, text: '100% Free & Safe' },
             ].map((item, idx) => (
               <div
                 key={idx}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
-                  borderRadius: '14px',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '12px',
                   background: 'var(--bg-surface)',
                   boxShadow: 'var(--neu-btn)',
                   border: '1px solid var(--border-subtle)',
-                  fontSize: '0.84rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   color: 'var(--text-main)',
                 }}
