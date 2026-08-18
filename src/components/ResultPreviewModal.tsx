@@ -251,14 +251,14 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             backgroundColor: 'var(--bg-surface)',
           }}
         >
-          {/* Left: Badge */}
+          {/* Left: Badge Pill */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
               padding: '6px 14px',
-              borderRadius: '10px',
+              borderRadius: '12px',
               backgroundColor: 'var(--bg-surface-inset)',
               boxShadow: 'var(--neu-inset-sm)',
               border: '1px solid var(--border-subtle)',
@@ -266,7 +266,6 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               fontSize: '0.84rem',
               fontWeight: 800,
               fontFamily: 'var(--font-mono)',
-              flexShrink: 0,
             }}
           >
             {headerBadge.icon}
@@ -309,7 +308,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             gap: '14px',
           }}
         >
-          {/* 1. REEL ONLY PREVIEW (Clean 9:16 Video Player Only) */}
+          {/* 1. REEL ONLY PREVIEW (Clean 9:16 Video Player with No Browser Extra Menus) */}
           {selectedType === 'reel' && (
             <div
               style={{
@@ -334,6 +333,9 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
                   poster={currentItem.thumbnailUrl}
                   controls
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  disablePictureInPicture
+                  disableRemotePlayback
                   autoPlay
                   playsInline
                   preload="metadata"

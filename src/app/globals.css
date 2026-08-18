@@ -139,23 +139,12 @@ a {
   text-decoration: none;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-full);
-}
-
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
+/* Clean Video Player - Suppress native browser download / PiP / extra menu buttons */
+video::-internal-media-controls-download-button,
+video::-webkit-media-controls-fullscreen-button,
+video::-webkit-media-controls-overflow-button,
+video::-webkit-media-controls-picture-in-picture-button {
+  display: none !important;
 }
 
 /* Gradient Text Helper */
