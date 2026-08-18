@@ -129,19 +129,19 @@ export default function HomePage() {
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
-      <main style={{ flex: 1, padding: 'clamp(32px, 6vw, 64px) 0 60px 0' }}>
-        <div className="container">
+      <main style={{ flex: 1, paddingTop: 'clamp(56px, 10vw, 84px)', paddingBottom: '60px' }}>
+        <div className="container" style={{ minHeight: '65vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           {/* Hero Section */}
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2.5vw, 22px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 3.5vw, 32px)' }}>
             <h1
               style={{
-                fontSize: 'clamp(1.28rem, 3.8vw, 2.75rem)',
+                fontSize: 'clamp(1.35rem, 4vw, 2.85rem)',
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
                 lineHeight: 1.25,
-                marginBottom: '8px',
+                marginBottom: '12px',
                 maxWidth: '680px',
-                margin: '0 auto 8px auto',
+                margin: '0 auto 12px auto',
                 textWrap: 'balance',
               }}
             >
@@ -150,11 +150,11 @@ export default function HomePage() {
 
             <p
               style={{
-                fontSize: 'clamp(0.8rem, 1.8vw, 0.95rem)',
+                fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '520px',
-                margin: '0 auto clamp(12px, 2vw, 20px) auto',
-                lineHeight: 1.5,
+                maxWidth: '540px',
+                margin: '0 auto clamp(16px, 2.5vw, 24px) auto',
+                lineHeight: 1.52,
                 fontWeight: 500,
                 textWrap: 'balance',
               }}
@@ -184,7 +184,8 @@ export default function HomePage() {
               justifyContent: 'center',
               flexWrap: 'wrap',
               gap: '8px',
-              marginTop: '24px',
+              marginTop: 'clamp(24px, 4vw, 36px)',
+              marginBottom: 'clamp(20px, 4vw, 40px)',
             }}
           >
             {[
