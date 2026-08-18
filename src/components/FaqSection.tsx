@@ -89,23 +89,24 @@ export const FaqSection: React.FC = () => {
     : faqs.filter((f) => f.category === activeCategory);
 
   return (
-    <section id="faq" style={{ margin: '80px 0 100px 0' }}>
+    <section id="faq" style={{ margin: 'clamp(40px, 6vw, 80px) 0 clamp(60px, 8vw, 100px) 0' }}>
       <div className="container-narrow">
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 3.5vw, 32px)' }}>
           <div
             className="badge-pill"
-            style={{ marginBottom: '14px', cursor: 'default' }}
+            style={{ marginBottom: '10px', cursor: 'default' }}
           >
-            <HelpCircle size={14} /> Comprehensive FAQ
+            <HelpCircle size={13} /> Common Questions
           </div>
           <h2
             style={{
-              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
-              fontWeight: 900,
+              fontSize: 'clamp(1.35rem, 3.8vw, 2.3rem)',
+              fontWeight: 800,
               letterSpacing: '-0.02em',
-              marginBottom: '14px',
+              marginBottom: '8px',
               color: 'var(--text-main)',
+              textWrap: 'balance',
             }}
           >
             Got Questions? We’ve Got <span className="text-gradient">Answers</span>
@@ -113,13 +114,14 @@ export const FaqSection: React.FC = () => {
           <p
             style={{
               color: 'var(--text-muted)',
-              fontSize: '1.05rem',
-              maxWidth: '560px',
+              fontSize: 'clamp(0.82rem, 1.8vw, 0.96rem)',
+              maxWidth: '520px',
               margin: '0 auto',
-              lineHeight: 1.6,
+              lineHeight: 1.5,
+              textWrap: 'balance',
             }}
           >
-            Find instant clarity on resolutions, audio ripping, batch carousel downloads, and privacy safeguards.
+            Find instant clarity on downloads, audio extraction, album ZIP exports, and safety.
           </p>
         </div>
 
@@ -130,8 +132,8 @@ export const FaqSection: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             flexWrap: 'wrap',
-            gap: '8px',
-            marginBottom: '32px',
+            gap: '6px',
+            marginBottom: '24px',
           }}
         >
           {categories.map((cat) => {
@@ -145,13 +147,13 @@ export const FaqSection: React.FC = () => {
                 }}
                 className={`btn-secondary ${isCatActive ? 'active' : ''}`}
                 style={{
-                  padding: '8px 18px',
-                  borderRadius: '14px',
-                  fontSize: '0.84rem',
-                  fontWeight: 800,
+                  padding: '6px 14px',
+                  borderRadius: '12px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
+                  gap: '5px',
                   border: isCatActive ? '1px solid rgba(225, 48, 108, 0.4)' : '1px solid var(--border-subtle)',
                   background: isCatActive ? 'var(--bg-surface-raised)' : 'var(--bg-surface)',
                   boxShadow: isCatActive ? 'var(--neu-pill-active)' : 'var(--neu-btn)',
@@ -166,7 +168,7 @@ export const FaqSection: React.FC = () => {
         </div>
 
         {/* FAQ Accordion List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {filteredFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
@@ -174,7 +176,7 @@ export const FaqSection: React.FC = () => {
                 key={idx}
                 className="neu-panel"
                 style={{
-                  borderRadius: '18px',
+                  borderRadius: '16px',
                   overflow: 'hidden',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   border: isOpen ? '1px solid rgba(225, 48, 108, 0.4)' : '1px solid var(--border-subtle)',
@@ -186,29 +188,29 @@ export const FaqSection: React.FC = () => {
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
                   style={{
                     width: '100%',
-                    padding: '20px 24px',
+                    padding: '14px 18px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '16px',
+                    gap: '12px',
                     background: 'transparent',
                     border: 'none',
                     color: 'var(--text-main)',
-                    fontSize: '1.05rem',
+                    fontSize: '0.92rem',
                     fontWeight: 700,
                     textAlign: 'left',
                     cursor: 'pointer',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <span>{faq.q}</span>
                     <span
                       className="tech-mono-tag"
                       style={{
-                        fontSize: '0.68rem',
+                        fontSize: '0.64rem',
                         fontWeight: 800,
-                        padding: '3px 8px',
-                        borderRadius: '6px',
+                        padding: '2px 7px',
+                        borderRadius: '5px',
                         background: 'var(--bg-surface-inset)',
                         boxShadow: 'var(--neu-inset-sm)',
                         border: `1px solid ${faq.badgeColor}`,
@@ -229,19 +231,19 @@ export const FaqSection: React.FC = () => {
                       flexShrink: 0,
                     }}
                   >
-                    <ChevronDown size={20} />
+                    <ChevronDown size={17} />
                   </div>
                 </button>
 
                 {isOpen && (
                   <div
                     style={{
-                      padding: '0 24px 22px 24px',
-                      fontSize: '0.95rem',
+                      padding: '0 18px 16px 18px',
+                      fontSize: '0.86rem',
                       color: 'var(--text-muted)',
-                      lineHeight: '1.7',
+                      lineHeight: '1.6',
                       borderTop: '1px solid var(--border-subtle)',
-                      paddingTop: '16px',
+                      paddingTop: '12px',
                       animation: 'fadeIn 0.2s ease-in-out',
                     }}
                   >

@@ -177,23 +177,24 @@ export const HowToGuide: React.FC = () => {
   ];
 
   return (
-    <section id="how-to" style={{ margin: '80px 0' }}>
+    <section id="how-to" style={{ margin: 'clamp(40px, 6vw, 70px) 0' }}>
       <div className="container">
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(24px, 4vw, 40px)' }}>
           <div
             className="badge-pill"
-            style={{ marginBottom: '14px', cursor: 'default' }}
+            style={{ marginBottom: '10px', cursor: 'default' }}
           >
-            <Sparkles size={14} /> Ultra Fast Workflow
+            <Sparkles size={13} /> Fast 3-Step Guide
           </div>
           <h2
             style={{
-              fontSize: 'clamp(1.9rem, 4vw, 2.6rem)',
-              fontWeight: 900,
+              fontSize: 'clamp(1.35rem, 3.8vw, 2.3rem)',
+              fontWeight: 800,
               letterSpacing: '-0.02em',
-              marginBottom: '14px',
+              marginBottom: '8px',
               color: 'var(--text-main)',
+              textWrap: 'balance',
             }}
           >
             How to Download from <span className="text-gradient">Instagram</span>
@@ -201,13 +202,14 @@ export const HowToGuide: React.FC = () => {
           <p
             style={{
               color: 'var(--text-muted)',
-              fontSize: '1.05rem',
-              maxWidth: '580px',
+              fontSize: 'clamp(0.82rem, 1.8vw, 0.96rem)',
+              maxWidth: '520px',
               margin: '0 auto',
-              lineHeight: 1.6,
+              lineHeight: 1.5,
+              textWrap: 'balance',
             }}
           >
-            Extract any public Instagram video, audio track, album, or avatar in three simple steps.
+            Save any public Instagram video, audio track, album, or avatar in three easy steps.
           </p>
         </div>
 
@@ -215,8 +217,8 @@ export const HowToGuide: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '24px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '16px',
             position: 'relative',
           }}
         >
@@ -224,6 +226,9 @@ export const HowToGuide: React.FC = () => {
             <div
               key={idx}
               className="how-to-card"
+              style={{
+                padding: 'clamp(16px, 3vw, 24px)',
+              }}
             >
               {/* Card Top Header */}
               <div>
