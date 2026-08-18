@@ -6,7 +6,6 @@ import {
   Lock,
   AlertTriangle,
   Shield,
-  CheckCircle2,
   X,
 } from 'lucide-react';
 
@@ -23,7 +22,6 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
   initialTab = 'terms',
   onClose,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const touchStartY = useRef(0);
@@ -39,7 +37,6 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
       document.documentElement.style.overflow = 'hidden';
       document.body.style.touchAction = 'none';
 
-      setIsExpanded(false);
       setDragOffset(0);
 
       return () => {
@@ -63,7 +60,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Touch Drag Gestures for Mobile (Swipe Down to Close, Swipe Up to Expand)
+  // Touch Drag Gestures for Mobile (Swipe Down to Dismiss)
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
     setIsDragging(true);
@@ -72,11 +69,8 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
     const deltaY = e.touches[0].clientY - touchStartY.current;
-    
     if (deltaY > 0) {
       setDragOffset(deltaY);
-    } else if (deltaY < -20 && !isExpanded) {
-      setDragOffset(deltaY * 0.4);
     }
   };
 
@@ -84,14 +78,8 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
     if (!isDragging) return;
     setIsDragging(false);
 
-    if (dragOffset > 80) {
+    if (dragOffset > 75) {
       onClose();
-    } else if (dragOffset < -40 && !isExpanded) {
-      setIsExpanded(true);
-      setDragOffset(0);
-    } else if (dragOffset > 40 && isExpanded) {
-      setIsExpanded(false);
-      setDragOffset(0);
     } else {
       setDragOffset(0);
     }
@@ -222,8 +210,12 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 1000,
-        backgroundColor: 'rgba(0, 0, 0, 0.65)',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 99999,
+        backgroundColor: 'rgba(0, 0, 0, 0.68)',
         backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'flex-end',
@@ -239,8 +231,8 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
         style={{
           width: '100%',
           maxWidth: '680px',
-          height: isExpanded ? '92vh' : '62vh',
-          maxHeight: '92vh',
+          height: '75vh',
+          maxHeight: '85vh',
           backgroundColor: 'var(--bg-surface)',
           borderTopLeftRadius: '26px',
           borderTopRightRadius: '26px',
@@ -251,10 +243,10 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
           overflow: 'hidden',
           overscrollBehavior: 'contain',
           transform: `translateY(${Math.max(0, dragOffset)}px)`,
-          transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        {/* Minimal Clean Pull Handle Pill for Mobile */}
+        {/* Clean Top Drag Pill for Mobile */}
         <div
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -339,10 +331,10 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             </div>
           </div>
 
-          {/* Desktop Close Icon */}
+          {/* Close Icon Button */}
           <button
             onClick={onClose}
-            className="btn-secondary desktop-close-btn"
+            className="btn-secondary"
             style={{
               width: '32px',
               height: '32px',
@@ -385,26 +377,23 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             backgroundColor: 'var(--bg-surface-inset)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
+            justifyContent: 'flex-end',
             gap: '10px',
             flexShrink: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', color: '#10b981', fontWeight: 700 }}>
-            <CheckCircle2 size={13} />
-            <span>DownGram Verified Document</span>
-          </div>
-
           <button
             onClick={onClose}
             className="btn-primary"
             style={{
-              padding: '7px 20px',
+              padding: '8px 24px',
               fontSize: '0.84rem',
               fontWeight: 800,
               borderRadius: '12px',
               cursor: 'pointer',
+              width: '100%',
+              maxWidth: '180px',
+              textAlign: 'center',
             }}
           >
             I Understand
@@ -421,16 +410,8 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             opacity: 1;
           }
         }
-        @media (max-width: 767px) {
-          .desktop-close-btn {
-            display: none !important;
-          }
-        }
         @media (min-width: 768px) {
           .mobile-pull-handle {
-            display: none !important;
-          }
-          .mobile-expand-btn {
             display: none !important;
           }
           .legal-modal-backdrop {
