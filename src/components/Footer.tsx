@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
                   border: '1px solid rgba(16, 185, 129, 0.25)',
                 }}
               >
-                <Activity size={12} /> LIVE // ONLINE
+                <Activity size={12} /> OPERATIONAL
               </span>
 
               <span
