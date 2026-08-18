@@ -249,111 +249,110 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             padding: '14px 18px',
             borderBottom: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface)',
-            gap: '12px',
+            gap: '8px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
-            {/* Tool Badge */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                borderRadius: '12px',
-                backgroundColor: 'var(--bg-surface-inset)',
-                boxShadow: 'var(--neu-inset-sm)',
-                border: '1px solid var(--border-subtle)',
-                color: headerBadge.color,
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                fontFamily: 'var(--font-mono)',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-              }}
-            >
-              {headerBadge.icon}
-              <span>{headerBadge.label}</span>
-            </div>
-
-            {/* Author Link */}
-            {data.author?.username && (
-              <a
-                href={`https://instagram.com/${data.author.username}`}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  fontSize: '0.86rem',
-                  fontWeight: 700,
-                  color: 'var(--text-muted)',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>@{data.author.username}</span>
-                <ExternalLink size={12} color="var(--text-dim)" style={{ flexShrink: 0 }} />
-              </a>
-            )}
+          {/* Left: Badge */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '10px',
+              backgroundColor: 'var(--bg-surface-inset)',
+              boxShadow: 'var(--neu-inset-sm)',
+              border: '1px solid var(--border-subtle)',
+              color: headerBadge.color,
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              fontFamily: 'var(--font-mono)',
+              flexShrink: 0,
+            }}
+          >
+            {headerBadge.icon}
+            <span>{headerBadge.label}</span>
           </div>
 
-          {/* Close Button (X) */}
+          {/* Center: Author Username */}
+          {data.author?.username && (
+            <a
+              href={`https://instagram.com/${data.author.username}`}
+              target="_blank"
+              rel="noreferrer"
+              style={{
+                fontSize: '0.86rem',
+                fontWeight: 700,
+                color: 'var(--text-muted)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                maxWidth: '150px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              @{data.author.username}
+              <ExternalLink size={11} color="var(--text-dim)" style={{ flexShrink: 0 }} />
+            </a>
+          )}
+
+          {/* Right: Neumorphic Circular Close Button */}
           <button
             onClick={onClose}
-            className="btn-secondary"
             style={{
-              width: '36px',
-              height: '36px',
-              minWidth: '36px',
-              borderRadius: '12px',
-              padding: 0,
+              width: '34px',
+              height: '34px',
+              minWidth: '34px',
+              borderRadius: '50%',
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: 'var(--neu-btn)',
+              color: 'var(--text-muted)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              boxShadow: 'var(--neu-btn)',
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border-subtle)',
-              color: 'var(--text-muted)',
               flexShrink: 0,
               transition: 'all 0.2s ease',
             }}
             title="Close Preview (Esc)"
-            aria-label="Close"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Modal Body - Strictly Tailored By User's Selected Tool */}
         <div
           style={{
-            padding: '20px',
+            padding: '16px',
             overflowY: 'auto',
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            gap: '16px',
+            gap: '14px',
           }}
         >
-          {/* 1. REEL ONLY PREVIEW (Clean Video Player Only - No Captions/Extra Clutter) */}
+          {/* 1. REEL ONLY PREVIEW (Clean 9:16 Video Player Only) */}
           {selectedType === 'reel' && (
             <div
               style={{
                 position: 'relative',
-                backgroundColor: '#000000',
+                backgroundColor: '#050608',
                 borderRadius: 'var(--radius-lg)',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '360px',
-                maxHeight: '520px',
-                boxShadow: 'inset 0 0 24px rgba(0,0,0,0.9)',
+                width: '100%',
+                maxWidth: '320px',
+                maxHeight: '54vh',
+                aspectRatio: '9 / 16',
+                margin: '0 auto',
+                boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
+                border: '1px solid var(--border-subtle)',
               }}
             >
               {currentItem?.type === 'video' ? (
@@ -365,8 +364,8 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   playsInline
                   preload="metadata"
                   style={{
-                    maxWidth: '100%',
-                    maxHeight: '520px',
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'contain',
                   }}
                 />
@@ -374,7 +373,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                 <img
                   src={`/api/proxy-download?url=${encodeURIComponent(currentItem?.url || '')}&inline=true`}
                   alt="Reel preview"
-                  style={{ maxWidth: '100%', maxHeight: '520px', objectFit: 'contain' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               )}
             </div>
@@ -806,10 +805,10 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
           )}
         </div>
 
-        {/* Modal Footer - Perfectly Aligned Actions */}
+        {/* Modal Footer - Symmetrical, Balanced Action Bar */}
         <div
           style={{
-            padding: '16px 20px',
+            padding: '14px 18px',
             borderTop: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface)',
             display: 'flex',
@@ -818,122 +817,148 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             width: '100%',
           }}
         >
-          {/* Reel Download Button */}
+          {/* Reel Actions */}
           {selectedType === 'reel' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <button
                 onClick={() => handleDownloadMedia()}
                 className="btn-gradient"
                 style={{
                   width: '100%',
-                  height: '50px',
-                  fontSize: '1.02rem',
+                  height: '48px',
+                  fontSize: '0.98rem',
                   fontWeight: 800,
                   borderRadius: '14px',
-                  boxShadow: 'var(--neu-raised-glow)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
                 }}
               >
-                <Download size={20} />
+                <Download size={19} />
                 <span>Download Reel (MP4)</span>
               </button>
 
-              {/* Extract Audio Track Optional Action */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', width: '100%' }}>
+                <button
+                  onClick={handleDownloadAudio}
+                  className="btn-secondary"
+                  style={{
+                    height: '42px',
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
+                    borderRadius: '12px',
+                    color: '#f59e0b',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  <Music size={15} />
+                  <span>Audio (MP3)</span>
+                </button>
+                <button
+                  onClick={() => handleCopyText(data.url, 'share_url')}
+                  className="btn-secondary"
+                  style={{
+                    height: '42px',
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
+                    borderRadius: '12px',
+                    color: copiedKey === 'share_url' ? '#22c55e' : 'var(--text-main)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  {copiedKey === 'share_url' ? <Check size={15} /> : <LinkIcon size={15} />}
+                  <span>{copiedKey === 'share_url' ? 'Copied Link' : 'Copy Link'}</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Audio Actions */}
+          {selectedType === 'audio' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <button
                 onClick={handleDownloadAudio}
+                className="btn-gradient"
+                style={{
+                  width: '100%',
+                  height: '48px',
+                  fontSize: '0.98rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                }}
+              >
+                <Download size={19} />
+                <span>Download Audio Track (MP3)</span>
+              </button>
+              <button
+                onClick={() => handleCopyText(data.url, 'audio_url')}
                 className="btn-secondary"
                 style={{
                   width: '100%',
                   height: '42px',
-                  fontSize: '0.88rem',
+                  fontSize: '0.86rem',
                   fontWeight: 700,
                   borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  color: '#f59e0b',
-                  borderColor: 'rgba(245, 158, 11, 0.3)',
-                  background: 'rgba(245, 158, 11, 0.06)',
                 }}
               >
-                <Music size={16} />
-                <span>Extract Sound / Audio (MP3)</span>
+                {copiedKey === 'audio_url' ? <Check size={15} /> : <Copy size={15} />}
+                <span>{copiedKey === 'audio_url' ? 'Copied Audio URL' : 'Copy Audio URL'}</span>
               </button>
             </div>
           )}
 
-          {/* Audio Download Button */}
-          {selectedType === 'audio' && (
-            <button
-              onClick={handleDownloadAudio}
-              className="btn-gradient"
-              style={{
-                width: '100%',
-                height: '50px',
-                fontSize: '1.02rem',
-                fontWeight: 800,
-                borderRadius: '14px',
-                boxShadow: 'var(--neu-raised-glow)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-              }}
-            >
-              <Download size={20} />
-              <span>Download Audio Track (MP3)</span>
-            </button>
-          )}
-
-          {/* Profile DP Download Button */}
+          {/* Profile Actions */}
           {selectedType === 'profile' && (
-            <button
-              onClick={handleDownloadProfilePic}
-              className="btn-gradient"
-              style={{
-                width: '100%',
-                height: '50px',
-                fontSize: '1.02rem',
-                fontWeight: 800,
-                borderRadius: '14px',
-                boxShadow: 'var(--neu-raised-glow)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-              }}
-            >
-              <Download size={20} />
-              <span>Download HD Profile Picture (JPG)</span>
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', width: '100%' }}>
+              <button
+                onClick={handleDownloadProfilePic}
+                className="btn-gradient"
+                style={{
+                  height: '46px',
+                  fontSize: '0.9rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                }}
+              >
+                <Download size={17} />
+                <span>Download DP</span>
+              </button>
+              <button
+                onClick={() => handleCopyText(data.profile?.biography || data.caption || '', 'bio_text')}
+                className="btn-secondary"
+                style={{
+                  height: '46px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  borderRadius: '14px',
+                }}
+              >
+                {copiedKey === 'bio_text' ? <Check size={16} /> : <Copy size={16} />}
+                <span>{copiedKey === 'bio_text' ? 'Copied Bio' : 'Copy Bio'}</span>
+              </button>
+            </div>
           )}
 
-          {/* Photo & Carousel Download Buttons */}
+          {/* Photo & Carousel Actions */}
           {selectedType === 'post' && (
-            <div style={{ display: 'flex', flexDirection: isCarousel ? 'column' : 'row', gap: '10px', width: '100%' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <button
                 onClick={() => handleDownloadMedia()}
                 className="btn-gradient"
                 style={{
                   width: '100%',
-                  height: '50px',
-                  fontSize: '1.02rem',
+                  height: '48px',
+                  fontSize: '0.98rem',
                   fontWeight: 800,
                   borderRadius: '14px',
-                  boxShadow: 'var(--neu-raised-glow)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
                 }}
               >
-                <Download size={20} />
+                <Download size={19} />
                 <span>
-                  Download {isCarousel ? `Photo ${currentSlideIndex + 1} (JPG)` : 'Photo (JPG)'}
+                  Download {isCarousel ? `Slide ${currentSlideIndex + 1} (JPG)` : 'Photo (JPG)'}
                 </span>
               </button>
 
@@ -944,44 +969,35 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   className="btn-secondary"
                   style={{
                     width: '100%',
-                    height: '46px',
+                    height: '42px',
                     borderColor: 'rgba(168, 85, 247, 0.4)',
-                    background: 'rgba(168, 85, 247, 0.08)',
+                    background: 'rgba(168, 85, 247, 0.1)',
                     color: '#c084fc',
                     fontWeight: 700,
                     borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
                   }}
                 >
-                  <FileArchive size={17} />
+                  <FileArchive size={16} />
                   <span>{isZipping ? 'Creating ZIP...' : `Download All ${items.length} Slides (.ZIP)`}</span>
                 </button>
               )}
             </div>
           )}
 
-          {/* Caption Copy Button */}
+          {/* Caption Copy Action */}
           {(selectedType === 'caption' || selectedType === 'bio') && (
             <button
               onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
               className="btn-gradient"
               style={{
                 width: '100%',
-                height: '50px',
-                fontSize: '1.02rem',
+                height: '48px',
+                fontSize: '0.98rem',
                 fontWeight: 800,
                 borderRadius: '14px',
-                boxShadow: 'var(--neu-raised-glow)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
               }}
             >
-              {copiedKey === 'full_caption' ? <Check size={20} /> : <Copy size={20} />}
+              {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
               <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption!' : 'Copy Entire Caption'}</span>
             </button>
           )}
