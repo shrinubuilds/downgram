@@ -106,7 +106,7 @@ export const DedicatedToolDownloader: React.FC<DedicatedToolDownloaderProps> = (
     <>
       <Navbar activeType={toolType} />
 
-      <main style={{ flex: 1, padding: '24px 0 60px 0' }}>
+      <main style={{ flex: 1, padding: 'clamp(32px, 6vw, 64px) 0 60px 0' }}>
         <div className="container">
           {/* Breadcrumb / Back to All Tools */}
           <div style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>

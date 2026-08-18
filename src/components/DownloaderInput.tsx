@@ -46,7 +46,7 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
     switch (activeType) {
       case 'reel':
         return {
-          placeholder: 'Paste Instagram Reel or Video link (e.g. instagram.com/reel/...)',
+          placeholder: 'Paste Instagram link here (Reel, Video, Photo, DP)...',
           icon: <Film size={18} color="#e1306c" />,
           label: 'REEL',
           color: '#e1306c',
@@ -147,34 +147,11 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               backgroundColor: 'var(--bg-surface-inset)',
               boxShadow: 'var(--neu-inset)',
               borderRadius: '16px',
-              padding: '6px 12px 6px 14px',
+              padding: '6px 14px',
               border: error ? '1.5px solid #ef4444' : '1px solid var(--border-subtle)',
               transition: 'border-color 0.2s ease',
             }}
           >
-            {/* Mode Tag */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '4px 8px',
-                borderRadius: '8px',
-                background: 'var(--bg-surface)',
-                boxShadow: 'var(--neu-btn)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                fontWeight: 800,
-                color: toolDetails.color,
-                flexShrink: 0,
-                marginRight: '6px',
-              }}
-              title={toolDetails.label}
-            >
-              {toolDetails.icon}
-              <span className="channel-mode-text">{toolDetails.label}</span>
-            </div>
-
             {/* Main Text Input */}
             <input
               ref={inputRef}

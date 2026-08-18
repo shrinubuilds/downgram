@@ -129,7 +129,7 @@ export default function HomePage() {
         onOpenHistory={() => setIsHistoryOpen(true)}
       />
 
-      <main style={{ flex: 1, padding: 'clamp(14px, 3vw, 32px) 0 50px 0' }}>
+      <main style={{ flex: 1, padding: 'clamp(32px, 6vw, 64px) 0 60px 0' }}>
         <div className="container">
           {/* Hero Section */}
           <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2.5vw, 22px)' }}>
