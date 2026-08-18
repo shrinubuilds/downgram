@@ -7,7 +7,7 @@ import {
   AlertTriangle,
   Shield,
   CheckCircle2,
-  ChevronUp,
+  X,
 } from 'lucide-react';
 
 export type LegalTabType = 'terms' | 'privacy' | 'dmca' | 'fair-use';
@@ -27,19 +27,27 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const touchStartY = useRef(0);
-  const sheetRef = useRef<HTMLDivElement>(null);
 
+  // Complete background scroll lock for desktop & mobile
   useEffect(() => {
     if (isOpen) {
+      const prevBodyOverflow = document.body.style.overflow;
+      const prevHtmlOverflow = document.documentElement.style.overflow;
+      const prevTouchAction = document.body.style.touchAction;
+
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+
       setIsExpanded(false);
       setDragOffset(0);
-    } else {
-      document.body.style.overflow = 'unset';
+
+      return () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = prevHtmlOverflow;
+        document.body.style.touchAction = prevTouchAction;
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   // Handle ESC key
@@ -55,7 +63,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Touch Drag Gestures for Swipe Down to Close & Swipe Up to Expand
+  // Touch Drag Gestures for Mobile (Swipe Down to Close, Swipe Up to Expand)
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
     setIsDragging(true);
@@ -65,11 +73,9 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
     if (!isDragging) return;
     const deltaY = e.touches[0].clientY - touchStartY.current;
     
-    // If dragging down, apply positive offset (towards bottom)
     if (deltaY > 0) {
       setDragOffset(deltaY);
     } else if (deltaY < -20 && !isExpanded) {
-      // Dragging up on half-height expands to full height
       setDragOffset(deltaY * 0.4);
     }
   };
@@ -78,23 +84,20 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
     if (!isDragging) return;
     setIsDragging(false);
 
-    // Swipe down threshold to close
-    if (dragOffset > 90) {
+    if (dragOffset > 80) {
       onClose();
     } else if (dragOffset < -40 && !isExpanded) {
-      // Swiped up -> Expand to full screen
       setIsExpanded(true);
       setDragOffset(0);
     } else if (dragOffset > 40 && isExpanded) {
-      // Swiped down on full screen -> Collapse to default
       setIsExpanded(false);
       setDragOffset(0);
     } else {
-      // Snap back
       setDragOffset(0);
     }
   };
 
+  // Dedicated single-document content
   const getDocDetails = () => {
     switch (initialTab) {
       case 'privacy':
@@ -105,7 +108,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
           badgeColor: '#0095f6',
           content: (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h4 style={{ color: 'var(--text-main)', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
+              <h4 style={{ color: 'var(--text-main)', fontSize: '1.12rem', fontWeight: 800, margin: 0 }}>
                 Your Privacy is Guaranteed
               </h4>
               <p>
@@ -121,7 +124,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
                 </ul>
               </div>
               <p>
-                All extraction and stream parsing requests are processed transiently in memory and transferred securely via HTTPS with SSL 256-bit encryption.
+                All extraction requests are processed transiently in memory and transferred securely via HTTPS with SSL 256-bit encryption.
               </p>
             </div>
           ),
@@ -134,7 +137,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
           badgeColor: '#f59e0b',
           content: (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h4 style={{ color: 'var(--text-main)', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
+              <h4 style={{ color: 'var(--text-main)', fontSize: '1.12rem', fontWeight: 800, margin: 0 }}>
                 Digital Millennium Copyright Act (DMCA)
               </h4>
               <p>
@@ -160,7 +163,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
           badgeColor: '#10b981',
           content: (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h4 style={{ color: 'var(--text-main)', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
+              <h4 style={{ color: 'var(--text-main)', fontSize: '1.12rem', fontWeight: 800, margin: 0 }}>
                 Fair Use Educational Notice
               </h4>
               <p>
@@ -186,7 +189,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
           badgeColor: '#e1306c',
           content: (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <h4 style={{ color: 'var(--text-main)', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
+              <h4 style={{ color: 'var(--text-main)', fontSize: '1.12rem', fontWeight: 800, margin: 0 }}>
                 Acceptable Use & Terms Agreement
               </h4>
               <p>
@@ -225,97 +228,72 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
+        overscrollBehavior: 'contain',
         animation: 'fadeIn 0.2s ease-out',
       }}
     >
-      {/* Bottom Sheet Modal Container */}
+      {/* Modal / Bottom Sheet Container */}
       <div
-        ref={sheetRef}
         className="legal-modal-sheet"
         onClick={(e) => e.stopPropagation()}
         style={{
           width: '100%',
-          maxWidth: '720px',
-          height: isExpanded ? '94vh' : '65vh',
-          maxHeight: '94vh',
+          maxWidth: '680px',
+          height: isExpanded ? '92vh' : '62vh',
+          maxHeight: '92vh',
           backgroundColor: 'var(--bg-surface)',
-          borderTopLeftRadius: '28px',
-          borderTopRightRadius: '28px',
+          borderTopLeftRadius: '26px',
+          borderTopRightRadius: '26px',
           borderTop: '1.5px solid var(--border-subtle)',
           boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.4)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          overscrollBehavior: 'contain',
           transform: `translateY(${Math.max(0, dragOffset)}px)`,
           transition: isDragging ? 'none' : 'height 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          touchAction: 'none',
         }}
       >
-        {/* Interactive Top Pull Handle Bar */}
+        {/* Minimal Clean Pull Handle Pill for Mobile */}
         <div
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          className="mobile-pull-handle"
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            paddingTop: '12px',
-            paddingBottom: '10px',
+            justifyContent: 'center',
+            paddingTop: '10px',
+            paddingBottom: '8px',
             cursor: 'grab',
             userSelect: 'none',
-            borderBottom: '1px solid var(--border-subtle)',
-            backgroundColor: 'var(--bg-surface-inset)',
+            backgroundColor: 'var(--bg-surface)',
           }}
         >
-          {/* Pull Bar Pill */}
           <div
             style={{
-              width: '46px',
-              height: '5px',
+              width: '42px',
+              height: '4.5px',
               borderRadius: '9999px',
               backgroundColor: isDragging ? 'var(--text-main)' : 'var(--border-subtle)',
               transition: 'background-color 0.2s ease',
             }}
           />
-
-          {/* Swipe Hint */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '0.68rem',
-              fontWeight: 800,
-              color: 'var(--text-dim)',
-              marginTop: '6px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-            }}
-          >
-            {isExpanded ? (
-              <span>Pull down to close or collapse</span>
-            ) : (
-              <>
-                <ChevronUp size={12} />
-                <span>Pull up for full view • Pull down to close</span>
-              </>
-            )}
-          </div>
         </div>
 
-        {/* Modal Header */}
+        {/* Modal Document Header */}
         <div
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           style={{
-            padding: '16px 22px 14px 22px',
+            padding: '12px 20px 14px 20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderBottom: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface)',
+            flexShrink: 0,
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -338,7 +316,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             <div>
               <div
                 style={{
-                  fontSize: '0.68rem',
+                  fontSize: '0.66rem',
                   fontWeight: 800,
                   color: doc.badgeColor,
                   textTransform: 'uppercase',
@@ -350,7 +328,7 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
               </div>
               <h3
                 style={{
-                  fontSize: 'clamp(1.1rem, 2.5vw, 1.3rem)',
+                  fontSize: 'clamp(1.08rem, 2.5vw, 1.25rem)',
                   fontWeight: 800,
                   color: 'var(--text-main)',
                   margin: 0,
@@ -361,42 +339,66 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="btn-secondary"
-            style={{
-              padding: '6px 12px',
-              borderRadius: '10px',
-              fontSize: '0.74rem',
-              fontWeight: 800,
-              boxShadow: 'var(--neu-btn)',
-              color: 'var(--text-muted)',
-              cursor: 'pointer',
-            }}
-          >
-            {isExpanded ? 'Collapse' : 'Full Screen'}
-          </button>
+          {/* Desktop Close Icon / Mobile Full-screen Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="btn-secondary mobile-expand-btn"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '10px',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                boxShadow: 'var(--neu-btn)',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+              }}
+            >
+              {isExpanded ? 'Collapse' : 'Expand'}
+            </button>
+
+            <button
+              onClick={onClose}
+              className="btn-secondary desktop-close-btn"
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0,
+                boxShadow: 'var(--neu-btn)',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+              }}
+              title="Close"
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
 
-        {/* Modal Scrollable Body */}
+        {/* Scrollable Document Content */}
         <div
           style={{
-            padding: '22px',
+            padding: '20px',
             overflowY: 'auto',
             lineHeight: 1.65,
-            fontSize: '0.92rem',
+            fontSize: '0.9rem',
             color: 'var(--text-muted)',
             flex: 1,
+            overscrollBehavior: 'contain',
             touchAction: 'pan-y',
           }}
         >
           {doc.content}
         </div>
 
-        {/* Modal Footer */}
+        {/* Modal Bottom Footer */}
         <div
           style={{
-            padding: '12px 22px',
+            padding: '12px 20px',
             borderTop: '1px solid var(--border-subtle)',
             backgroundColor: 'var(--bg-surface-inset)',
             display: 'flex',
@@ -407,17 +409,17 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             flexShrink: 0,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#10b981', fontWeight: 700 }}>
-            <CheckCircle2 size={14} />
-            <span>DownGram Verified Legal Document</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.76rem', color: '#10b981', fontWeight: 700 }}>
+            <CheckCircle2 size={13} />
+            <span>DownGram Verified Document</span>
           </div>
 
           <button
             onClick={onClose}
             className="btn-primary"
             style={{
-              padding: '8px 22px',
-              fontSize: '0.86rem',
+              padding: '7px 20px',
+              fontSize: '0.84rem',
               fontWeight: 800,
               borderRadius: '12px',
               cursor: 'pointer',
@@ -437,14 +439,25 @@ export const LegalSafetyModal: React.FC<LegalSafetyModalProps> = ({
             opacity: 1;
           }
         }
+        @media (max-width: 767px) {
+          .desktop-close-btn {
+            display: none !important;
+          }
+        }
         @media (min-width: 768px) {
+          .mobile-pull-handle {
+            display: none !important;
+          }
+          .mobile-expand-btn {
+            display: none !important;
+          }
           .legal-modal-backdrop {
             align-items: center !important;
-            padding: 20px !important;
+            padding: 24px !important;
           }
           .legal-modal-sheet {
             height: auto !important;
-            max-height: 84vh !important;
+            max-height: 82vh !important;
             border-radius: 24px !important;
             border: 1px solid var(--border-subtle) !important;
           }
