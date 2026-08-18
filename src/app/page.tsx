@@ -171,6 +171,10 @@ export default function HomePage() {
               onSubmit={handleSubmit}
               isLoading={isLoading}
               activeType={activeType}
+              onSelectType={(type) => {
+                setActiveType(type);
+                setError(null);
+              }}
               error={error}
               loadingStep={loadingStep}
             />

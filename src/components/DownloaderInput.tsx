@@ -15,6 +15,7 @@ import {
   FileText,
   Link as LinkIcon,
   Check,
+  Sparkles,
 } from 'lucide-react';
 import { MediaType } from '@/types/instagram';
 
@@ -26,7 +27,7 @@ interface DownloaderInputProps {
   loadingStep?: string;
   error?: string | null;
   activeType: MediaType;
-  onLoadSample?: (typeKey: string) => void;
+  onSelectType?: (type: MediaType) => void;
 }
 
 export const DownloaderInput: React.FC<DownloaderInputProps> = ({
@@ -37,47 +38,92 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
   loadingStep,
   error,
   activeType,
+  onSelectType,
 }) => {
   const [pasteSuccess, setPasteSuccess] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const formatTabs: {
+    id: MediaType;
+    label: string;
+    icon: React.ReactNode;
+    color: string;
+    gradient: string;
+  }[] = [
+    {
+      id: 'reel',
+      label: 'Reels & Video',
+      icon: <Film size={15} />,
+      color: '#e1306c',
+      gradient: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)',
+    },
+    {
+      id: 'audio',
+      label: 'Audio / MP3',
+      icon: <Music size={15} />,
+      color: '#f59e0b',
+      gradient: 'linear-gradient(135deg, #f59e0b, #d97706, #b45309)',
+    },
+    {
+      id: 'post',
+      label: 'Photos & ZIP',
+      icon: <Layers size={15} />,
+      color: '#a855f7',
+      gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+    },
+    {
+      id: 'profile',
+      label: 'Profile DP',
+      icon: <UserCheck size={15} />,
+      color: '#10b981',
+      gradient: 'linear-gradient(135deg, #10b981, #059669)',
+    },
+    {
+      id: 'caption',
+      label: 'Captions',
+      icon: <FileText size={15} />,
+      color: '#0095f6',
+      gradient: 'linear-gradient(135deg, #0095f6, #2563eb)',
+    },
+  ];
+
   const getToolDetails = () => {
     switch (activeType) {
       case 'reel':
         return {
-          placeholder: 'Paste Instagram Reel or Video link (e.g. instagram.com/reel/...)',
+          placeholder: 'Paste Instagram Reel or Video link...',
           icon: <Film size={18} color="#e1306c" />,
           label: 'REEL',
           color: '#e1306c',
         };
       case 'audio':
         return {
-          placeholder: 'Paste Reel link to extract audio track (MP3)...',
+          placeholder: 'Paste Reel link to extract MP3 audio...',
           icon: <Music size={18} color="#f59e0b" />,
           label: 'AUDIO',
           color: '#f59e0b',
         };
       case 'post':
         return {
-          placeholder: 'Paste Instagram Photo or Carousel link (e.g. instagram.com/p/...)',
+          placeholder: 'Paste Instagram Photo or Carousel link...',
           icon: <Layers size={18} color="#a855f7" />,
           label: 'PHOTOS',
           color: '#a855f7',
         };
       case 'profile':
         return {
-          placeholder: 'Enter Instagram username (e.g. @username) or profile URL...',
+          placeholder: 'Enter Instagram username or profile link...',
           icon: <UserCheck size={18} color="#10b981" />,
           label: 'PROFILE',
           color: '#10b981',
         };
       case 'caption':
         return {
-          placeholder: 'Paste Post or Reel link to extract caption text...',
-          icon: <FileText size={18} color="#06b6d4" />,
+          placeholder: 'Paste Post or Reel link to extract captions...',
+          icon: <FileText size={18} color="#0095f6" />,
           label: 'CAPTION',
-          color: '#06b6d4',
+          color: '#0095f6',
         };
       default:
         return {
@@ -107,14 +153,14 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
   };
 
   return (
-    <div style={{ width: '100%', maxWidth: '940px', margin: '0 auto' }}>
-      {/* Neumorphic Extruded Input Base Station */}
+    <div style={{ width: '100%', maxWidth: '960px', margin: '0 auto' }}>
+      {/* Neumorphic Master Control Console */}
       <div
-        className="neu-search-station"
+        className="neu-master-station"
         style={{
           position: 'relative',
-          padding: '10px',
-          borderRadius: '24px',
+          padding: 'clamp(14px, 2.5vw, 22px)',
+          borderRadius: '26px',
           backgroundColor: 'var(--bg-surface)',
           boxShadow: isFocused
             ? 'var(--neu-raised-glow)'
@@ -123,6 +169,62 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
+        {/* Top Format Switcher Segmented Track */}
+        <div
+          className="format-switcher-track"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '5px',
+            borderRadius: '16px',
+            backgroundColor: 'var(--bg-surface-inset)',
+            boxShadow: 'var(--neu-inset-sm)',
+            border: '1px solid var(--border-subtle)',
+            marginBottom: '14px',
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+          }}
+        >
+          {formatTabs.map((tab) => {
+            const isActive = activeType === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => {
+                  if (onSelectType) onSelectType(tab.id);
+                }}
+                className={`format-pill-btn ${isActive ? 'active' : ''}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '7px 12px',
+                  borderRadius: '12px',
+                  border: isActive ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
+                  background: isActive ? tab.gradient : 'transparent',
+                  color: isActive ? '#ffffff' : 'var(--text-muted)',
+                  fontWeight: isActive ? 800 : 600,
+                  fontSize: '0.78rem',
+                  whiteSpace: 'nowrap',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: isActive ? 'var(--neu-pill-active)' : 'none',
+                  flex: '1 0 auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ color: isActive ? '#ffffff' : tab.color, display: 'flex', alignItems: 'center' }}>
+                  {tab.icon}
+                </span>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Input Form Bar */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -148,7 +250,7 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               boxShadow: 'var(--neu-inset)',
               borderRadius: '16px',
               padding: '6px 12px 6px 14px',
-              border: error ? '1.5px solid #ef4444' : '1px solid var(--border-subtle)',
+              border: error ? '1.5px solid #ef4444' : isFocused ? '1.5px solid rgba(225, 48, 108, 0.5)' : '1px solid var(--border-subtle)',
               transition: 'border-color 0.2s ease',
             }}
           >
@@ -192,7 +294,7 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
                 border: 'none',
                 outline: 'none',
                 color: 'var(--text-main)',
-                fontSize: 'clamp(0.92rem, 2vw, 1.02rem)',
+                fontSize: 'clamp(0.88rem, 2vw, 0.98rem)',
                 padding: '10px 6px',
                 fontFamily: 'inherit',
                 fontWeight: 600,
@@ -237,11 +339,11 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               onClick={handlePaste}
               className="btn-secondary downloader-paste-btn"
               style={{
-                padding: '12px 18px',
-                fontSize: '0.88rem',
+                padding: '12px 16px',
+                fontSize: '0.86rem',
                 whiteSpace: 'nowrap',
                 fontWeight: 800,
-                borderRadius: '16px',
+                borderRadius: '14px',
                 boxShadow: 'var(--neu-btn)',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -251,12 +353,12 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
             >
               {pasteSuccess ? (
                 <>
-                  <Check size={16} color="#10b981" />
+                  <Check size={15} color="#10b981" />
                   <span style={{ color: '#10b981' }}>Pasted!</span>
                 </>
               ) : (
                 <>
-                  <Clipboard size={16} color="#f59e0b" />
+                  <Clipboard size={15} color="#f59e0b" />
                   <span>Paste</span>
                 </>
               )}
@@ -268,23 +370,23 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
               disabled={isLoading || !url.trim()}
               className="btn-gradient downloader-submit-btn"
               style={{
-                padding: '13px 26px',
-                fontSize: '0.96rem',
+                padding: '12px 24px',
+                fontSize: '0.92rem',
                 fontWeight: 800,
                 whiteSpace: 'nowrap',
-                borderRadius: '16px',
-                minWidth: '140px',
+                borderRadius: '14px',
+                minWidth: '130px',
               }}
             >
               {isLoading ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
+                  <Loader2 size={16} className="animate-spin" />
                   <span>Downloading...</span>
                 </>
               ) : (
                 <>
                   <span>Download</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={16} />
                 </>
               )}
             </button>
@@ -296,22 +398,22 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
       {isLoading && loadingStep && (
         <div
           style={{
-            marginTop: '16px',
-            padding: '12px 18px',
-            borderRadius: '16px',
+            marginTop: '14px',
+            padding: '10px 16px',
+            borderRadius: '14px',
             background: 'var(--bg-surface-inset)',
-            boxShadow: 'var(--neu-inset)',
+            boxShadow: 'var(--neu-inset-sm)',
             border: '1px solid rgba(225, 48, 108, 0.4)',
             color: '#e1306c',
-            fontSize: '0.9rem',
+            fontSize: '0.86rem',
             fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '10px',
+            gap: '8px',
           }}
         >
-          <Zap size={17} className="animate-bounce" />
+          <Zap size={15} className="animate-bounce" />
           <span>{loadingStep}</span>
         </div>
       )}
@@ -320,26 +422,33 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
       {error && (
         <div
           style={{
-            marginTop: '16px',
-            padding: '12px 18px',
-            borderRadius: '16px',
+            marginTop: '14px',
+            padding: '10px 16px',
+            borderRadius: '14px',
             backgroundColor: 'var(--bg-surface-inset)',
-            boxShadow: 'var(--neu-inset)',
+            boxShadow: 'var(--neu-inset-sm)',
             border: '1px solid rgba(239, 68, 68, 0.5)',
             color: '#ef4444',
-            fontSize: '0.9rem',
+            fontSize: '0.86rem',
             fontWeight: 700,
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '8px',
           }}
         >
-          <AlertCircle size={18} />
+          <AlertCircle size={16} />
           <span>{error}</span>
         </div>
       )}
 
       <style jsx>{`
+        .format-switcher-track::-webkit-scrollbar {
+          display: none;
+        }
+        .format-pill-btn:hover:not(.active) {
+          background: var(--bg-surface-raised) !important;
+          color: var(--text-main) !important;
+        }
         @media (max-width: 680px) {
           .downloader-form-bar {
             flex-direction: column !important;
@@ -364,6 +473,3 @@ export const DownloaderInput: React.FC<DownloaderInputProps> = ({
     </div>
   );
 };
-
-
-
