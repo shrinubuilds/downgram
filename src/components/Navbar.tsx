@@ -141,9 +141,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '68px',
-          padding: '0 clamp(14px, 2.5vw, 24px)',
-          borderRadius: '22px',
+          height: '56px',
+          padding: '0 clamp(10px, 2vw, 18px)',
+          borderRadius: '18px',
           backgroundColor: 'var(--bg-surface)',
           boxShadow: isScrolled
             ? 'var(--neu-raised-glow)'
@@ -169,7 +169,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
         />
 
         {/* Left: Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Link
             href="/"
             onClick={() => {
@@ -178,7 +178,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
             }}
             style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}
           >
-            <DownGramLogo size="md" />
+            <DownGramLogo size="sm" />
           </Link>
         </div>
 
@@ -188,71 +188,71 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px',
+            gap: '3px',
             background: 'var(--bg-surface-inset)',
             boxShadow: 'var(--neu-inset)',
-            padding: '4px 6px',
-            borderRadius: '16px',
+            padding: '3px 5px',
+            borderRadius: '14px',
             border: '1px solid var(--border-subtle)',
           }}
         >
           <Link
             href="/reels"
             className="nav-link-btn"
-            style={{ color: activeType === 'reel' ? '#e1306c' : undefined }}
+            style={{ color: activeType === 'reel' ? '#e1306c' : undefined, fontSize: '0.8rem', padding: '5px 10px' }}
           >
-            <Film size={14} color="#e1306c" />
+            <Film size={13} color="#e1306c" />
             <span>Reels</span>
           </Link>
 
           <Link
             href="/audio"
             className="nav-link-btn"
-            style={{ color: activeType === 'audio' ? '#f59e0b' : undefined }}
+            style={{ color: activeType === 'audio' ? '#f59e0b' : undefined, fontSize: '0.8rem', padding: '5px 10px' }}
           >
-            <Music size={14} color="#f59e0b" />
+            <Music size={13} color="#f59e0b" />
             <span>Audio</span>
           </Link>
 
           <Link
             href="/photos"
             className="nav-link-btn"
-            style={{ color: activeType === 'post' ? '#a855f7' : undefined }}
+            style={{ color: activeType === 'post' ? '#a855f7' : undefined, fontSize: '0.8rem', padding: '5px 10px' }}
           >
-            <Layers size={14} color="#a855f7" />
+            <Layers size={13} color="#a855f7" />
             <span>Photos</span>
           </Link>
 
           <Link
             href="/profile"
             className="nav-link-btn"
-            style={{ color: activeType === 'profile' ? '#10b981' : undefined }}
+            style={{ color: activeType === 'profile' ? '#10b981' : undefined, fontSize: '0.8rem', padding: '5px 10px' }}
           >
-            <UserCheck size={14} color="#10b981" />
+            <UserCheck size={13} color="#10b981" />
             <span>Profile DP</span>
           </Link>
 
           <Link
             href="/captions"
             className="nav-link-btn"
-            style={{ color: activeType === 'caption' ? '#0095f6' : undefined }}
+            style={{ color: activeType === 'caption' ? '#0095f6' : undefined, fontSize: '0.8rem', padding: '5px 10px' }}
           >
-            <FileText size={14} color="#0095f6" />
+            <FileText size={13} color="#0095f6" />
             <span>Captions</span>
           </Link>
         </nav>
 
         {/* Right: Theme Toggler & Hamburger Menu Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {/* Neumorphic Push Button Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="btn-secondary"
             style={{
-              width: '42px',
-              height: '42px',
+              width: '36px',
+              height: '36px',
               padding: 0,
-              borderRadius: '14px',
+              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -275,9 +275,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
               }}
             >
               {theme === 'dark' ? (
-                <Sun size={19} color="#fcaf45" />
+                <Sun size={16} color="#fcaf45" />
               ) : (
-                <Moon size={19} color="#833ab4" />
+                <Moon size={16} color="#833ab4" />
               )}
             </div>
           </button>
@@ -287,10 +287,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="btn-secondary hamburger-btn"
             style={{
-              width: '42px',
-              height: '42px',
+              width: '36px',
+              height: '36px',
               padding: 0,
-              borderRadius: '14px',
+              borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -304,7 +304,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
             title="Tools Menu"
             aria-label="Tools Menu"
           >
-            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMenuOpen ? <X size={17} /> : <Menu size={17} />}
           </button>
         </div>
       </div>
@@ -315,12 +315,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
           className="neu-panel menu-drawer"
           style={{
             position: 'absolute',
-            top: '80px',
+            top: '68px',
             left: '16px',
             right: '16px',
-            padding: '20px',
+            padding: '12px',
             backgroundColor: 'var(--bg-surface)',
-            borderRadius: '24px',
+            borderRadius: '20px',
             boxShadow: 'var(--neu-raised-glow)',
             border: '1px solid var(--border-subtle)',
             animation: 'slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -332,14 +332,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '14px',
-              paddingBottom: '10px',
+              marginBottom: '8px',
+              paddingBottom: '6px',
               borderBottom: '1px solid var(--border-subtle)',
             }}
           >
             <span
               style={{
-                fontSize: '0.8rem',
+                fontSize: '0.72rem',
                 fontWeight: 800,
                 color: 'var(--text-dim)',
                 textTransform: 'uppercase',
@@ -358,14 +358,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
+                padding: '2px',
               }}
             >
-              <X size={18} />
+              <X size={15} />
             </button>
           </div>
 
           {/* List of Tools */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {navTools.map((tool) => (
               <Link
                 key={tool.href}
@@ -379,8 +380,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '14px 16px',
-                  borderRadius: '18px',
+                  padding: '8px 12px',
+                  borderRadius: '13px',
                   background: 'var(--bg-surface)',
                   boxShadow: 'var(--neu-btn)',
                   border: '1px solid var(--border-subtle)',
@@ -389,12 +390,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                   transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div
                     style={{
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '14px',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '10px',
                       background: 'var(--bg-surface-inset)',
                       boxShadow: 'var(--neu-inset-sm)',
                       display: 'flex',
@@ -407,10 +408,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                     {tool.icon}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.96rem', color: 'var(--text-main)' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.84rem', color: 'var(--text-main)' }}>
                       {tool.label}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    <div style={{ fontSize: '0.70rem', color: 'var(--text-muted)', marginTop: '1px' }}>
                       {tool.desc}
                     </div>
                   </div>
@@ -418,9 +419,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
 
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '10px',
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '8px',
                     background: 'var(--bg-surface-inset)',
                     boxShadow: 'var(--neu-inset-sm)',
                     display: 'flex',
@@ -430,7 +431,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                     flexShrink: 0,
                   }}
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight size={13} />
                 </div>
               </Link>
             ))}

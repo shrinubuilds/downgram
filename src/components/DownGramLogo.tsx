@@ -12,15 +12,15 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
   showBadge = true,
 }) => {
   const iconDimensions = {
-    sm: 36,
-    md: 44,
-    lg: 52,
+    sm: 30,
+    md: 36,
+    lg: 44,
   }[size];
 
   const fontSize = {
-    sm: '1.25rem',
-    md: '1.45rem',
-    lg: '1.75rem',
+    sm: '1.05rem',
+    md: '1.24rem',
+    lg: '1.48rem',
   }[size];
 
   return (
@@ -29,7 +29,7 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '12px',
+        gap: '9px',
         cursor: 'pointer',
         userSelect: 'none',
       }}
