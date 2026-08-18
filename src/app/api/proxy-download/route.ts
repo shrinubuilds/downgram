@@ -28,10 +28,8 @@ export async function GET(req: NextRequest) {
     });
 
     if (!res.ok) {
-      return NextResponse.json(
-        { error: `Failed to fetch target media: ${res.status} ${res.statusText}` },
-        { status: res.status }
-      );
+      // Fallback: direct redirect to media URL so browser downloads directly
+      return NextResponse.redirect(mediaUrl, 302);
     }
 
     let contentType = res.headers.get('content-type');
@@ -68,7 +66,14 @@ export async function GET(req: NextRequest) {
       headers,
     });
   } catch (error: any) {
-    console.error('Error in /api/proxy-download:', error);
+    console.error('Error in /api/proxy-download, attempting direct redirect:', error);
+    try {
+      const { searchParams } = new URL(req.url);
+      const mediaUrl = searchParams.get('url');
+      if (mediaUrl) {
+        return NextResponse.redirect(mediaUrl, 302);
+      }
+    } catch {}
     return NextResponse.json(
       { error: error.message || 'Failed to stream media file.' },
       { status: 500 }
