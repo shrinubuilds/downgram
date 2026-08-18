@@ -1,24 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Heart,
+  Lock,
   ArrowUp,
   Scale,
-  Lock,
   AlertTriangle,
   Shield,
 } from 'lucide-react';
 import { DownGramLogo } from './DownGramLogo';
-import { LegalSheetModal, LegalTabType } from './LegalSheetModal';
+import { LegalSafetyModal, LegalTabType } from './LegalSafetyModal';
 
 export const Footer: React.FC = () => {
   const [showFab, setShowFab] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
-  const [legalTab, setLegalTab] = useState<LegalTabType>('terms');
+  const [legalModalTab, setLegalModalTab] = useState<LegalTabType>('terms');
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleScroll = () => {
       setShowFab(window.scrollY > 300);
     };
@@ -31,15 +31,15 @@ export const Footer: React.FC = () => {
   };
 
   const openLegalModal = (tab: LegalTabType) => {
-    setLegalTab(tab);
+    setLegalModalTab(tab);
     setIsLegalModalOpen(true);
   };
 
-  const legalItems: { tab: LegalTabType; label: string; icon: React.ReactNode; color: string }[] = [
-    { tab: 'terms', label: 'Terms of Service', icon: <Scale size={14} />, color: '#e1306c' },
-    { tab: 'privacy', label: 'Privacy Policy', icon: <Lock size={14} />, color: '#0095f6' },
-    { tab: 'dmca', label: 'DMCA Disclaimer', icon: <AlertTriangle size={14} />, color: '#f59e0b' },
-    { tab: 'fair-use', label: 'Fair Use Notice', icon: <Shield size={14} />, color: '#10b981' },
+  const legalItems: { id: LegalTabType; label: string; icon: React.ReactNode; color: string }[] = [
+    { id: 'terms', label: 'Terms of Service', icon: <Scale size={13} />, color: '#e1306c' },
+    { id: 'privacy', label: 'Privacy Policy', icon: <Lock size={13} />, color: '#0095f6' },
+    { id: 'dmca', label: 'DMCA Disclaimer', icon: <AlertTriangle size={13} />, color: '#f59e0b' },
+    { id: 'fair-use', label: 'Fair Use Notice', icon: <Shield size={13} />, color: '#10b981' },
   ];
 
   return (
@@ -55,7 +55,7 @@ export const Footer: React.FC = () => {
         }}
       >
         <div className="container">
-          {/* Main Footer Block: Logo/Description on Left & Legal Buttons on Right */}
+          {/* Main Footer Block */}
           <div
             style={{
               display: 'flex',
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
             }}
           >
             {/* Brand Logo & Tagline */}
-            <div style={{ maxWidth: '420px' }}>
+            <div>
               <Link
                 href="/"
                 onClick={scrollToTop}
@@ -82,15 +82,16 @@ export const Footer: React.FC = () => {
                   color: 'var(--text-muted)',
                   lineHeight: '1.5',
                   margin: 0,
+                  maxWidth: '380px',
                 }}
               >
-                The clean, fast, and watermark-free Instagram media downloader for Reels, MP3 audio, and photos.
+                Fast, secure Instagram media downloader for Reels, MP3 audio, photo albums, and profile pictures.
               </p>
             </div>
 
-            {/* Legal & Safety Options (Opens Bottom Sheet Modal) */}
+            {/* Legal & Safety Popup Buttons */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-              <span
+              <div
                 style={{
                   fontSize: '0.72rem',
                   fontWeight: 800,
@@ -101,7 +102,7 @@ export const Footer: React.FC = () => {
                 }}
               >
                 Legal & Safety
-              </span>
+              </div>
 
               <div
                 style={{
@@ -113,27 +114,13 @@ export const Footer: React.FC = () => {
               >
                 {legalItems.map((item) => (
                   <button
-                    key={item.tab}
-                    type="button"
-                    onClick={() => openLegalModal(item.tab)}
-                    className="legal-chip-btn"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '7px 14px',
-                      borderRadius: '12px',
-                      background: 'var(--bg-surface)',
-                      boxShadow: 'var(--neu-btn)',
-                      border: '1px solid var(--border-subtle)',
-                      color: 'var(--text-main)',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }}
+                    key={item.id}
+                    onClick={() => openLegalModal(item.id)}
+                    className="legal-pill-btn"
                   >
-                    <span style={{ color: item.color, display: 'flex' }}>{item.icon}</span>
+                    <span style={{ color: item.color, display: 'flex', alignItems: 'center' }}>
+                      {item.icon}
+                    </span>
                     <span>{item.label}</span>
                   </button>
                 ))}
@@ -141,7 +128,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Footer Bottom Bar */}
+          {/* Footer Bottom Copyright Bar */}
           <div
             style={{
               marginTop: '16px',
@@ -167,15 +154,30 @@ export const Footer: React.FC = () => {
         </div>
 
         <style jsx>{`
-          .legal-chip-btn:hover {
-            color: #e1306c !important;
-            background: var(--bg-surface-raised) !important;
-            box-shadow: var(--neu-raised-sm) !important;
+          .legal-pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 12px;
+            background: var(--bg-surface-inset);
+            box-shadow: var(--neu-inset-sm);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+          .legal-pill-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-surface-raised);
+            box-shadow: var(--neu-raised-sm);
             transform: translateY(-2px);
           }
-          .legal-chip-btn:active {
+          .legal-pill-btn:active {
             transform: translateY(1px);
-            box-shadow: var(--neu-btn-pressed) !important;
+            box-shadow: var(--neu-btn-pressed);
           }
         `}</style>
       </footer>
@@ -211,10 +213,10 @@ export const Footer: React.FC = () => {
         <ArrowUp size={18} />
       </button>
 
-      {/* Unified Bottom Sheet Legal Modal */}
-      <LegalSheetModal
+      {/* Bottom Sheet Overlay Modal */}
+      <LegalSafetyModal
         isOpen={isLegalModalOpen}
-        initialTab={legalTab}
+        initialTab={legalModalTab}
         onClose={() => setIsLegalModalOpen(false)}
       />
     </>
