@@ -74,18 +74,19 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
 
   return (
     <div style={{ margin: '0 auto 24px auto', maxWidth: '980px', width: '100%' }}>
-      {/* Neumorphic Tool Station Plate */}
+      {/* Neumorphic 5-Tool Station Plate - 100% Visible on all devices */}
       <div
         className="tools-neu-plate"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '8px',
-          padding: '8px',
-          borderRadius: '22px',
+          gap: '6px',
+          padding: '6px',
+          borderRadius: '20px',
           backgroundColor: 'var(--bg-tabs)',
           boxShadow: 'var(--neu-raised)',
           border: '1px solid var(--border-subtle)',
+          width: '100%',
         }}
       >
         {tabs.map((tab) => {
@@ -100,26 +101,26 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                padding: '12px 10px',
-                borderRadius: '16px',
-                border: isActive ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
+                borderRadius: '14px',
+                border: isActive ? '1px solid rgba(255, 255, 255, 0.25)' : '1px solid transparent',
                 background: isActive ? tab.gradient : 'transparent',
                 color: isActive ? '#ffffff' : 'var(--text-muted)',
                 fontWeight: isActive ? 800 : 700,
-                fontSize: '0.92rem',
                 cursor: 'pointer',
-                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 boxShadow: isActive ? 'var(--neu-pill-active)' : 'none',
+                minWidth: 0,
               }}
             >
               {/* Icon */}
               <span
+                className="tab-icon-wrapper"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   color: isActive ? '#ffffff' : tab.color,
-                  transform: isActive ? 'scale(1.1)' : 'scale(1)',
+                  transform: isActive ? 'scale(1.08)' : 'scale(1)',
                   transition: 'transform 0.2s ease',
                   flexShrink: 0,
                 }}
@@ -128,7 +129,15 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
               </span>
 
               {/* Label */}
-              <span style={{ whiteSpace: 'nowrap', textShadow: isActive ? '0 1px 2px rgba(0,0,0,0.3)' : 'none' }}>
+              <span
+                className="tab-label-text"
+                style={{
+                  whiteSpace: 'nowrap',
+                  textShadow: isActive ? '0 1px 2px rgba(0,0,0,0.3)' : 'none',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {tab.label}
               </span>
             </button>
@@ -140,16 +149,16 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
       <div
         className="tool-readout-banner"
         style={{
-          marginTop: '12px',
+          marginTop: '10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '8px',
-          fontSize: '0.86rem',
+          gap: '6px',
+          fontSize: '0.84rem',
           color: 'var(--text-muted)',
           textAlign: 'center',
-          padding: '8px 16px',
-          borderRadius: '14px',
+          padding: '8px 14px',
+          borderRadius: '12px',
           background: 'var(--bg-surface-inset)',
           boxShadow: 'var(--neu-inset-sm)',
           border: '1px solid var(--border-subtle)',
@@ -159,18 +168,23 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '5px',
+            gap: '4px',
             color: activeTabInfo.color,
             fontWeight: 800,
             flexShrink: 0,
           }}
         >
-          <Sparkles size={14} /> {activeTabInfo.label} Tool:
+          <Sparkles size={14} /> {activeTabInfo.label}:
         </span>
-        <span style={{ lineHeight: 1.4, fontWeight: 500 }}>{activeTabInfo.hint}</span>
+        <span style={{ lineHeight: 1.35, fontWeight: 500 }}>{activeTabInfo.hint}</span>
       </div>
 
       <style jsx>{`
+        .neu-tab-btn {
+          padding: 11px 8px;
+          gap: 8px;
+          font-size: 0.9rem;
+        }
         .neu-tab-btn:hover:not(.active) {
           background: var(--bg-surface-raised);
           color: var(--text-main);
@@ -178,30 +192,36 @@ export const MediaTypeTabs: React.FC<MediaTypeTabsProps> = ({
         }
         @media (max-width: 680px) {
           .tools-neu-plate {
-            display: flex !important;
-            overflow-x: auto !important;
-            flex-wrap: nowrap !important;
-            padding: 6px !important;
-            gap: 6px !important;
-            border-radius: 18px !important;
-            scrollbar-width: none !important;
-            -webkit-overflow-scrolling: touch !important;
-          }
-          .tools-neu-plate::-webkit-scrollbar {
-            display: none !important;
+            grid-template-columns: repeat(5, 1fr) !important;
+            gap: 4px !important;
+            padding: 5px !important;
           }
           .neu-tab-btn {
-            flex: 1 0 auto !important;
-            min-width: 96px !important;
-            padding: 10px 14px !important;
-            font-size: 0.86rem !important;
-            border-radius: 13px !important;
+            flex-direction: column !important;
+            padding: 8px 3px !important;
+            gap: 4px !important;
+            font-size: 0.72rem !important;
+            min-height: 54px !important;
+          }
+          .tab-label-text {
+            font-size: 0.72rem !important;
+            letter-spacing: -0.01em !important;
           }
           .tool-readout-banner {
-            font-size: 0.78rem !important;
-            padding: 8px 12px !important;
+            font-size: 0.76rem !important;
+            padding: 6px 10px !important;
             flex-direction: column !important;
-            gap: 3px !important;
+            gap: 2px !important;
+          }
+        }
+        @media (max-width: 380px) {
+          .neu-tab-btn {
+            padding: 6px 2px !important;
+            font-size: 0.68rem !important;
+            min-height: 50px !important;
+          }
+          .tab-label-text {
+            font-size: 0.68rem !important;
           }
         }
       `}</style>
