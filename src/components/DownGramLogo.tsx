@@ -12,15 +12,15 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
   showBadge = true,
 }) => {
   const iconDimensions = {
-    sm: 30,
-    md: 36,
-    lg: 44,
+    sm: 32,
+    md: 38,
+    lg: 46,
   }[size];
 
   const fontSize = {
-    sm: '1.05rem',
-    md: '1.24rem',
-    lg: '1.48rem',
+    sm: '1.25rem',
+    md: '1.45rem',
+    lg: '1.75rem',
   }[size];
 
   return (
@@ -181,21 +181,20 @@ export const DownGramLogo: React.FC<DownGramLogoProps> = ({
       </div>
 
       {/* Brand Typography */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span
-          style={{
-            fontSize,
-            fontWeight: 900,
-            letterSpacing: '-0.03em',
-            background: 'var(--ig-primary-gradient)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            display: 'inline-block',
-          }}
-        >
-          DownGram
-        </span>
-      </div>
+      <span
+        style={{
+          fontSize,
+          fontWeight: 900,
+          letterSpacing: '-0.03em',
+          background: 'var(--ig-primary-gradient)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          display: 'inline-block',
+          lineHeight: 1,
+        }}
+      >
+        DownGram
+      </span>
     </div>
   );
 };
