@@ -158,11 +158,11 @@ export const DedicatedToolDownloader: React.FC<DedicatedToolDownloaderProps> = (
 
             <h1
               style={{
-                fontSize: 'clamp(1.85rem, 4.5vw, 3.2rem)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.18,
-                marginBottom: '12px',
+                fontSize: 'clamp(1.3rem, 3.2vw, 2.35rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.24,
+                marginBottom: '10px',
               }}
             >
               {pageTitle}
@@ -170,11 +170,11 @@ export const DedicatedToolDownloader: React.FC<DedicatedToolDownloaderProps> = (
 
             <p
               style={{
-                fontSize: 'clamp(0.92rem, 1.8vw, 1.08rem)',
+                fontSize: 'clamp(0.82rem, 1.4vw, 0.95rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '650px',
+                maxWidth: '600px',
                 margin: '0 auto',
-                lineHeight: 1.55,
+                lineHeight: 1.5,
                 fontWeight: 500,
               }}
             >

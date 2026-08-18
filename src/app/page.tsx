@@ -132,15 +132,14 @@ export default function HomePage() {
       <main style={{ flex: 1, padding: '36px 0 60px 0' }}>
         <div className="container">
           {/* Hero Section */}
-          {/* Hero Section */}
-          <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 4vw, 32px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(16px, 3.5vw, 26px)' }}>
             <h1
               style={{
-                fontSize: 'clamp(1.85rem, 4.5vw, 3.4rem)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.18,
-                marginBottom: '12px',
+                fontSize: 'clamp(1.3rem, 3.2vw, 2.35rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.24,
+                marginBottom: '10px',
               }}
             >
               Download Instagram <span className="text-gradient">Reels, Videos,</span>
@@ -150,11 +149,11 @@ export default function HomePage() {
 
             <p
               style={{
-                fontSize: 'clamp(0.92rem, 1.8vw, 1.1rem)',
+                fontSize: 'clamp(0.82rem, 1.4vw, 0.95rem)',
                 color: 'var(--text-muted)',
-                maxWidth: '680px',
-                margin: '0 auto clamp(18px, 3vw, 28px) auto',
-                lineHeight: 1.55,
+                maxWidth: '600px',
+                margin: '0 auto clamp(14px, 2.5vw, 22px) auto',
+                lineHeight: 1.5,
                 fontWeight: 500,
               }}
             >
