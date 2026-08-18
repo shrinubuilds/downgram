@@ -34,7 +34,7 @@ const CustomReelVideoPlayer: React.FC<{
 }> = ({ videoUrl, thumbnailUrl }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState('0:00');
   const [duration, setDuration] = useState('0:00');
@@ -50,7 +50,7 @@ const CustomReelVideoPlayer: React.FC<{
   const togglePlay = () => {
     if (!videoRef.current) return;
     if (videoRef.current.paused) {
-      videoRef.current.play();
+      videoRef.current.play().catch(() => {});
       setIsPlaying(true);
     } else {
       videoRef.current.pause();
@@ -114,10 +114,17 @@ const CustomReelVideoPlayer: React.FC<{
         autoPlay
         loop
         muted={isMuted}
+        preload="auto"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onError={() => {
+          if (videoRef.current && !videoRef.current.src.includes(videoUrl)) {
+            videoRef.current.src = videoUrl;
+            videoRef.current.play().catch(() => {});
+          }
+        }}
         style={{
           width: '100%',
           height: '100%',

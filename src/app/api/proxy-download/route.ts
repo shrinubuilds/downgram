@@ -17,18 +17,24 @@ export async function GET(req: NextRequest) {
     // Sanitize filename for header
     const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
 
+    const range = req.headers.get('range');
+    const fetchHeaders: Record<string, string> = {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      'Referer': 'https://www.instagram.com/',
+      'Accept': '*/*',
+    };
+    if (range) {
+      fetchHeaders['Range'] = range;
+    }
+
     const res = await fetch(mediaUrl, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        'Referer': 'https://www.instagram.com/',
-        'Accept': '*/*',
-      },
+      headers: fetchHeaders,
       cache: 'no-store',
     });
 
     if (!res.ok) {
-      // Fallback: direct redirect to media URL so browser downloads directly
+      // Fallback: direct redirect to media URL so browser streams/downloads directly
       return NextResponse.redirect(mediaUrl, 302);
     }
 
@@ -48,10 +54,12 @@ export async function GET(req: NextRequest) {
     }
 
     const contentLength = res.headers.get('content-length');
+    const contentRange = res.headers.get('content-range');
 
     const headers: Record<string, string> = {
       'Content-Disposition': isInline ? 'inline' : `attachment; filename="${safeFilename}"`,
       'Content-Type': contentType,
+      'Accept-Ranges': 'bytes',
       'Cache-Control': 'public, max-age=86400',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
@@ -60,9 +68,12 @@ export async function GET(req: NextRequest) {
     if (contentLength) {
       headers['Content-Length'] = contentLength;
     }
+    if (contentRange) {
+      headers['Content-Range'] = contentRange;
+    }
 
     return new NextResponse(res.body as any, {
-      status: 200,
+      status: res.status === 206 ? 206 : 200,
       headers,
     });
   } catch (error: any) {
