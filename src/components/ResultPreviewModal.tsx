@@ -39,6 +39,7 @@ const CustomReelVideoPlayer: React.FC<{
   const [currentTime, setCurrentTime] = useState('0:00');
   const [duration, setDuration] = useState('0:00');
   const [showCenterIcon, setShowCenterIcon] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
 
   const formatSecs = (sec: number) => {
     if (!sec || isNaN(sec)) return '0:00';
@@ -76,6 +77,16 @@ const CustomReelVideoPlayer: React.FC<{
     setDuration(formatSecs(dur));
   };
 
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      const { videoWidth, videoHeight } = videoRef.current;
+      if (videoWidth && videoHeight) {
+        setAspectRatio(videoWidth / videoHeight);
+      }
+    }
+    handleTimeUpdate();
+  };
+
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     if (!videoRef.current) return;
@@ -83,6 +94,8 @@ const CustomReelVideoPlayer: React.FC<{
     const pos = (e.clientX - rect.left) / rect.width;
     videoRef.current.currentTime = pos * (videoRef.current.duration || 0);
   };
+
+  const isHorizontal = aspectRatio && aspectRatio > 1.1;
 
   return (
     <div
@@ -96,14 +109,15 @@ const CustomReelVideoPlayer: React.FC<{
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        maxWidth: '320px',
-        maxHeight: '54vh',
-        aspectRatio: '9 / 16',
+        maxWidth: isHorizontal ? '100%' : '320px',
+        maxHeight: isHorizontal ? '48vh' : '56vh',
+        aspectRatio: aspectRatio ? `${aspectRatio}` : 'auto',
         margin: '0 auto',
         boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
         border: '1px solid var(--border-subtle)',
         cursor: 'pointer',
         userSelect: 'none',
+        transition: 'aspect-ratio 0.25s ease, max-width 0.25s ease',
       }}
     >
       <video
@@ -116,7 +130,7 @@ const CustomReelVideoPlayer: React.FC<{
         muted={isMuted}
         preload="auto"
         onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onError={() => {
@@ -128,7 +142,7 @@ const CustomReelVideoPlayer: React.FC<{
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
+          objectFit: 'cover',
           pointerEvents: 'none',
         }}
       />
