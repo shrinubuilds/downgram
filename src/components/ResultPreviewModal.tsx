@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   Download,
@@ -16,6 +16,10 @@ import {
   ChevronRight,
   Copy,
   Check,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
   Link as LinkIcon,
 } from 'lucide-react';
 import JSZip from 'jszip';
@@ -23,6 +27,201 @@ import confetti from 'canvas-confetti';
 import { InstagramScrapeResult, MediaItem, MediaType } from '@/types/instagram';
 import { formatNumber, triggerDownload, copyToClipboard } from '@/lib/utils';
 import { AudioPlayerCard } from './AudioPlayerCard';
+
+const CustomReelVideoPlayer: React.FC<{
+  videoUrl: string;
+  thumbnailUrl?: string;
+}> = ({ videoUrl, thumbnailUrl }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState('0:00');
+  const [duration, setDuration] = useState('0:00');
+  const [showCenterIcon, setShowCenterIcon] = useState(false);
+
+  const formatSecs = (sec: number) => {
+    if (!sec || isNaN(sec)) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+    setShowCenterIcon(true);
+    setTimeout(() => setShowCenterIcon(false), 700);
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
+  };
+
+  const handleTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const cur = videoRef.current.currentTime;
+    const dur = videoRef.current.duration || 1;
+    setProgress((cur / dur) * 100);
+    setCurrentTime(formatSecs(cur));
+    setDuration(formatSecs(dur));
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    videoRef.current.currentTime = pos * (videoRef.current.duration || 0);
+  };
+
+  return (
+    <div
+      onClick={togglePlay}
+      style={{
+        position: 'relative',
+        backgroundColor: '#050608',
+        borderRadius: '18px',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        maxWidth: '320px',
+        maxHeight: '54vh',
+        aspectRatio: '9 / 16',
+        margin: '0 auto',
+        boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
+        border: '1px solid var(--border-subtle)',
+        cursor: 'pointer',
+        userSelect: 'none',
+      }}
+    >
+      <video
+        ref={videoRef}
+        src={`/api/proxy-download?url=${encodeURIComponent(videoUrl)}&inline=true`}
+        poster={thumbnailUrl}
+        playsInline
+        autoPlay
+        loop
+        muted={isMuted}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleTimeUpdate}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Center Play/Pause Pulsing Badge */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          background: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(8px)',
+          border: '1.5px solid rgba(255, 255, 255, 0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#ffffff',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+          transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          opacity: !isPlaying || showCenterIcon ? 1 : 0,
+          pointerEvents: 'none',
+        }}
+      >
+        {isPlaying ? <Pause size={24} fill="#ffffff" /> : <Play size={24} fill="#ffffff" style={{ marginLeft: '3px' }} />}
+      </div>
+
+      {/* Floating Sound Toggle Button (Top Right) */}
+      <button
+        onClick={toggleMute}
+        style={{
+          position: 'absolute',
+          top: '12px',
+          right: '12px',
+          width: '34px',
+          height: '34px',
+          borderRadius: '50%',
+          background: 'rgba(0, 0, 0, 0.65)',
+          backdropFilter: 'blur(8px)',
+          border: '1px solid rgba(255, 255, 255, 0.25)',
+          color: '#ffffff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          zIndex: 10,
+        }}
+        title={isMuted ? 'Unmute' : 'Mute'}
+      >
+        {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+      </button>
+
+      {/* Bottom Floating Minimal Progress Bar */}
+      <div
+        onClick={handleSeek}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          padding: '10px 14px 10px',
+          background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px',
+          zIndex: 10,
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            height: '4px',
+            backgroundColor: 'rgba(255, 255, 255, 0.25)',
+            borderRadius: '2px',
+            overflow: 'hidden',
+            cursor: 'pointer',
+          }}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              height: '100%',
+              background: 'var(--ig-primary-gradient)',
+              borderRadius: '2px',
+              transition: 'width 0.1s linear',
+            }}
+          />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#cbd5e1', fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+          <span>{currentTime}</span>
+          <span>{duration}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface ResultPreviewModalProps {
   isOpen: boolean;
@@ -308,51 +507,39 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             gap: '14px',
           }}
         >
-          {/* 1. REEL ONLY PREVIEW (Clean 9:16 Video Player with No Browser Extra Menus) */}
+          {/* 1. REEL ONLY PREVIEW (Custom Clean Video Player - No Native Browser Menus) */}
           {selectedType === 'reel' && (
-            <div
-              style={{
-                position: 'relative',
-                backgroundColor: '#050608',
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                maxWidth: '320px',
-                maxHeight: '54vh',
-                aspectRatio: '9 / 16',
-                margin: '0 auto',
-                boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              {currentItem?.type === 'video' ? (
-                <video
-                  src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
-                  poster={currentItem.thumbnailUrl}
-                  controls
-                  controlsList="nodownload nofullscreen noremoteplayback"
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  autoPlay
-                  playsInline
-                  preload="metadata"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-              ) : (
+            currentItem?.type === 'video' ? (
+              <CustomReelVideoPlayer
+                videoUrl={currentItem.url}
+                thumbnailUrl={currentItem.thumbnailUrl}
+              />
+            ) : (
+              <div
+                style={{
+                  position: 'relative',
+                  backgroundColor: '#050608',
+                  borderRadius: '18px',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  maxWidth: '320px',
+                  maxHeight: '54vh',
+                  aspectRatio: '9 / 16',
+                  margin: '0 auto',
+                  boxShadow: 'var(--neu-inset), 0 12px 30px rgba(0, 0, 0, 0.4)',
+                  border: '1px solid var(--border-subtle)',
+                }}
+              >
                 <img
                   src={`/api/proxy-download?url=${encodeURIComponent(currentItem?.url || '')}&inline=true`}
                   alt="Reel preview"
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
-              )}
-            </div>
+              </div>
+            )
           )}
 
           {/* 2. AUDIO ONLY PREVIEW */}
