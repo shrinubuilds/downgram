@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { DownloaderInput } from '@/components/DownloaderInput';
 import { ResultPreviewModal } from '@/components/ResultPreviewModal';
-import { ResultCard } from '@/components/ResultCard';
 import { HowToGuide } from '@/components/HowToGuide';
 import { FaqSection } from '@/components/FaqSection';
 import { Footer } from '@/components/Footer';
@@ -195,12 +194,44 @@ export const DedicatedToolDownloader: React.FC<DedicatedToolDownloaderProps> = (
             />
           </div>
 
-          {/* Inline Result Card (if fetched) */}
-          {scrapeResult && (
-            <div style={{ marginTop: '30px' }}>
-              <ResultCard data={scrapeResult} selectedType={toolType} />
-            </div>
-          )}
+          {/* Neumorphic Value Highlights */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+              gap: '8px',
+              marginTop: 'clamp(24px, 4vw, 36px)',
+              marginBottom: 'clamp(20px, 4vw, 40px)',
+            }}
+          >
+            {[
+              { icon: <CheckCircle2 size={14} color="#10b981" />, text: 'No Watermarks' },
+              { icon: <Zap size={14} color="#fcaf45" />, text: 'Fast Cloud Processing' },
+              { icon: <Shield size={14} color="#06b6d4" />, text: '100% Free & Secure' },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '12px',
+                  background: 'var(--bg-surface)',
+                  boxShadow: 'var(--neu-btn)',
+                  border: '1px solid var(--border-subtle)',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  color: 'var(--text-main)',
+                }}
+              >
+                {item.icon}
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* How-To & FAQ Sections */}
