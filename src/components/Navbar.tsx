@@ -309,6 +309,27 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
         </div>
       </div>
 
+      {/* Full-Screen Frosted Glass Blur Backdrop for Mobile Menu */}
+      {isMenuOpen && (
+        <div
+          onClick={() => setIsMenuOpen(false)}
+          className="mobile-menu-backdrop"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 95,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            animation: 'fadeIn 0.2s ease-out',
+          }}
+        />
+      )}
+
       {/* Neumorphic Dropdown / Mobile Menu Drawer */}
       {isMenuOpen && (
         <div
