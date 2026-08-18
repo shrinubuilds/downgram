@@ -365,7 +365,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
           </div>
 
           {/* List of Tools */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {navTools.map((tool) => (
               <Link
                 key={tool.href}
@@ -379,22 +379,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '12px 14px',
-                  borderRadius: '16px',
+                  padding: '14px 16px',
+                  borderRadius: '18px',
                   background: 'var(--bg-surface)',
                   boxShadow: 'var(--neu-btn)',
                   border: '1px solid var(--border-subtle)',
                   textDecoration: 'none',
                   color: 'var(--text-main)',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                   <div
                     style={{
-                      width: '38px',
-                      height: '38px',
-                      borderRadius: '12px',
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '14px',
                       background: 'var(--bg-surface-inset)',
                       boxShadow: 'var(--neu-inset-sm)',
                       display: 'flex',
@@ -407,60 +407,33 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
                     {tool.icon}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.94rem', color: 'var(--text-main)' }}>
+                    <div style={{ fontWeight: 800, fontSize: '0.96rem', color: 'var(--text-main)' }}>
                       {tool.label}
                     </div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {tool.desc}
                     </div>
                   </div>
                 </div>
 
-                <ChevronRight size={18} color="var(--text-dim)" />
+                <div
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '10px',
+                    background: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset-sm)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: tool.color,
+                    flexShrink: 0,
+                  }}
+                >
+                  <ChevronRight size={16} />
+                </div>
               </Link>
             ))}
-          </div>
-
-          {/* Quick Links in Menu */}
-          <div
-            style={{
-              marginTop: '16px',
-              paddingTop: '12px',
-              borderTop: '1px solid var(--border-subtle)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-around',
-              flexWrap: 'wrap',
-              gap: '8px',
-            }}
-          >
-            <button
-              onClick={() => handleNavClick('#how-to')}
-              className="btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '0.78rem', borderRadius: '10px' }}
-            >
-              <BookOpen size={13} color="#10b981" />
-              <span>How It Works</span>
-            </button>
-
-            <button
-              onClick={() => handleNavClick('#faq')}
-              className="btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '0.78rem', borderRadius: '10px' }}
-            >
-              <HelpCircle size={13} color="#06b6d4" />
-              <span>FAQ</span>
-            </button>
-
-            <Link
-              href="/privacy"
-              onClick={() => setIsMenuOpen(false)}
-              className="btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '0.78rem', borderRadius: '10px', textDecoration: 'none' }}
-            >
-              <Shield size={13} color="#a855f7" />
-              <span>Privacy</span>
-            </Link>
           </div>
         </div>
       )}
@@ -469,7 +442,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
         .tool-drawer-item:hover {
           background: var(--bg-surface-raised) !important;
           box-shadow: var(--neu-raised-sm) !important;
-          transform: translateX(4px);
+          transform: translateY(-2px);
+        }
+        .tool-drawer-item:active {
+          transform: translateY(1px);
+          box-shadow: var(--neu-btn-pressed) !important;
         }
         @media (min-width: 901px) {
           .hamburger-btn {
@@ -491,5 +468,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
     </header>
   );
 };
+
 
 

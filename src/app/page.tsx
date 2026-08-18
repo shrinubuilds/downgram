@@ -162,17 +162,6 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Media Type Filter Tabs (Desktop Only) */}
-          <div className="desktop-tools-wrapper">
-            <MediaTypeTabs
-              activeType={activeType}
-              onSelect={(type) => {
-                setActiveType(type);
-                setError(null);
-              }}
-            />
-          </div>
-
           {/* Search Input Bar */}
           <div id="downloader-box">
             <DownloaderInput
