@@ -480,6 +480,18 @@ a {
   padding: 0 clamp(14px, 3.5vw, 24px);
 }
 
+/* Desktop Tools Wrapper */
+.desktop-tools-wrapper {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .desktop-tools-wrapper {
+    display: none !important;
+  }
+}
+
 /* Mobile & Touch Responsive Enhancements */
 @media (max-width: 768px) {
   .how-to-card {

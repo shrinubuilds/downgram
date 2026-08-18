@@ -471,9 +471,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onSelectType, activeType }) => {
           box-shadow: var(--neu-raised-sm) !important;
           transform: translateX(4px);
         }
+        @media (min-width: 901px) {
+          .hamburger-btn {
+            display: none !important;
+          }
+          .menu-drawer {
+            display: none !important;
+          }
+        }
         @media (max-width: 900px) {
           .desktop-nav-links {
             display: none !important;
+          }
+          .hamburger-btn {
+            display: flex !important;
           }
         }
       `}</style>
