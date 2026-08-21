@@ -214,12 +214,7 @@ export async function triggerDownload(url: string, filename: string) {
     const res = await fetch(proxyUrl);
     if (res.ok) {
       const rawBlob = await res.blob();
-      let finalBlob = rawBlob;
-
-      // Extract pure audio PCM samples and remove all video stream tracks
-      if (isAudio) {
-        finalBlob = await extractPureAudioBlob(rawBlob);
-      }
+      const finalBlob = isAudio ? new Blob([rawBlob], { type: 'audio/mpeg' }) : rawBlob;
 
       const blobUrl = window.URL.createObjectURL(finalBlob);
       const link = document.createElement('a');
@@ -251,6 +246,7 @@ export async function triggerDownload(url: string, filename: string) {
     document.body.removeChild(link);
   }, 1000);
 }
+
 
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
