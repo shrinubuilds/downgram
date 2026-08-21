@@ -579,6 +579,13 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                 <img
                   src={`/api/proxy-download?url=${encodeURIComponent(currentItem?.url || '')}&inline=true`}
                   alt="Reel preview"
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    if (currentItem?.thumbnailUrl && !e.currentTarget.src.includes(encodeURIComponent(currentItem.thumbnailUrl))) {
+                      e.currentTarget.src = `/api/proxy-download?url=${encodeURIComponent(currentItem.thumbnailUrl)}&inline=true`;
+                    }
+                  }}
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               </div>
@@ -651,6 +658,8 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                       <img
                         src={`/api/proxy-download?url=${encodeURIComponent(dpPicUrl)}&inline=true`}
                         alt={data.author?.username || 'Avatar'}
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
                         style={{
                           width: '100%',
                           height: '100%',
@@ -845,6 +854,13 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   <img
                     src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
                     alt={`Slide ${currentSlideIndex + 1}`}
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
+                    onError={(e) => {
+                      if (currentItem.thumbnailUrl && !e.currentTarget.src.includes(encodeURIComponent(currentItem.thumbnailUrl))) {
+                        e.currentTarget.src = `/api/proxy-download?url=${encodeURIComponent(currentItem.thumbnailUrl)}&inline=true`;
+                      }
+                    }}
                     style={{
                       display: 'block',
                       width: 'auto',
@@ -953,6 +969,8 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                       <img
                         src={`/api/proxy-download?url=${encodeURIComponent(it.thumbnailUrl || it.url)}&inline=true`}
                         alt={`Thumb ${idx + 1}`}
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     </div>

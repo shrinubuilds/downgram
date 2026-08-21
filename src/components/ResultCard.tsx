@@ -216,8 +216,13 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               {data.author?.avatarUrl ? (
                 <img
-                  src={data.author.avatarUrl}
+                  src={`/api/proxy-download?url=${encodeURIComponent(data.author.avatarUrl)}&inline=true`}
                   alt={data.author.username}
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = 'none';
+                  }}
                   style={{
                     width: '48px',
                     height: '48px',
@@ -334,6 +339,13 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                 <img
                   src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
                   alt={`Instagram media`}
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    if (currentItem.thumbnailUrl && !e.currentTarget.src.includes(encodeURIComponent(currentItem.thumbnailUrl))) {
+                      e.currentTarget.src = `/api/proxy-download?url=${encodeURIComponent(currentItem.thumbnailUrl)}&inline=true`;
+                    }
+                  }}
                   style={{
                     maxWidth: '100%',
                     maxHeight: '620px',
@@ -440,13 +452,16 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             }}
           >
             <img
-              src={
+              src={`/api/proxy-download?url=${encodeURIComponent(
                 data.profile?.profilePicUrlHd ||
                 data.profile?.profilePicUrl ||
                 data.author?.avatarUrl ||
-                currentItem?.url
-              }
+                currentItem?.url ||
+                ''
+              )}&inline=true`}
               alt={data.author?.username || 'Avatar'}
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
               style={{
                 width: '100%',
                 height: '100%',
@@ -512,6 +527,13 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             <img
               src={`/api/proxy-download?url=${encodeURIComponent(currentItem.url)}&inline=true`}
               alt={`Slide ${currentSlideIndex + 1}`}
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
+              onError={(e) => {
+                if (currentItem.thumbnailUrl && !e.currentTarget.src.includes(encodeURIComponent(currentItem.thumbnailUrl))) {
+                  e.currentTarget.src = `/api/proxy-download?url=${encodeURIComponent(currentItem.thumbnailUrl)}&inline=true`;
+                }
+              }}
               style={{
                 maxWidth: '100%',
                 maxHeight: '620px',
@@ -610,8 +632,10 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                   }}
                 >
                   <img
-                    src={it.thumbnailUrl || it.url}
+                    src={`/api/proxy-download?url=${encodeURIComponent(it.thumbnailUrl || it.url)}&inline=true`}
                     alt={`Thumb ${idx + 1}`}
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>

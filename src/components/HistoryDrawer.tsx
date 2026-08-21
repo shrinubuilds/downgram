@@ -203,8 +203,14 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
                   }}
                 >
                   <img
-                    src={item.thumbnailUrl}
+                    src={
+                      item.thumbnailUrl.startsWith('data:') || item.thumbnailUrl.startsWith('/api/')
+                        ? item.thumbnailUrl
+                        : `/api/proxy-download?url=${encodeURIComponent(item.thumbnailUrl)}&inline=true`
+                    }
                     alt={item.title}
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>

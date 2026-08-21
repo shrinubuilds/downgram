@@ -123,6 +123,8 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
             <img
               src={`/api/proxy-download?url=${encodeURIComponent(audio.coverUrl)}&inline=true`}
               alt={audio.title || 'Cover'}
+              referrerPolicy="no-referrer"
+              crossOrigin="anonymous"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           ) : (

@@ -201,11 +201,26 @@ export async function extractPureAudioBlob(videoBlob: Blob): Promise<Blob> {
   }
 }
 
+export function getProxiedImageUrl(url?: string): string {
+  if (!url) return '';
+  if (url.startsWith('data:') || url.startsWith('/api/')) return url;
+  return `/api/proxy-download?url=${encodeURIComponent(url)}&inline=true`;
+}
+
 export async function triggerDownload(url: string, filename: string) {
-  const isAudio = filename.endsWith('.mp3') || filename.includes('_Audio_') || filename.includes('_320kbps') || filename.includes('_audio');
+  const isAudio =
+    filename.endsWith('.mp3') ||
+    filename.includes('_Audio_') ||
+    filename.includes('_320kbps') ||
+    filename.includes('_audio');
   let safeFilename = filename;
   if (isAudio) {
-    safeFilename = safeFilename.replace(/(\.mp3)+$/gi, '').replace(/\.mp4$/gi, '').replace(/\.m4a$/gi, '').replace(/\.wav$/gi, '') + '.mp3';
+    safeFilename =
+      safeFilename
+        .replace(/(\.mp3)+$/gi, '')
+        .replace(/\.mp4$/gi, '')
+        .replace(/\.m4a$/gi, '')
+        .replace(/\.wav$/gi, '') + '.mp3';
   }
   const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(safeFilename)}${isAudio ? '&audio=true' : ''}`;
 
@@ -231,20 +246,19 @@ export async function triggerDownload(url: string, filename: string) {
       return;
     }
   } catch (err) {
-    console.warn('Blob download fetch error, falling back to direct anchor:', err);
+    console.warn('Blob download fetch error, using safe non-redirect fallback:', err);
   }
 
-  // 2. Direct anchor click fallback
+  // 2. Direct download anchor fallback (No target="_blank" to prevent opening error website tabs)
   const link = document.createElement('a');
   link.style.display = 'none';
   link.href = proxyUrl;
   link.setAttribute('download', safeFilename);
-  link.target = '_blank';
   document.body.appendChild(link);
   link.click();
   setTimeout(() => {
     document.body.removeChild(link);
-  }, 1000);
+  }, 1500);
 }
 
 
