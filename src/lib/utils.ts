@@ -202,10 +202,11 @@ export async function extractPureAudioBlob(videoBlob: Blob): Promise<Blob> {
 }
 
 export async function triggerDownload(url: string, filename: string) {
-  const isAudio = filename.endsWith('.mp3') || filename.includes('_Audio_') || filename.includes('_320kbps');
-  const safeFilename = isAudio
-    ? filename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '').replace(/\.wav$/i, '') + '.mp3'
-    : filename;
+  const isAudio = filename.endsWith('.mp3') || filename.includes('_Audio_') || filename.includes('_320kbps') || filename.includes('_audio');
+  let safeFilename = filename;
+  if (isAudio) {
+    safeFilename = safeFilename.replace(/(\.mp3)+$/gi, '').replace(/\.mp4$/gi, '').replace(/\.m4a$/gi, '').replace(/\.wav$/gi, '') + '.mp3';
+  }
   const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(safeFilename)}${isAudio ? '&audio=true' : ''}`;
 
   try {

@@ -17,8 +17,7 @@ export async function GET(req: NextRequest) {
     // Sanitize filename for header
     let safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
     if (isAudio) {
-      safeFilename = safeFilename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '');
-      if (!safeFilename.endsWith('.mp3')) safeFilename += '.mp3';
+      safeFilename = safeFilename.replace(/(\.mp3)+$/gi, '').replace(/\.mp4$/gi, '').replace(/\.m4a$/gi, '') + '.mp3';
     }
 
     const range = req.headers.get('range');
