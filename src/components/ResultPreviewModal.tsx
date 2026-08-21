@@ -330,7 +330,23 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
       data.url;
     if (!audioUrl) return;
 
-    const filename = `DownGram_Audio_${data.author?.username || 'track'}_${data.shortcode || 'audio'}.mp3`;
+    // Clean, descriptive audio filename format
+    const cleanUser = (data.author?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+    
+    let cleanTrackTitle = (data.audio?.title || '')
+      .replace(/^Sound from\s*@?[a-zA-Z0-9_.-]*/i, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
+
+    if (!cleanTrackTitle || cleanTrackTitle.length < 2 || cleanTrackTitle.toLowerCase() === 'audio') {
+      cleanTrackTitle = data.shortcode || 'Audio';
+    }
+
+    const filename = `DownGram_${cleanUser}_${cleanTrackTitle}_320kbps.mp3`;
     triggerDownload(audioUrl, filename);
     triggerConfetti();
 
