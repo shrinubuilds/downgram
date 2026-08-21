@@ -84,14 +84,14 @@ async function scrapePostOrReel(
           }
         }
 
-        if (directUrl || thumbUrl) {
-          const itemUrl = directUrl || thumbUrl;
-          const isVid = itemUrl.includes('.mp4') || itemUrl.includes('/v/') || itemUrl.includes('/o1/v/') || isVideo;
+        const validItemUrl = directUrl || thumbUrl;
+        if (validItemUrl && validItemUrl.startsWith('http')) {
+          const isVid = validItemUrl.includes('.mp4') || validItemUrl.includes('/v/') || validItemUrl.includes('/o1/v/') || isVideo;
           items.push({
             id: `ig_${shortcode}_${idx + 1}`,
             type: isVid ? 'video' : 'image',
-            url: itemUrl,
-            thumbnailUrl: thumbUrl || itemUrl,
+            url: validItemUrl,
+            thumbnailUrl: thumbUrl || validItemUrl,
             width: 1080,
             height: isVid ? 1920 : 1080,
             filename: `DownGram_Instagram_${shortcode}_${idx + 1}.${isVid ? 'mp4' : 'jpg'}`,
@@ -101,39 +101,42 @@ async function scrapePostOrReel(
 
       if (items.length > 0) {
         const caption = `Instagram Post (${shortcode})`;
+        const firstItem = items[0];
+        const audioUrl = firstItem.type === 'video' ? firstItem.url : items.find(it => it.type === 'video')?.url || firstItem.url;
+        
         return {
           success: true,
           mediaType,
           url: cleanUrl,
           shortcode,
-          title: `Instagram Video • ${shortcode}`,
+          title: `Instagram ${mediaType === 'audio' ? 'Audio' : mediaType === 'post' ? 'Post' : 'Video'} • ${shortcode}`,
           caption,
           captionFormatted: caption,
-          hashtags: ['#instagram', '#reels', '#viral'],
+          hashtags: ['#instagram', '#reels', '#viral', '#trending'],
           mentions: [],
           author: {
             username: 'instagram_creator',
             fullName: 'Instagram Creator',
-            avatarUrl: items[0].thumbnailUrl,
+            avatarUrl: firstItem.thumbnailUrl,
             isVerified: true,
           },
           profile: {
             username: 'instagram_creator',
             fullName: 'Instagram Creator',
-            profilePicUrl: items[0].thumbnailUrl,
-            profilePicUrlHd: items[0].thumbnailUrl,
+            profilePicUrl: firstItem.thumbnailUrl,
+            profilePicUrlHd: firstItem.thumbnailUrl,
             isVerified: true,
             isPrivate: false,
           },
           items,
-          audio: items[0].type === 'video' ? {
+          audio: {
             title: `Sound from Reel (${shortcode})`,
-            artist: 'Original Audio',
-            audioUrl: items[0].url,
-            coverUrl: items[0].thumbnailUrl,
+            artist: '@instagram_creator',
+            audioUrl: audioUrl,
+            coverUrl: firstItem.thumbnailUrl,
             duration: 15,
             isOriginalAudio: true,
-          } : undefined,
+          },
           sourceType: 'live',
         };
       }
