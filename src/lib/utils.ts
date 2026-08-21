@@ -168,10 +168,31 @@ export function extractHashtagsAndMentions(text: string): { hashtags: string[]; 
   };
 }
 
+import { audioBufferToWavBlob } from './audioConverter';
+
+export async function extractPureAudioBlob(videoBlob: Blob): Promise<Blob> {
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) {
+      return new Blob([videoBlob], { type: 'audio/mp3' });
+    }
+
+    const audioCtx = new AudioContextClass();
+    const arrayBuffer = await videoBlob.arrayBuffer();
+    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    const audioBlob = audioBufferToWavBlob(audioBuffer);
+    await audioCtx.close();
+    return audioBlob;
+  } catch (err) {
+    console.warn('Web Audio extraction error:', err);
+    return new Blob([videoBlob], { type: 'audio/mp3' });
+  }
+}
+
 export async function triggerDownload(url: string, filename: string) {
   const isAudio = filename.endsWith('.mp3') || filename.includes('_Audio_') || filename.includes('_320kbps');
   const safeFilename = isAudio
-    ? filename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '') + (filename.endsWith('.mp3') ? '' : '.mp3')
+    ? filename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '').replace(/\.wav$/i, '') + '.mp3'
     : filename;
   const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(safeFilename)}${isAudio ? '&audio=true' : ''}`;
 
@@ -180,7 +201,13 @@ export async function triggerDownload(url: string, filename: string) {
     const res = await fetch(proxyUrl);
     if (res.ok) {
       const rawBlob = await res.blob();
-      const finalBlob = isAudio ? new Blob([rawBlob], { type: 'audio/mpeg' }) : rawBlob;
+      let finalBlob = rawBlob;
+
+      // Extract pure audio PCM samples and remove all video stream tracks
+      if (isAudio) {
+        finalBlob = await extractPureAudioBlob(rawBlob);
+      }
+
       const blobUrl = window.URL.createObjectURL(finalBlob);
       const link = document.createElement('a');
       link.style.display = 'none';
@@ -192,7 +219,7 @@ export async function triggerDownload(url: string, filename: string) {
       setTimeout(() => {
         document.body.removeChild(link);
         window.URL.revokeObjectURL(blobUrl);
-      }, 2000);
+      }, 2500);
       return;
     }
   } catch (err) {
