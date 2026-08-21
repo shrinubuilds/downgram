@@ -36,7 +36,18 @@ export function parseInstagramUrl(inputUrl: string): {
 
     const pathname = parsed.pathname;
     
-    // Reel match: /reel/CODE/ or /reels/CODE/
+    // 1. Audio / Music match: /reels/audio/ID, /reel/audio/ID, /audio/ID, /music/ID (MUST BE FIRST)
+    const audioMatch = pathname.match(/\/(?:reels\/audio|reel\/audio|audio|music)\/([0-9A-Za-z_-]+)/);
+    if (audioMatch) {
+      return {
+        mediaType: 'audio',
+        shortcode: audioMatch[1],
+        cleanUrl: `https://www.instagram.com/reels/audio/${audioMatch[1]}/`,
+        isValid: true,
+      };
+    }
+
+    // 2. Reel match: /reel/CODE/ or /reels/CODE/
     const reelMatch = pathname.match(/\/(?:reel|reels)\/([A-Za-z0-9_-]+)/);
     if (reelMatch) {
       return {
@@ -47,7 +58,7 @@ export function parseInstagramUrl(inputUrl: string): {
       };
     }
 
-    // Post / Carousel match: /p/CODE/
+    // 3. Post / Carousel match: /p/CODE/
     const postMatch = pathname.match(/\/p\/([A-Za-z0-9_-]+)/);
     if (postMatch) {
       return {
@@ -58,24 +69,13 @@ export function parseInstagramUrl(inputUrl: string): {
       };
     }
 
-    // IGTV / Video match: /tv/CODE/
+    // 4. IGTV / Video match: /tv/CODE/
     const tvMatch = pathname.match(/\/tv\/([A-Za-z0-9_-]+)/);
     if (tvMatch) {
       return {
         mediaType: 'video',
         shortcode: tvMatch[1],
         cleanUrl: `https://www.instagram.com/tv/${tvMatch[1]}/`,
-        isValid: true,
-      };
-    }
-
-    // Audio match: /audio/ID/ or /music/ID/
-    const audioMatch = pathname.match(/\/(?:audio|music)\/([0-9_-]+)/);
-    if (audioMatch) {
-      return {
-        mediaType: 'audio',
-        shortcode: audioMatch[1],
-        cleanUrl: `https://www.instagram.com/audio/${audioMatch[1]}/`,
         isValid: true,
       };
     }

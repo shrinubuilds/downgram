@@ -79,11 +79,18 @@ async function fetchInstagramRealMetadata(targetUrl: string, shortcode: string) 
         username = userFromDesc[1];
       }
 
-      const nameFromTitle = titleRaw.match(/^([^:]+)\s+on Instagram/i);
-      if (nameFromTitle) {
-        fullName = nameFromTitle[1].trim();
-        if (username === 'instagram_creator') {
-          username = fullName.toLowerCase().replace(/\s+/g, '_');
+      const audioTitleMatch = titleRaw.match(/^([^|]+)\s*\|\s*Original audio on Instagram/i) ||
+                              titleRaw.match(/^([^|]+)\s*\|\s*Audio on Instagram/i);
+      if (audioTitleMatch) {
+        fullName = audioTitleMatch[1].trim();
+        username = fullName.toLowerCase().replace(/[^a-zA-Z0-9._-]/g, '_');
+      } else {
+        const nameFromTitle = titleRaw.match(/^([^:]+)\s+on Instagram/i);
+        if (nameFromTitle) {
+          fullName = nameFromTitle[1].trim();
+          if (username === 'instagram_creator') {
+            username = fullName.toLowerCase().replace(/\s+/g, '_');
+          }
         }
       }
 
