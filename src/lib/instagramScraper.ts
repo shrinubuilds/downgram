@@ -692,19 +692,38 @@ async function scrapeProfile(
 
   // Strategy 1: OpenGraph & Direct Profile Page Meta Scraper (Extracts Real Live Full-HD DP from Instagram CDN)
   try {
-    const res = await fetch(cleanUrl, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-      },
-      next: { revalidate: 0 },
-    });
+    const crawlerUas = [
+      'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+      'Twitterbot/1.0',
+      'TelegramBot (like TwitterBot)',
+    ];
 
-    if (res.ok) {
-      const html = await res.text();
+    let html = '';
+    for (const ua of crawlerUas) {
+      try {
+        const res = await fetch(cleanUrl, {
+          headers: {
+            'User-Agent': ua,
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+          },
+          next: { revalidate: 0 },
+        });
 
+        if (res.ok) {
+          const text = await res.text();
+          if (text.includes('og:image') || text.includes('og:description')) {
+            html = text;
+            break;
+          }
+        }
+      } catch (err) {
+        // try next ua
+      }
+    }
+
+    if (html) {
       const ogImgMatch =
         html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i) ||
         html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/i);
@@ -722,10 +741,10 @@ async function scrapeProfile(
           ? rawPicUrl.replace(/_s100x100_/, '_s1080x1080_')
           : rawPicUrl.replace(/_s\d+x\d+_/, '_s1080x1080_');
 
-        const descText = ogDescMatch ? ogDescMatch[1].replace(/&#064;/g, '@') : '';
-        const titleText = ogTitleMatch ? ogTitleMatch[1].replace(/&#064;/g, '@') : `${cleanUsername} (@${cleanUsername})`;
+        const descText = decodeHtmlEntities(ogDescMatch ? ogDescMatch[1] : '');
+        const titleText = decodeHtmlEntities(ogTitleMatch ? ogTitleMatch[1] : `${cleanUsername} (@${cleanUsername})`);
 
-        // Parse stats from description (e.g. "680M Followers, 649 Following, 4,120 Posts")
+        // Parse stats from description (e.g. "686M Followers, 276 Following, 8,562 Posts")
         const followersMatch = descText.match(/([\d.,KMkmB]+)\s*Followers/i);
         const followingMatch = descText.match(/([\d.,KMkmB]+)\s*Following/i);
         const postsMatch = descText.match(/([\d.,KMkmB]+)\s*Posts/i);
@@ -746,7 +765,14 @@ async function scrapeProfile(
 
         // Clean user full name
         const fullName = titleText.split('(')[0]?.trim() || cleanUsername;
-        const bio = descText || `Instagram Profile (@${cleanUsername})`;
+        let bio = '';
+        const bioSnippet = descText.match(/-\s*See Instagram photos and videos from (.+)/i) ||
+                           descText.match(/-\s*(.+)/s);
+        if (bioSnippet) {
+          bio = bioSnippet[1].trim();
+        } else {
+          bio = descText || `Instagram Profile (@${cleanUsername})`;
+        }
         const { hashtags, mentions } = extractHashtagsAndMentions(bio);
 
         return {
