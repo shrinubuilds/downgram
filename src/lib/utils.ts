@@ -140,15 +140,44 @@ export function extractHashtagsAndMentions(text: string): { hashtags: string[]; 
   };
 }
 
-export function triggerDownload(url: string, filename: string) {
-  // Use in-app proxy download to ensure attachment headers and avoid CORS/hotlink block
-  const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}`;
-  const a = document.createElement('a');
-  a.href = proxyUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+export async function triggerDownload(url: string, filename: string) {
+  const isAudio = filename.endsWith('.mp3');
+  const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}${isAudio ? '&audio=true' : ''}`;
+
+  try {
+    // 1. Direct Blob Download (100% reliable across Android Chrome, iOS Safari & Desktop)
+    const res = await fetch(proxyUrl);
+    if (res.ok) {
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      }, 2000);
+      return;
+    }
+  } catch (err) {
+    console.warn('Blob download fetch error, falling back to direct anchor:', err);
+  }
+
+  // 2. Direct anchor click fallback
+  const link = document.createElement('a');
+  link.style.display = 'none';
+  link.href = proxyUrl;
+  link.setAttribute('download', filename);
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    document.body.removeChild(link);
+  }, 1000);
 }
 
 export async function copyToClipboard(text: string): Promise<boolean> {
