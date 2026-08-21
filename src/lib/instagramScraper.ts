@@ -1,5 +1,5 @@
 import { InstagramScrapeResult, MediaItem, MediaType, AudioInfo, ProfileInfo } from '@/types/instagram';
-import { extractHashtagsAndMentions, parseInstagramUrl } from './utils';
+import { decodeHtmlEntities, extractHashtagsAndMentions, parseInstagramUrl } from './utils';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { igdl } from 'btch-downloader';
@@ -67,8 +67,8 @@ async function fetchInstagramRealMetadata(targetUrl: string, shortcode: string) 
         html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i) ||
         html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/i);
 
-      const titleRaw = ogTitleMatch ? ogTitleMatch[1].replace(/&#064;/g, '@').replace(/&quot;/g, '"').replace(/&amp;/g, '&') : '';
-      const descRaw = ogDescMatch ? ogDescMatch[1].replace(/&#064;/g, '@').replace(/&quot;/g, '"').replace(/&amp;/g, '&') : '';
+      const titleRaw = decodeHtmlEntities(ogTitleMatch ? ogTitleMatch[1] : '');
+      const descRaw = decodeHtmlEntities(ogDescMatch ? ogDescMatch[1] : '');
       const thumbUrl = ogImgMatch ? ogImgMatch[1].replace(/&amp;/g, '&') : '';
 
       let username = 'instagram_creator';
@@ -90,7 +90,7 @@ async function fetchInstagramRealMetadata(targetUrl: string, shortcode: string) 
       let caption = '';
       const captionMatch = titleRaw.match(/on Instagram:\s*"(.*)"/s) || descRaw.match(/:\s*"(.*)"/s);
       if (captionMatch) {
-        caption = captionMatch[1].trim();
+        caption = decodeHtmlEntities(captionMatch[1].trim());
       } else {
         caption = titleRaw || descRaw;
       }

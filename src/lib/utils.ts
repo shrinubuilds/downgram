@@ -130,13 +130,41 @@ export function formatTime(seconds?: number): string {
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
+export function decodeHtmlEntities(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    // Decimal entities: &#128523; or &#064;
+    .replace(/&#(\d+);/g, (_, dec) => {
+      try {
+        return String.fromCodePoint(parseInt(dec, 10));
+      } catch {
+        return '';
+      }
+    })
+    // Hexadecimal entities: &#x1f60b; or &#x1F600;
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+      try {
+        return String.fromCodePoint(parseInt(hex, 16));
+      } catch {
+        return '';
+      }
+    });
+}
+
 export function extractHashtagsAndMentions(text: string): { hashtags: string[]; mentions: string[] } {
   if (!text) return { hashtags: [], mentions: [] };
-  const hashtagMatches = text.match(/#[a-zA-Z0-9_\u0080-\uFFFF]+/g) || [];
-  const mentionMatches = text.match(/@[a-zA-Z0-9_.]+/g) || [];
+  const cleanText = decodeHtmlEntities(text);
+  const hashtagMatches = cleanText.match(/#[a-zA-Z0-9_\u0080-\uFFFF]+/g) || [];
+  const mentionMatches = cleanText.match(/@[a-zA-Z0-9_.]+/g) || [];
   return {
-    hashtags: Array.from(new Set(hashtagMatches.map(h => h.trim()))),
-    mentions: Array.from(new Set(mentionMatches.map(m => m.trim()))),
+    hashtags: Array.from(new Set(hashtagMatches.map((h) => h.trim()))),
+    mentions: Array.from(new Set(mentionMatches.map((m) => m.trim()))),
   };
 }
 

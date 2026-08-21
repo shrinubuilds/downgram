@@ -1155,22 +1155,69 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             </div>
           )}
 
-          {/* Caption Copy Action */}
+          {/* Caption Copy & Download Action */}
           {(selectedType === 'caption' || selectedType === 'bio') && (
-            <button
-              onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
-              className="btn-gradient"
-              style={{
-                width: '100%',
-                height: '48px',
-                fontSize: '0.98rem',
-                fontWeight: 800,
-                borderRadius: '14px',
-              }}
-            >
-              {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
-              <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption!' : 'Copy Entire Caption'}</span>
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+              <button
+                onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
+                className="btn-gradient"
+                style={{
+                  width: '100%',
+                  height: '48px',
+                  fontSize: '0.98rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                }}
+              >
+                {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
+                <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption with Emojis!' : 'Copy Caption & Emojis'}</span>
+              </button>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', width: '100%' }}>
+                {data.hashtags && data.hashtags.length > 0 && (
+                  <button
+                    onClick={() => handleCopyText(data.hashtags?.join(' ') || '', 'hashtags_only')}
+                    className="btn-secondary"
+                    style={{
+                      height: '42px',
+                      fontSize: '0.86rem',
+                      fontWeight: 700,
+                      borderRadius: '12px',
+                    }}
+                  >
+                    {copiedKey === 'hashtags_only' ? <Check size={15} /> : <Copy size={15} />}
+                    <span>{copiedKey === 'hashtags_only' ? 'Copied Tags' : 'Copy Hashtags'}</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={() => {
+                    const textToSave = data.caption || data.profile?.biography || '';
+                    const blob = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `DownGram_Caption_${data.author?.username || 'post'}_${data.shortcode || 'instagram'}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    triggerConfetti();
+                  }}
+                  className="btn-secondary"
+                  style={{
+                    height: '42px',
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
+                    borderRadius: '12px',
+                    gridColumn: (!data.hashtags || data.hashtags.length === 0) ? 'span 2' : undefined,
+                  }}
+                >
+                  <Download size={15} />
+                  <span>Save as .TXT</span>
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>
