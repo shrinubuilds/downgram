@@ -708,16 +708,15 @@ async function scrapeProfile(
             'User-Agent': ua,
             'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.9',
+            'Referer': 'https://www.instagram.com/',
           },
           next: { revalidate: 0 },
         });
 
-        if (res.ok) {
-          const text = await res.text();
-          if (text.includes('og:image') || text.includes('og:description')) {
-            html = text;
-            break;
-          }
+        const text = await res.text();
+        if (text && (text.includes('og:image') || text.includes('og:description'))) {
+          html = text;
+          break;
         }
       } catch (err) {
         // try next ua
