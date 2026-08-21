@@ -241,7 +241,8 @@ async function scrapePostOrReel(
         const realAvatar = realMeta?.avatarUrl || items[0].thumbnailUrl;
         const caption = realMeta?.caption || `Instagram Post (${shortcode})`;
         const firstItem = items[0];
-        const audioUrl = firstItem.type === 'video' ? firstItem.url : items.find(it => it.type === 'video')?.url || firstItem.url;
+        const videoItem = items.find(it => it.type === 'video' || (it.url && !it.url.includes('.jpg') && !it.url.includes('.jpeg') && !it.url.includes('.webp') && !it.url.includes('.png')));
+        const audioUrl = videoItem ? videoItem.url : 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
         
         return {
           success: true,
@@ -589,16 +590,18 @@ async function scrapePostOrReel(
     const authorFullName = realMeta?.fullName || fallbackAuthor;
     const authorAvatar = realMeta?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=95';
 
+    const videoStreamUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
+
     const fallbackItems: MediaItem[] = isVideo
       ? [
           {
             id: `media_${shortcode || 'reel'}_1`,
             type: 'video',
-            url: realMeta?.thumbUrl || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+            url: videoStreamUrl,
             thumbnailUrl: realMeta?.thumbUrl || authorAvatar,
             width: 1080,
             height: 1920,
-            filename: `DownGram_${fallbackAuthor}_${shortcode || 'reel'}.mp4`,
+            filename: `DownGram_${fallbackAuthor}_video.mp4`,
           },
         ]
       : [
@@ -609,7 +612,7 @@ async function scrapePostOrReel(
             thumbnailUrl: realMeta?.thumbUrl || authorAvatar,
             width: 1440,
             height: 1800,
-            filename: `DownGram_${fallbackAuthor}_${shortcode || 'photo'}_slide_1.jpg`,
+            filename: `DownGram_${fallbackAuthor}_photo_1.jpg`,
           },
           {
             id: `media_${shortcode || 'photo'}_2`,
@@ -618,7 +621,7 @@ async function scrapePostOrReel(
             thumbnailUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&auto=format&fit=crop&q=80',
             width: 1440,
             height: 1800,
-            filename: `DownGram_${fallbackAuthor}_${shortcode || 'photo'}_slide_2.jpg`,
+            filename: `DownGram_${fallbackAuthor}_photo_2.jpg`,
           },
         ];
 
@@ -660,7 +663,7 @@ async function scrapePostOrReel(
       audio: {
         title: `Sound from @${fallbackAuthor}`,
         artist: `@${fallbackAuthor}`,
-        audioUrl: fallbackItems[0].url,
+        audioUrl: videoStreamUrl,
         coverUrl: authorAvatar,
         duration: 25,
         isOriginalAudio: true,
