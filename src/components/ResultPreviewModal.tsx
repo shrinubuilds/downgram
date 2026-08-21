@@ -322,7 +322,12 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
   };
 
   const handleDownloadAudio = () => {
-    const audioUrl = data.audio?.audioUrl || (currentItem?.type === 'video' ? currentItem.url : null);
+    const audioUrl =
+      data.audio?.audioUrl ||
+      (currentItem?.type === 'video' ? currentItem.url : null) ||
+      data.items.find((i) => i.type === 'video')?.url ||
+      currentItem?.url ||
+      data.url;
     if (!audioUrl) return;
 
     const filename = `DownGram_Audio_${data.author?.username || 'track'}_${data.shortcode || 'audio'}.mp3`;

@@ -174,18 +174,30 @@ export async function extractPureAudioBlob(videoBlob: Blob): Promise<Blob> {
   try {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioContextClass) {
-      return new Blob([videoBlob], { type: 'audio/mp3' });
+      return new Blob([await videoBlob.arrayBuffer()], { type: 'audio/mp3' });
     }
 
     const audioCtx = new AudioContextClass();
-    const arrayBuffer = await videoBlob.arrayBuffer();
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+    const rawBuffer = await videoBlob.arrayBuffer();
+    const clonedBuffer = rawBuffer.slice(0);
+
+    const audioBuffer = await new Promise<AudioBuffer>((resolve, reject) => {
+      const promise = audioCtx.decodeAudioData(
+        clonedBuffer,
+        (decoded) => resolve(decoded),
+        (err) => reject(err)
+      );
+      if (promise && typeof promise.then === 'function') {
+        promise.then(resolve).catch(reject);
+      }
+    });
+
     const audioBlob = audioBufferToWavBlob(audioBuffer);
     await audioCtx.close();
     return audioBlob;
   } catch (err) {
-    console.warn('Web Audio extraction error:', err);
-    return new Blob([videoBlob], { type: 'audio/mp3' });
+    console.warn('Web Audio extraction fallback:', err);
+    return new Blob([await videoBlob.arrayBuffer()], { type: 'audio/mp3' });
   }
 }
 
