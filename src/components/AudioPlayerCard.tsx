@@ -80,13 +80,16 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
 
   return (
     <div
-      className="glass-panel"
       style={{
-        padding: '24px',
+        backgroundColor: 'var(--bg-surface)',
+        boxShadow: 'var(--neu-raised-sm)',
+        borderRadius: 'var(--radius-lg)',
+        border: '1px solid var(--border-subtle)',
+        padding: '18px 16px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '18px',
-        border: '1px solid rgba(245, 158, 11, 0.3)',
+        gap: '14px',
+        width: '100%',
       }}
     >
       <audio ref={audioRef} src={audioStreamUrl} preload="metadata" />
@@ -96,22 +99,23 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
+          gap: '14px',
+          overflow: 'hidden',
         }}
       >
         {/* Vinyl / Cover Art */}
         <div
           style={{
             position: 'relative',
-            width: '64px',
-            height: '64px',
-            borderRadius: '16px',
+            width: '56px',
+            height: '56px',
+            borderRadius: '14px',
             overflow: 'hidden',
             background: 'var(--ig-primary-gradient)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 18px rgba(0, 0, 0, 0.5)',
+            boxShadow: 'var(--neu-inset-sm)',
             flexShrink: 0,
           }}
         >
@@ -123,42 +127,55 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
             />
           ) : (
             <Disc3
-              size={34}
+              size={30}
               color="#ffffff"
               className={isPlaying ? 'animate-spin' : ''}
             />
           )}
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              fontSize: '0.75rem',
-              fontWeight: 700,
+              gap: '5px',
+              fontSize: '0.72rem',
+              fontWeight: 800,
               color: '#f59e0b',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
-              marginBottom: '4px',
+              marginBottom: '3px',
+              fontFamily: 'var(--font-mono)',
             }}
           >
-            <Music size={13} />
-            {audio.isOriginalAudio ? 'Original Reel Soundtrack' : 'Instagram Audio'}
+            <Music size={12} />
+            <span>{audio.isOriginalAudio ? 'Original Audio' : 'Instagram Track'}</span>
           </div>
           <h4
             style={{
-              fontSize: '1.15rem',
-              fontWeight: 700,
+              fontSize: '1.02rem',
+              fontWeight: 800,
               color: 'var(--text-main)',
-              lineHeight: 1.2,
-              marginBottom: '4px',
+              lineHeight: 1.25,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              marginBottom: '2px',
             }}
           >
             {audio.title || 'Extracted Audio Track'}
           </h4>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+          <p
+            style={{
+              fontSize: '0.82rem',
+              color: 'var(--text-muted)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
+            }}
+          >
             {audio.artist || (authorUsername ? `@${authorUsername}` : 'Instagram Audio')}
           </p>
         </div>
@@ -169,19 +186,21 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '16px',
-          backgroundColor: 'var(--bg-secondary)',
-          padding: '12px 18px',
+          gap: '10px',
+          backgroundColor: 'var(--bg-surface-inset)',
+          boxShadow: 'var(--neu-inset-sm)',
+          padding: '10px 14px',
           borderRadius: 'var(--radius-md)',
           border: '1px solid var(--border-subtle)',
+          width: '100%',
         }}
       >
         {/* Play/Pause Button */}
         <button
           onClick={togglePlay}
           style={{
-            width: '44px',
-            height: '44px',
+            width: '38px',
+            height: '38px',
             borderRadius: 'var(--radius-full)',
             background: 'linear-gradient(135deg, #f59e0b, #e1306c)',
             border: 'none',
@@ -191,11 +210,11 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
             justifyContent: 'center',
             cursor: 'pointer',
             flexShrink: 0,
-            boxShadow: '0 2px 12px rgba(245, 158, 11, 0.4)',
+            boxShadow: '0 2px 10px rgba(245, 158, 11, 0.4)',
           }}
           title={isPlaying ? 'Pause Audio' : 'Play Audio'}
         >
-          {isPlaying ? <Pause size={18} /> : <Play size={18} style={{ marginLeft: '2px' }} />}
+          {isPlaying ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: '2px' }} />}
         </button>
 
         {/* Wave Bars */}
@@ -204,8 +223,8 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
             flex: 1,
             display: 'flex',
             alignItems: 'center',
-            gap: '3px',
-            height: '36px',
+            gap: '2px',
+            height: '30px',
             overflow: 'hidden',
           }}
         >
@@ -219,7 +238,7 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
                   style={{
                     flex: 1,
                     height: `${barHeight}%`,
-                    backgroundColor: isPast ? '#f59e0b' : 'rgba(255, 255, 255, 0.18)',
+                    backgroundColor: isPast ? '#f59e0b' : 'rgba(148, 163, 184, 0.3)',
                     borderRadius: '2px',
                     transition: 'all 0.15s ease',
                   }}
@@ -232,14 +251,15 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
         {/* Time Progress */}
         <span
           style={{
-            fontSize: '0.82rem',
+            fontSize: '0.78rem',
             color: 'var(--text-muted)',
             fontVariantNumeric: 'tabular-nums',
-            minWidth: '70px',
-            textAlign: 'right',
+            fontFamily: 'var(--font-mono)',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
           }}
         >
-          {formatTime(currentTime)} / {formatTime(duration)}
+          {formatTime(currentTime)}
         </span>
 
         {/* Mute Button */}
@@ -252,10 +272,12 @@ export const AudioPlayerCard: React.FC<AudioPlayerCardProps> = ({
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
+            padding: '4px',
+            flexShrink: 0,
           }}
           title={isMuted ? 'Unmute' : 'Mute'}
         >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
         </button>
       </div>
     </div>
