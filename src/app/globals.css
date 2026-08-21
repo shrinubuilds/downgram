@@ -76,7 +76,7 @@
   --neu-btn: 6px 6px 14px #c0c8d6, -6px -6px 14px #ffffff;
   --neu-btn-pressed: inset 4px 4px 10px #b6bfcf, inset -4px -4px 10px #ffffff;
 
-  --border-subtle: rgba(255, 255, 255, 0.85);
+  --border-subtle: rgba(15, 23, 42, 0.08);
   --border-glow: rgba(225, 48, 108, 0.35);
   --border-active: rgba(240, 148, 51, 0.7);
 
