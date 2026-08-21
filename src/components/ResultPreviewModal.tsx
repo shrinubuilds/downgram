@@ -300,10 +300,16 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
     const targetItem = item || currentItem;
     if (!targetItem?.url) return;
 
-    const ext = targetItem.type === 'video' ? 'mp4' : 'jpg';
-    const filename =
-      targetItem.filename ||
-      `DownGram_${data.author?.username || 'media'}_${targetItem.id || 'download'}.${ext}`;
+    const username = (data.author?.username || data.profile?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+
+    const isVideo = targetItem.type === 'video';
+    const ext = isVideo ? 'mp4' : 'jpg';
+    const typeLabel = isVideo ? 'video' : 'photo';
+    const suffix = items.length > 1 ? `_${currentSlideIndex + 1}` : '';
+    const filename = `DownGram_${username}_${typeLabel}${suffix}.${ext}`;
 
     triggerDownload(targetItem.url, filename);
     triggerConfetti();
@@ -330,23 +336,12 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
       data.url;
     if (!audioUrl) return;
 
-    // Clean, descriptive audio filename format
-    const cleanUser = (data.author?.username || 'instagram')
+    const username = (data.author?.username || data.profile?.username || 'instagram')
       .replace(/^@+/, '')
       .replace(/[^a-zA-Z0-9_-]/g, '_')
       .replace(/_+/g, '_');
-    
-    let cleanTrackTitle = (data.audio?.title || '')
-      .replace(/^Sound from\s*@?[a-zA-Z0-9_.-]*/i, '')
-      .replace(/[^a-zA-Z0-9_-]/g, '_')
-      .replace(/_+/g, '_')
-      .replace(/^_+|_+$/g, '');
 
-    if (!cleanTrackTitle || cleanTrackTitle.length < 2 || cleanTrackTitle.toLowerCase() === 'audio') {
-      cleanTrackTitle = data.shortcode || 'Audio';
-    }
-
-    const filename = `DownGram_${cleanUser}_${cleanTrackTitle}_320kbps.mp3`;
+    const filename = `DownGram_${username}_audio.mp3`;
     triggerDownload(audioUrl, filename);
     triggerConfetti();
 
@@ -372,7 +367,12 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
       currentItem?.url;
     if (!picUrl) return;
 
-    const filename = `DownGram_${data.author?.username || 'profile'}_HD_DP.jpg`;
+    const username = (data.author?.username || data.profile?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+
+    const filename = `DownGram_${username}_profile.jpg`;
     triggerDownload(picUrl, filename);
     triggerConfetti();
   };
@@ -1236,7 +1236,11 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
                   a.href = url;
-                  a.download = `DownGram_Caption_${data.author?.username || 'post'}_${data.shortcode || 'instagram'}.txt`;
+                  const username = (data.author?.username || data.profile?.username || 'instagram')
+                    .replace(/^@+/, '')
+                    .replace(/[^a-zA-Z0-9_-]/g, '_')
+                    .replace(/_+/g, '_');
+                  a.download = `DownGram_${username}_caption.txt`;
                   document.body.appendChild(a);
                   a.click();
                   document.body.removeChild(a);

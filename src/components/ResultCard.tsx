@@ -60,10 +60,16 @@ export const ResultCard: React.FC<ResultCardProps> = ({
     const target = item || currentItem;
     if (!target?.url) return;
 
-    const ext = target.type === 'video' ? 'mp4' : 'jpg';
-    const filename =
-      target.filename ||
-      `DownGram_${data.author?.username || 'media'}_${target.id || 'download'}.${ext}`;
+    const username = (data.author?.username || data.profile?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+
+    const isVideo = target.type === 'video';
+    const ext = isVideo ? 'mp4' : 'jpg';
+    const typeLabel = isVideo ? 'video' : 'photo';
+    const suffix = items.length > 1 ? `_${currentSlideIndex + 1}` : '';
+    const filename = `DownGram_${username}_${typeLabel}${suffix}.${ext}`;
 
     triggerDownload(target.url, filename);
     triggerConfetti();
@@ -82,10 +88,20 @@ export const ResultCard: React.FC<ResultCardProps> = ({
   };
 
   const handleDownloadAudio = () => {
-    const audioUrl = data.audio?.audioUrl || (currentItem?.type === 'video' ? currentItem.url : null);
+    const audioUrl =
+      data.audio?.audioUrl ||
+      (currentItem?.type === 'video' ? currentItem.url : null) ||
+      data.items.find((i) => i.type === 'video')?.url ||
+      currentItem?.url ||
+      data.url;
     if (!audioUrl) return;
 
-    const filename = `DownGram_Audio_${data.author?.username || 'track'}_${data.shortcode || 'audio'}.mp3`;
+    const username = (data.author?.username || data.profile?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+
+    const filename = `DownGram_${username}_audio.mp3`;
     triggerDownload(audioUrl, filename);
     triggerConfetti();
 
@@ -110,7 +126,12 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       currentItem?.url;
     if (!picUrl) return;
 
-    const filename = `DownGram_${data.author?.username || 'profile'}_HD_DP.jpg`;
+    const username = (data.author?.username || data.profile?.username || 'instagram')
+      .replace(/^@+/, '')
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .replace(/_+/g, '_');
+
+    const filename = `DownGram_${username}_profile.jpg`;
     triggerDownload(picUrl, filename);
     triggerConfetti();
   };
