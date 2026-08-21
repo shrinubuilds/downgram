@@ -15,7 +15,11 @@ export async function GET(req: NextRequest) {
     }
 
     // Sanitize filename for header
-    const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+    let safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_');
+    if (isAudio) {
+      safeFilename = safeFilename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '');
+      if (!safeFilename.endsWith('.mp3')) safeFilename += '.mp3';
+    }
 
     const range = req.headers.get('range');
     const fetchHeaders: Record<string, string> = {
@@ -38,11 +42,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(mediaUrl, 302);
     }
 
-    let contentType = res.headers.get('content-type');
-    if (!contentType || contentType === 'application/octet-stream') {
-      if (isAudio) {
-        contentType = 'audio/mpeg';
-      } else if (mediaUrl.includes('.jpg') || filename.endsWith('.jpg') || mediaUrl.includes('.jpeg')) {
+    let contentType = res.headers.get('content-type') || '';
+    if (isAudio) {
+      contentType = 'audio/mpeg';
+    } else if (!contentType || contentType === 'application/octet-stream') {
+      if (mediaUrl.includes('.jpg') || filename.endsWith('.jpg') || mediaUrl.includes('.jpeg')) {
         contentType = 'image/jpeg';
       } else if (mediaUrl.includes('.webp') || filename.endsWith('.webp')) {
         contentType = 'image/webp';

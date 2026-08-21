@@ -169,19 +169,23 @@ export function extractHashtagsAndMentions(text: string): { hashtags: string[]; 
 }
 
 export async function triggerDownload(url: string, filename: string) {
-  const isAudio = filename.endsWith('.mp3');
-  const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}${isAudio ? '&audio=true' : ''}`;
+  const isAudio = filename.endsWith('.mp3') || filename.includes('_Audio_') || filename.includes('_320kbps');
+  const safeFilename = isAudio
+    ? filename.replace(/\.mp4$/i, '').replace(/\.m4a$/i, '') + (filename.endsWith('.mp3') ? '' : '.mp3')
+    : filename;
+  const proxyUrl = `/api/proxy-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(safeFilename)}${isAudio ? '&audio=true' : ''}`;
 
   try {
     // 1. Direct Blob Download (100% reliable across Android Chrome, iOS Safari & Desktop)
     const res = await fetch(proxyUrl);
     if (res.ok) {
-      const blob = await res.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
+      const rawBlob = await res.blob();
+      const finalBlob = isAudio ? new Blob([rawBlob], { type: 'audio/mpeg' }) : rawBlob;
+      const blobUrl = window.URL.createObjectURL(finalBlob);
       const link = document.createElement('a');
       link.style.display = 'none';
       link.href = blobUrl;
-      link.download = filename;
+      link.download = safeFilename;
       document.body.appendChild(link);
       link.click();
 
@@ -199,7 +203,7 @@ export async function triggerDownload(url: string, filename: string) {
   const link = document.createElement('a');
   link.style.display = 'none';
   link.href = proxyUrl;
-  link.setAttribute('download', filename);
+  link.setAttribute('download', safeFilename);
   link.target = '_blank';
   document.body.appendChild(link);
   link.click();
