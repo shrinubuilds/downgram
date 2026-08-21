@@ -694,12 +694,13 @@ async function scrapeProfile(
   try {
     const crawlerUas = [
       'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
-      'Twitterbot/1.0',
       'TelegramBot (like TwitterBot)',
+      'Twitterbot/1.0',
+      'WhatsApp/2.21.23.17 A',
     ];
 
     let html = '';
+    // First try direct fetch with crawler UAs
     for (const ua of crawlerUas) {
       try {
         const res = await fetch(cleanUrl, {
@@ -713,7 +714,7 @@ async function scrapeProfile(
 
         if (res.ok) {
           const text = await res.text();
-          if (text.includes('og:image') || text.includes('og:description')) {
+          if (text.includes('og:image') && text.includes('og:description')) {
             html = text;
             break;
           }
@@ -722,6 +723,43 @@ async function scrapeProfile(
         // try next ua
       }
     }
+
+    // If direct fetch failed, try via allorigins.win proxy (different IP, bypasses Vercel block)
+    if (!html) {
+      try {
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`${cleanUrl}?__a=1`)}`;
+        const pRes = await fetch(proxyUrl, { next: { revalidate: 0 } });
+        if (pRes.ok) {
+          const pData = await pRes.json();
+          const pText = pData.contents || '';
+          if (pText.includes('og:image') && pText.includes('og:description')) {
+            html = pText;
+          }
+        }
+      } catch (err) {
+        // proxy also failed
+      }
+    }
+
+    // If allorigins failed, try corsproxy.io
+    if (!html) {
+      try {
+        const proxyUrl2 = `https://corsproxy.io/?url=${encodeURIComponent(cleanUrl)}`;
+        const p2Res = await fetch(proxyUrl2, {
+          headers: { 'User-Agent': 'facebookexternalhit/1.1' },
+          next: { revalidate: 0 },
+        });
+        if (p2Res.ok) {
+          const p2Text = await p2Res.text();
+          if (p2Text.includes('og:image') && p2Text.includes('og:description')) {
+            html = p2Text;
+          }
+        }
+      } catch (err) {
+        // proxy also failed
+      }
+    }
+
 
     if (html) {
       const ogImgMatch =
@@ -765,15 +803,11 @@ async function scrapeProfile(
 
         // Clean user full name
         const fullName = titleText.split('(')[0]?.trim() || cleanUsername;
-        let bio = '';
-        const bioSnippet = descText.match(/-\s*See Instagram photos and videos from (.+)/i) ||
-                           descText.match(/-\s*(.+)/s);
-        if (bioSnippet) {
-          bio = bioSnippet[1].trim();
-        } else {
-          bio = descText || `Instagram Profile (@${cleanUsername})`;
-        }
-        const { hashtags, mentions } = extractHashtagsAndMentions(bio);
+        // Extract real bio: og:description format is "686M Followers, 276 Following, 8,562 Posts - See Instagram photos and videos from Name (@handle)"
+        // We show the stats line cleanly as the bio since Instagram doesn't expose actual bio in OpenGraph
+        const bio = descText.replace(/\s*-\s*See Instagram photos and videos from.*/i, '').trim() ||
+                    descText || `@${cleanUsername} on Instagram`;
+        const { hashtags, mentions } = extractHashtagsAndMentions(descText);
 
         return {
           success: true,
@@ -798,9 +832,9 @@ async function scrapeProfile(
             profilePicUrlHd: hdPicUrl,
             isVerified: true,
             isPrivate: false,
-            followersCount: followersCount ?? 150000,
-            followingCount: followingCount ?? 450,
-            postsCount: postsCount ?? 320,
+            followersCount: followersCount,
+            followingCount: followingCount,
+            postsCount: postsCount,
           },
           items: [
             {
@@ -905,6 +939,95 @@ async function scrapeProfile(
     }
   } catch (err) {
     console.warn('Profile JSON strategy failed:', err);
+  }
+
+  // Strategy 3: Snapsave.app profile page scraper (reliable third-party proxy)
+  try {
+    const snapRes = await fetch('https://snapsave.app/action.php?lang=en', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+        'Referer': 'https://snapsave.app/',
+        'Origin': 'https://snapsave.app',
+      },
+      body: `url=${encodeURIComponent(`https://www.instagram.com/${cleanUsername}/`)}`,
+      next: { revalidate: 0 },
+    });
+
+    if (snapRes.ok) {
+      const snapHtml = await snapRes.text();
+      // Parse profile data from snapsave response
+      const dpMatch = snapHtml.match(/src="(https:\/\/[^"]+cdninstagram\.com[^"]+\.(jpg|png|jpeg)[^"]*)"/i) ||
+                      snapHtml.match(/src="(https:\/\/d\.rapidcdn\.app[^"]+)"/i);
+      const nameMatch = snapHtml.match(/<h1[^>]*>([^<]+)<\/h1>/i) ||
+                        snapHtml.match(/profile[-_]name[^>]*>([^<]+)</i);
+      const followersMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Followers/i) ||
+                             snapHtml.match(/Followers.*?(\d[\d,.KMkmB]*)/i);
+      const followingMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Following/i) ||
+                             snapHtml.match(/Following.*?(\d[\d,.KMkmB]*)/i);
+      const postsMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Posts/i) ||
+                         snapHtml.match(/Posts.*?(\d[\d,.KMkmB]*)/i);
+
+      if (dpMatch) {
+        const dpUrl = dpMatch[1].replace(/&amp;/g, '&');
+        const fullName = nameMatch ? decodeHtmlEntities(nameMatch[1].trim()) : cleanUsername;
+
+        const parseNum = (s?: string): number | undefined => {
+          if (!s) return undefined;
+          const c = s.toUpperCase().trim();
+          if (c.endsWith('B')) return Math.round(parseFloat(c) * 1_000_000_000);
+          if (c.endsWith('M')) return Math.round(parseFloat(c) * 1_000_000);
+          if (c.endsWith('K')) return Math.round(parseFloat(c) * 1_000);
+          const n = parseInt(c.replace(/,/g, ''), 10);
+          return isNaN(n) ? undefined : n;
+        };
+
+        const bioText = `@${cleanUsername} on Instagram`;
+        return {
+          success: true,
+          mediaType: 'profile',
+          url: cleanUrl,
+          title: `${fullName} (@${cleanUsername}) - Instagram Profile`,
+          caption: bioText,
+          captionFormatted: bioText,
+          hashtags: ['#instagram'],
+          mentions: [`@${cleanUsername}`],
+          author: {
+            username: cleanUsername,
+            fullName,
+            avatarUrl: dpUrl,
+            isVerified: false,
+          },
+          profile: {
+            username: cleanUsername,
+            fullName,
+            biography: bioText,
+            profilePicUrl: dpUrl,
+            profilePicUrlHd: dpUrl,
+            isVerified: false,
+            isPrivate: false,
+            followersCount: parseNum(followersMatch?.[1]),
+            followingCount: parseNum(followingMatch?.[1]),
+            postsCount: parseNum(postsMatch?.[1]),
+          },
+          items: [
+            {
+              id: `dp_${cleanUsername}`,
+              type: 'image',
+              url: dpUrl,
+              thumbnailUrl: dpUrl,
+              width: 1080,
+              height: 1080,
+              filename: `DownGram_${cleanUsername}_profile.jpg`,
+            },
+          ],
+          sourceType: 'live',
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('Strategy 3 (Snapsave profile) failed:', err);
   }
 
   // If real profile data could not be fetched
