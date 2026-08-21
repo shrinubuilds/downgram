@@ -1001,7 +1001,9 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                     lineHeight: 1.65,
                   }}
                 >
-                  {data.caption || data.profile?.biography || 'No caption text available.'}
+                  <p style={{ margin: 0, color: 'var(--text-main)', fontSize: '0.95rem', lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
+                    {data.caption || data.profile?.biography || 'No caption text available.'}
+                  </p>
                 </div>
 
                 {/* Hashtags Section */}
