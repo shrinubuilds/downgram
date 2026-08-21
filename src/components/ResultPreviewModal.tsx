@@ -941,7 +941,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             </div>
           )}
 
-          {/* 5. CAPTION ONLY PREVIEW (Full text caption and hashtags only) */}
+          {/* 5. CAPTION ONLY PREVIEW (Full text caption with emojis and hashtags) */}
           {(selectedType === 'caption' || selectedType === 'bio') && (
             <div
               style={{
@@ -952,58 +952,88 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             >
               <div
                 style={{
-                  backgroundColor: 'var(--bg-secondary)',
+                  backgroundColor: 'var(--bg-surface)',
+                  boxShadow: 'var(--neu-raised-sm)',
                   padding: '20px',
                   borderRadius: 'var(--radius-lg)',
                   border: '1px solid var(--border-subtle)',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '12px',
+                  gap: '14px',
                 }}
               >
+                {/* Author Bar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#f97316', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Full Post Caption
-                  </span>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>
-                    {(data.caption || data.profile?.biography || '').length} characters
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                      @{data.author?.username || 'instagram_creator'}
+                    </span>
+                    {data.author?.isVerified && (
+                      <CheckCircle2 size={15} color="#0095f6" fill="#0095f6" stroke="#fff" />
+                    )}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      color: 'var(--text-dim)',
+                      fontFamily: 'var(--font-mono)',
+                    }}
+                  >
+                    {(data.caption || data.profile?.biography || '').length} CHARS
                   </span>
                 </div>
 
+                {/* Caption Inset Box */}
                 <div
                   style={{
-                    backgroundColor: 'var(--bg-input)',
+                    backgroundColor: 'var(--bg-surface-inset)',
+                    boxShadow: 'var(--neu-inset)',
                     padding: '16px',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--border-subtle)',
-                    maxHeight: '260px',
+                    maxHeight: '270px',
                     overflowY: 'auto',
                     whiteSpace: 'pre-wrap',
-                    fontSize: '0.94rem',
+                    wordBreak: 'break-word',
+                    fontSize: '0.95rem',
                     color: 'var(--text-main)',
-                    lineHeight: 1.6,
+                    lineHeight: 1.65,
                   }}
                 >
-                  {data.caption || data.profile?.biography || 'No text caption available.'}
+                  {data.caption || data.profile?.biography || 'No caption text available.'}
                 </div>
 
-                {/* Hashtag breakdown */}
+                {/* Hashtags Section */}
                 {data.hashtags && data.hashtags.length > 0 && (
                   <div>
-                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
-                      Hashtags ({data.hashtags.length})
+                    <span
+                      style={{
+                        fontSize: '0.76rem',
+                        fontWeight: 800,
+                        color: 'var(--text-dim)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        display: 'block',
+                        marginBottom: '8px',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      HASHTAGS ({data.hashtags.length})
                     </span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {data.hashtags.map((h, i) => (
                         <span
                           key={i}
                           style={{
-                            padding: '3px 8px',
-                            borderRadius: 'var(--radius-sm)',
-                            backgroundColor: 'rgba(249, 115, 22, 0.12)',
+                            padding: '4px 10px',
+                            borderRadius: 'var(--radius-full)',
+                            backgroundColor: 'var(--bg-surface-inset)',
+                            boxShadow: 'var(--neu-inset-sm)',
+                            border: '1px solid var(--border-subtle)',
                             color: '#f97316',
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
+                            fontSize: '0.82rem',
+                            fontWeight: 700,
                           }}
                         >
                           {h}
@@ -1155,68 +1185,56 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
             </div>
           )}
 
-          {/* Caption Copy & Download Action */}
+          {/* Caption Only Actions - Exactly Two Buttons */}
           {(selectedType === 'caption' || selectedType === 'bio') && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
               <button
                 onClick={() => handleCopyText(data.caption || data.profile?.biography || '', 'full_caption')}
                 className="btn-gradient"
                 style={{
-                  width: '100%',
                   height: '48px',
-                  fontSize: '0.98rem',
+                  fontSize: '0.92rem',
                   fontWeight: 800,
                   borderRadius: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
                 }}
               >
-                {copiedKey === 'full_caption' ? <Check size={19} /> : <Copy size={19} />}
-                <span>{copiedKey === 'full_caption' ? 'Copied Entire Caption with Emojis!' : 'Copy Caption & Emojis'}</span>
+                {copiedKey === 'full_caption' ? <Check size={18} /> : <Copy size={18} />}
+                <span>{copiedKey === 'full_caption' ? 'Copied!' : 'Copy Caption'}</span>
               </button>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', width: '100%' }}>
-                {data.hashtags && data.hashtags.length > 0 && (
-                  <button
-                    onClick={() => handleCopyText(data.hashtags?.join(' ') || '', 'hashtags_only')}
-                    className="btn-secondary"
-                    style={{
-                      height: '42px',
-                      fontSize: '0.86rem',
-                      fontWeight: 700,
-                      borderRadius: '12px',
-                    }}
-                  >
-                    {copiedKey === 'hashtags_only' ? <Check size={15} /> : <Copy size={15} />}
-                    <span>{copiedKey === 'hashtags_only' ? 'Copied Tags' : 'Copy Hashtags'}</span>
-                  </button>
-                )}
-
-                <button
-                  onClick={() => {
-                    const textToSave = data.caption || data.profile?.biography || '';
-                    const blob = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `DownGram_Caption_${data.author?.username || 'post'}_${data.shortcode || 'instagram'}.txt`;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    triggerConfetti();
-                  }}
-                  className="btn-secondary"
-                  style={{
-                    height: '42px',
-                    fontSize: '0.86rem',
-                    fontWeight: 700,
-                    borderRadius: '12px',
-                    gridColumn: (!data.hashtags || data.hashtags.length === 0) ? 'span 2' : undefined,
-                  }}
-                >
-                  <Download size={15} />
-                  <span>Save as .TXT</span>
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  const textToSave = data.caption || data.profile?.biography || '';
+                  const blob = new Blob([textToSave], { type: 'text/plain;charset=utf-8' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `DownGram_Caption_${data.author?.username || 'post'}_${data.shortcode || 'instagram'}.txt`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  triggerConfetti();
+                }}
+                className="btn-secondary"
+                style={{
+                  height: '48px',
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  borderRadius: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                <Download size={18} />
+                <span>Download .TXT</span>
+              </button>
             </div>
           )}
         </div>
