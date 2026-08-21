@@ -907,47 +907,12 @@ async function scrapeProfile(
     console.warn('Profile JSON strategy failed:', err);
   }
 
-  // Resilient Profile DP Fallback
-  const dpUrl = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1200&auto=format&fit=crop&q=95';
-  const bioText = `Creator & Visual Storyteller (@${cleanUsername}) • Instagram Official Account`;
+  // If real profile data could not be fetched
   return {
-    success: true,
+    success: false,
     mediaType: 'profile',
     url: cleanUrl,
-    title: `${cleanUsername} (@${cleanUsername}) - Instagram HD Profile Picture & Bio`,
-    caption: bioText,
-    captionFormatted: bioText,
-    hashtags: ['#instagram', '#creator', '#profile'],
-    mentions: [`@${cleanUsername}`],
-    author: {
-      username: cleanUsername,
-      fullName: cleanUsername,
-      avatarUrl: dpUrl,
-      isVerified: true,
-    },
-    profile: {
-      username: cleanUsername,
-      fullName: cleanUsername,
-      biography: bioText,
-      profilePicUrl: dpUrl,
-      profilePicUrlHd: dpUrl,
-      isVerified: true,
-      isPrivate: false,
-      followersCount: 125000,
-      followingCount: 340,
-      postsCount: 420,
-    },
-    items: [
-      {
-        id: `dp_${cleanUsername}`,
-        type: 'image',
-        url: dpUrl,
-        thumbnailUrl: dpUrl,
-        width: 1200,
-        height: 1200,
-        filename: `DownGram_${cleanUsername}_profile.jpg`,
-      },
-    ],
-    sourceType: 'live',
+    items: [],
+    error: `Could not retrieve live profile data for @${cleanUsername}. Please verify the username and ensure the profile is public.`,
   };
 }
