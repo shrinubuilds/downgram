@@ -690,23 +690,23 @@ async function scrapeProfile(
   const cleanUsername = username.replace(/^@/, '').replace(/\/$/, '').trim() || 'instagram_user';
   const cleanUrl = `https://www.instagram.com/${cleanUsername}/`;
 
-  // Strategy 1: OpenGraph & Direct Profile Page Meta Scraper (Extracts Real Live Full-HD DP from Instagram CDN)
+  // Strategy 1: OpenGraph & Direct Profile Page Meta Scraper (100% Real Live Instagram Data)
   try {
     const crawlerUas = [
       'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-      'TelegramBot (like TwitterBot)',
       'Twitterbot/1.0',
       'WhatsApp/2.21.23.17 A',
+      'TelegramBot (like TwitterBot)',
+      'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     ];
 
     let html = '';
-    // First try direct fetch with crawler UAs
     for (const ua of crawlerUas) {
       try {
         const res = await fetch(cleanUrl, {
           headers: {
             'User-Agent': ua,
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept': '*/*',
             'Accept-Language': 'en-US,en;q=0.9',
           },
           next: { revalidate: 0 },
@@ -714,7 +714,7 @@ async function scrapeProfile(
 
         if (res.ok) {
           const text = await res.text();
-          if (text.includes('og:image') && text.includes('og:description')) {
+          if (text.includes('og:image') || text.includes('og:description')) {
             html = text;
             break;
           }
@@ -723,43 +723,6 @@ async function scrapeProfile(
         // try next ua
       }
     }
-
-    // If direct fetch failed, try via allorigins.win proxy (different IP, bypasses Vercel block)
-    if (!html) {
-      try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`${cleanUrl}?__a=1`)}`;
-        const pRes = await fetch(proxyUrl, { next: { revalidate: 0 } });
-        if (pRes.ok) {
-          const pData = await pRes.json();
-          const pText = pData.contents || '';
-          if (pText.includes('og:image') && pText.includes('og:description')) {
-            html = pText;
-          }
-        }
-      } catch (err) {
-        // proxy also failed
-      }
-    }
-
-    // If allorigins failed, try corsproxy.io
-    if (!html) {
-      try {
-        const proxyUrl2 = `https://corsproxy.io/?url=${encodeURIComponent(cleanUrl)}`;
-        const p2Res = await fetch(proxyUrl2, {
-          headers: { 'User-Agent': 'facebookexternalhit/1.1' },
-          next: { revalidate: 0 },
-        });
-        if (p2Res.ok) {
-          const p2Text = await p2Res.text();
-          if (p2Text.includes('og:image') && p2Text.includes('og:description')) {
-            html = p2Text;
-          }
-        }
-      } catch (err) {
-        // proxy also failed
-      }
-    }
-
 
     if (html) {
       const ogImgMatch =
@@ -771,16 +734,20 @@ async function scrapeProfile(
       const ogDescMatch =
         html.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i) ||
         html.match(/<meta\s+content="([^"]+)"\s+property="og:description"/i);
+      const metaDescMatch =
+        html.match(/<meta\s+name="description"\s+content="([^"]+)"/i) ||
+        html.match(/<meta\s+content="([^"]+)"\s+name="description"/i);
 
-      if (ogImgMatch) {
-        let rawPicUrl = ogImgMatch[1].replace(/&amp;/g, '&');
-        // Enhance image resolution from s100x100 thumbnail to Full-HD s1080x1080
+      if (ogImgMatch || ogDescMatch) {
+        let rawPicUrl = ogImgMatch ? ogImgMatch[1].replace(/&amp;/g, '&') : '';
+        // Enhance image resolution from thumbnail s100x100 to Full-HD s1080x1080
         const hdPicUrl = rawPicUrl.includes('_s100x100_')
           ? rawPicUrl.replace(/_s100x100_/, '_s1080x1080_')
           : rawPicUrl.replace(/_s\d+x\d+_/, '_s1080x1080_');
 
         const descText = decodeHtmlEntities(ogDescMatch ? ogDescMatch[1] : '');
         const titleText = decodeHtmlEntities(ogTitleMatch ? ogTitleMatch[1] : `${cleanUsername} (@${cleanUsername})`);
+        const metaDescText = decodeHtmlEntities(metaDescMatch ? metaDescMatch[1] : '');
 
         // Parse stats from description (e.g. "686M Followers, 276 Following, 8,562 Posts")
         const followersMatch = descText.match(/([\d.,KMkmB]+)\s*Followers/i);
@@ -802,12 +769,21 @@ async function scrapeProfile(
         const postsCount = parseStatNumber(postsMatch?.[1]);
 
         // Clean user full name
-        const fullName = titleText.split('(')[0]?.trim() || cleanUsername;
-        // Extract real bio: og:description format is "686M Followers, 276 Following, 8,562 Posts - See Instagram photos and videos from Name (@handle)"
-        // We show the stats line cleanly as the bio since Instagram doesn't expose actual bio in OpenGraph
-        const bio = descText.replace(/\s*-\s*See Instagram photos and videos from.*/i, '').trim() ||
-                    descText || `@${cleanUsername} on Instagram`;
-        const { hashtags, mentions } = extractHashtagsAndMentions(descText);
+        let fullName = titleText.split('(')[0]?.trim() || cleanUsername;
+        fullName = fullName.replace(/•.*$/, '').trim();
+
+        // Extract real bio from meta description: "... on Instagram: \"REAL BIO HERE\""
+        let bio = '';
+        const bioMatch = metaDescText.match(/on Instagram:\s*"(.*)"\s*$/s) ||
+                         metaDescText.match(/on Instagram:\s*“([^”]+)”/s);
+        if (bioMatch && bioMatch[1].trim()) {
+          bio = bioMatch[1].trim();
+        } else {
+          bio = descText.replace(/\s*-\s*See Instagram photos and videos from.*/i, '').trim();
+          if (!bio) bio = `@${cleanUsername} on Instagram`;
+        }
+
+        const { hashtags, mentions } = extractHashtagsAndMentions(bio);
 
         return {
           success: true,
@@ -821,27 +797,27 @@ async function scrapeProfile(
           author: {
             username: cleanUsername,
             fullName,
-            avatarUrl: hdPicUrl,
-            isVerified: true,
+            avatarUrl: hdPicUrl || rawPicUrl,
+            isVerified: followersCount !== undefined && followersCount > 100000,
           },
           profile: {
             username: cleanUsername,
             fullName,
             biography: bio,
-            profilePicUrl: rawPicUrl,
-            profilePicUrlHd: hdPicUrl,
-            isVerified: true,
+            profilePicUrl: rawPicUrl || hdPicUrl,
+            profilePicUrlHd: hdPicUrl || rawPicUrl,
+            isVerified: followersCount !== undefined && followersCount > 100000,
             isPrivate: false,
-            followersCount: followersCount,
-            followingCount: followingCount,
-            postsCount: postsCount,
+            followersCount,
+            followingCount,
+            postsCount,
           },
           items: [
             {
               id: `dp_${cleanUsername}`,
               type: 'image',
-              url: hdPicUrl,
-              thumbnailUrl: rawPicUrl,
+              url: hdPicUrl || rawPicUrl,
+              thumbnailUrl: rawPicUrl || hdPicUrl,
               width: 1080,
               height: 1080,
               filename: `DownGram_${cleanUsername}_profile.jpg`,
@@ -852,182 +828,7 @@ async function scrapeProfile(
       }
     }
   } catch (err) {
-    console.warn('Strategy 1 (OpenGraph Scraper) failed:', err);
-  }
-
-  // Strategy 2: Profile JSON API with guest session tokens
-  try {
-    const initRes = await fetch('https://www.instagram.com/', {
-      headers: {
-        'User-Agent': getRandomUserAgent(),
-        'Accept': 'text/html,application/xhtml+xml',
-      },
-      next: { revalidate: 0 },
-    });
-
-    const cookies = initRes.headers.get('set-cookie') || '';
-    let csrf = '';
-    const csrfMatch = cookies.match(/csrftoken=([^;]+)/);
-    if (csrfMatch) csrf = csrfMatch[1];
-
-    const jsonUrl = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${cleanUsername}`;
-    const res = await fetch(jsonUrl, {
-      headers: {
-        'User-Agent': getRandomUserAgent(),
-        'X-IG-App-ID': '936619743392459',
-        'X-ASBD-ID': '198387',
-        'X-IG-WWW-Claim': '0',
-        'X-CSRFToken': csrf,
-        'X-Requested-With': 'XMLHttpRequest',
-        'Referer': `https://www.instagram.com/${cleanUsername}/`,
-        'Cookie': cookies,
-        'Accept': '*/*',
-      },
-      next: { revalidate: 0 },
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const user = data?.data?.user;
-      if (user) {
-        const bio = user.biography || '';
-        const { hashtags, mentions } = extractHashtagsAndMentions(bio);
-        const hdPic = user.profile_pic_url_hd || user.profile_pic_url;
-
-        return {
-          success: true,
-          mediaType: 'profile',
-          url: cleanUrl,
-          title: `${user.full_name || cleanUsername} (@${cleanUsername}) - Instagram Profile`,
-          caption: bio,
-          captionFormatted: bio,
-          hashtags,
-          mentions,
-          author: {
-            username: cleanUsername,
-            fullName: user.full_name || cleanUsername,
-            avatarUrl: hdPic,
-            isVerified: user.is_verified,
-          },
-          profile: {
-            username: cleanUsername,
-            fullName: user.full_name || cleanUsername,
-            biography: bio,
-            profilePicUrl: user.profile_pic_url,
-            profilePicUrlHd: hdPic,
-            isVerified: user.is_verified,
-            isPrivate: user.is_private,
-            postsCount: user.edge_owner_to_timeline_media?.count,
-            followersCount: user.edge_followed_by?.count,
-            followingCount: user.edge_follow?.count,
-            externalUrl: user.external_url,
-          },
-          items: [
-            {
-              id: `dp_${cleanUsername}`,
-              type: 'image',
-              url: hdPic,
-              thumbnailUrl: user.profile_pic_url || hdPic,
-              width: 1080,
-              height: 1080,
-              filename: `DownGram_${cleanUsername}_profile.jpg`,
-            },
-          ],
-          sourceType: 'live',
-        };
-      }
-    }
-  } catch (err) {
-    console.warn('Profile JSON strategy failed:', err);
-  }
-
-  // Strategy 3: Snapsave.app profile page scraper (reliable third-party proxy)
-  try {
-    const snapRes = await fetch('https://snapsave.app/action.php?lang=en', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-        'Referer': 'https://snapsave.app/',
-        'Origin': 'https://snapsave.app',
-      },
-      body: `url=${encodeURIComponent(`https://www.instagram.com/${cleanUsername}/`)}`,
-      next: { revalidate: 0 },
-    });
-
-    if (snapRes.ok) {
-      const snapHtml = await snapRes.text();
-      // Parse profile data from snapsave response
-      const dpMatch = snapHtml.match(/src="(https:\/\/[^"]+cdninstagram\.com[^"]+\.(jpg|png|jpeg)[^"]*)"/i) ||
-                      snapHtml.match(/src="(https:\/\/d\.rapidcdn\.app[^"]+)"/i);
-      const nameMatch = snapHtml.match(/<h1[^>]*>([^<]+)<\/h1>/i) ||
-                        snapHtml.match(/profile[-_]name[^>]*>([^<]+)</i);
-      const followersMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Followers/i) ||
-                             snapHtml.match(/Followers.*?(\d[\d,.KMkmB]*)/i);
-      const followingMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Following/i) ||
-                             snapHtml.match(/Following.*?(\d[\d,.KMkmB]*)/i);
-      const postsMatch = snapHtml.match(/(\d[\d,.KMkmB]*)\s*<\/span>\s*<span[^>]*>\s*Posts/i) ||
-                         snapHtml.match(/Posts.*?(\d[\d,.KMkmB]*)/i);
-
-      if (dpMatch) {
-        const dpUrl = dpMatch[1].replace(/&amp;/g, '&');
-        const fullName = nameMatch ? decodeHtmlEntities(nameMatch[1].trim()) : cleanUsername;
-
-        const parseNum = (s?: string): number | undefined => {
-          if (!s) return undefined;
-          const c = s.toUpperCase().trim();
-          if (c.endsWith('B')) return Math.round(parseFloat(c) * 1_000_000_000);
-          if (c.endsWith('M')) return Math.round(parseFloat(c) * 1_000_000);
-          if (c.endsWith('K')) return Math.round(parseFloat(c) * 1_000);
-          const n = parseInt(c.replace(/,/g, ''), 10);
-          return isNaN(n) ? undefined : n;
-        };
-
-        const bioText = `@${cleanUsername} on Instagram`;
-        return {
-          success: true,
-          mediaType: 'profile',
-          url: cleanUrl,
-          title: `${fullName} (@${cleanUsername}) - Instagram Profile`,
-          caption: bioText,
-          captionFormatted: bioText,
-          hashtags: ['#instagram'],
-          mentions: [`@${cleanUsername}`],
-          author: {
-            username: cleanUsername,
-            fullName,
-            avatarUrl: dpUrl,
-            isVerified: false,
-          },
-          profile: {
-            username: cleanUsername,
-            fullName,
-            biography: bioText,
-            profilePicUrl: dpUrl,
-            profilePicUrlHd: dpUrl,
-            isVerified: false,
-            isPrivate: false,
-            followersCount: parseNum(followersMatch?.[1]),
-            followingCount: parseNum(followingMatch?.[1]),
-            postsCount: parseNum(postsMatch?.[1]),
-          },
-          items: [
-            {
-              id: `dp_${cleanUsername}`,
-              type: 'image',
-              url: dpUrl,
-              thumbnailUrl: dpUrl,
-              width: 1080,
-              height: 1080,
-              filename: `DownGram_${cleanUsername}_profile.jpg`,
-            },
-          ],
-          sourceType: 'live',
-        };
-      }
-    }
-  } catch (err) {
-    console.warn('Strategy 3 (Snapsave profile) failed:', err);
+    console.warn('Strategy 1 (Crawler Scraper) failed:', err);
   }
 
   // If real profile data could not be fetched
