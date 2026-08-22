@@ -37,14 +37,18 @@ export async function scrapeInstagram(targetUrl: string, requestedType?: MediaTy
 
   const mediaType = requestedType || parsed.mediaType;
 
-  // Handle Profile / DP / Bio extraction
-  if (mediaType === 'profile' || mediaType === 'bio' || (!parsed.shortcode && parsed.username)) {
-    if (parsed.shortcode) {
-      const postResult = await scrapePostOrReel(parsed.shortcode, parsed.cleanUrl, mediaType);
-      if (postResult.success) {
-        return postResult;
-      }
-    }
+  // Caption/bio with a post shortcode → extract caption from the post, not the profile
+  if ((mediaType === 'caption' || mediaType === 'bio') && parsed.shortcode) {
+    return scrapePostOrReel(parsed.shortcode, parsed.cleanUrl, mediaType);
+  }
+
+  // Handle Profile / DP extraction (no shortcode, or explicit profile type)
+  if (mediaType === 'profile' || (!parsed.shortcode && parsed.username)) {
+    return scrapeProfile(parsed.username || '', targetUrl, mediaType);
+  }
+
+  // Bio without a shortcode (username-only URL) → profile scrape for bio
+  if (mediaType === 'bio' && !parsed.shortcode && parsed.username) {
     return scrapeProfile(parsed.username || '', targetUrl, mediaType);
   }
 

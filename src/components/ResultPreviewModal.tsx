@@ -654,12 +654,18 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                       currentItem?.thumbnailUrl ||
                       currentItem?.url ||
                       '';
+                    const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.author?.username || 'IG')}&background=833ab4&color=fff&size=512&bold=true`;
                     return (
                       <img
-                        src={`/api/proxy-download?url=${encodeURIComponent(dpPicUrl)}&inline=true`}
+                        src={dpPicUrl ? `/api/proxy-download?url=${encodeURIComponent(dpPicUrl)}&inline=true` : fallbackAvatar}
                         alt={data.author?.username || 'Avatar'}
                         referrerPolicy="no-referrer"
                         crossOrigin="anonymous"
+                        onError={(e) => {
+                          if (!e.currentTarget.src.includes('ui-avatars.com')) {
+                            e.currentTarget.src = fallbackAvatar;
+                          }
+                        }}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -727,44 +733,56 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
               </div>
 
               {/* Biography Section */}
-              <div
-                style={{
-                  backgroundColor: 'var(--bg-surface-inset)',
-                  boxShadow: 'var(--neu-inset-sm)',
-                  padding: '16px',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-subtle)',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono)' }}>
-                    BIOGRAPHY
-                  </span>
-                  <button
-                    onClick={() => handleCopyText(data.profile?.biography || data.caption || '', 'bio')}
+              {(() => {
+                // Pick best bio text: prefer real bio over the synthetic stats-line placeholder
+                const rawBio = data.profile?.biography || data.caption || '';
+                const bioText =
+                  rawBio && !rawBio.startsWith('Official Instagram Profile of')
+                    ? rawBio
+                    : data.caption && !data.caption.startsWith('Official Instagram Profile of')
+                    ? data.caption
+                    : rawBio || 'No biography text provided.';
+                return (
+                  <div
                     style={{
-                      background: 'var(--bg-surface)',
-                      boxShadow: 'var(--neu-btn)',
+                      backgroundColor: 'var(--bg-surface-inset)',
+                      boxShadow: 'var(--neu-inset-sm)',
+                      padding: '16px',
+                      borderRadius: 'var(--radius-md)',
                       border: '1px solid var(--border-subtle)',
-                      borderRadius: '8px',
-                      padding: '4px 10px',
-                      color: copiedKey === 'bio' ? '#22c55e' : '#e1306c',
-                      fontSize: '0.78rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
                     }}
                   >
-                    {copiedKey === 'bio' ? <Check size={13} /> : <Copy size={13} />}
-                    {copiedKey === 'bio' ? 'Copied Bio' : 'Copy Bio'}
-                  </button>
-                </div>
-                <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-main)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
-                  {data.profile?.biography || data.caption || 'No biography text provided.'}
-                </p>
-              </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono)' }}>
+                        BIOGRAPHY
+                      </span>
+                      <button
+                        onClick={() => handleCopyText(bioText, 'bio')}
+                        style={{
+                          background: 'var(--bg-surface)',
+                          boxShadow: 'var(--neu-btn)',
+                          border: '1px solid var(--border-subtle)',
+                          borderRadius: '8px',
+                          padding: '4px 10px',
+                          color: copiedKey === 'bio' ? '#22c55e' : '#e1306c',
+                          fontSize: '0.78rem',
+                          fontWeight: 800,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        {copiedKey === 'bio' ? <Check size={13} /> : <Copy size={13} />}
+                        {copiedKey === 'bio' ? 'Copied Bio' : 'Copy Bio'}
+                      </button>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--text-main)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
+                      {bioText}
+                    </p>
+                  </div>
+                );
+              })()}
 
               {/* Bio Links Section */}
               {data.profile?.externalUrl && (
@@ -1001,22 +1019,61 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   gap: '14px',
                 }}
               >
-                {/* Author Bar */}
+                {/* Author Bar with Avatar */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-main)' }}>
-                      @{data.author?.username || 'instagram_creator'}
-                    </span>
-                    {data.author?.isVerified && (
-                      <CheckCircle2 size={15} color="#0095f6" fill="#0095f6" stroke="#fff" />
-                    )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {/* Author avatar */}
+                    {(() => {
+                      const avUrl = data.author?.avatarUrl || data.profile?.profilePicUrl || '';
+                      const fallbackAv = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.author?.username || 'IG')}&background=e1306c&color=fff&size=128&bold=true`;
+                      return (
+                        <img
+                          src={avUrl ? `/api/proxy-download?url=${encodeURIComponent(avUrl)}&inline=true` : fallbackAv}
+                          alt={data.author?.username || 'avatar'}
+                          referrerPolicy="no-referrer"
+                          crossOrigin="anonymous"
+                          onError={(e) => {
+                            if (!e.currentTarget.src.includes('ui-avatars.com')) {
+                              e.currentTarget.src = fallbackAv;
+                            }
+                          }}
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '2px solid #e1306c',
+                            flexShrink: 0,
+                          }}
+                        />
+                      );
+                    })()}
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '0.92rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                          @{data.author?.username || 'instagram_creator'}
+                        </span>
+                        {data.author?.isVerified && (
+                          <CheckCircle2 size={14} color="#0095f6" fill="#0095f6" stroke="#fff" />
+                        )}
+                      </div>
+                      {data.author?.fullName && (
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          {data.author.fullName}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <span
                     style={{
-                      fontSize: '0.78rem',
+                      fontSize: '0.75rem',
                       fontWeight: 700,
                       color: 'var(--text-dim)',
                       fontFamily: 'var(--font-mono)',
+                      background: 'var(--bg-surface-inset)',
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      border: '1px solid var(--border-subtle)',
                     }}
                   >
                     {(data.caption || data.profile?.biography || '').length} CHARS
@@ -1045,7 +1102,7 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                   </p>
                 </div>
 
-                {/* Hashtags Section */}
+                {/* Hashtags Section - clickable chips */}
                 {data.hashtags && data.hashtags.length > 0 && (
                   <div>
                     <span
@@ -1064,21 +1121,67 @@ export const ResultPreviewModal: React.FC<ResultPreviewModalProps> = ({
                     </span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {data.hashtags.map((h, i) => (
-                        <span
+                        <button
                           key={i}
+                          onClick={() => handleCopyText(h, `tag_${i}`)}
+                          title="Click to copy hashtag"
                           style={{
                             padding: '4px 10px',
                             borderRadius: 'var(--radius-full)',
                             backgroundColor: 'var(--bg-surface-inset)',
                             boxShadow: 'var(--neu-inset-sm)',
                             border: '1px solid var(--border-subtle)',
-                            color: '#f97316',
+                            color: copiedKey === `tag_${i}` ? '#22c55e' : '#f97316',
                             fontSize: '0.82rem',
                             fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
                           }}
                         >
-                          {h}
-                        </span>
+                          {copiedKey === `tag_${i}` ? '✓ Copied' : h}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Mentions Section */}
+                {data.mentions && data.mentions.length > 0 && (
+                  <div>
+                    <span
+                      style={{
+                        fontSize: '0.76rem',
+                        fontWeight: 800,
+                        color: 'var(--text-dim)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        display: 'block',
+                        marginBottom: '8px',
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      MENTIONS ({data.mentions.length})
+                    </span>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {data.mentions.map((m, i) => (
+                        <a
+                          key={i}
+                          href={`https://instagram.com/${m.replace(/^@/, '')}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            padding: '4px 10px',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'rgba(0, 149, 246, 0.1)',
+                            border: '1px solid rgba(0, 149, 246, 0.25)',
+                            color: '#60a5fa',
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            textDecoration: 'none',
+                          }}
+                        >
+                          {m}
+                        </a>
                       ))}
                     </div>
                   </div>
